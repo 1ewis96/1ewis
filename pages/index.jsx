@@ -13,6 +13,7 @@ import ExchangeProsConsCards from '../components/ExchangeProsConsCards';
 import BeginnersGuide from '../components/BeginnersGuide';
 import CookieConsent from '../components/CookieConsent';
 import ParticleBackground from '../components/ParticleBackground';
+import PartnerLogoSlider from '../components/PartnerLogoSlider';
 import Footer from '../components/Footer';
 import { useMemo } from 'react';
 
@@ -166,13 +167,22 @@ export default function HomePage() {
               </h1>
               
               <motion.p 
-                className="text-xl md:text-2xl text-gray-300 mb-10 max-w-3xl mx-auto"
+                className="text-xl md:text-2xl text-gray-300 mb-6 max-w-3xl mx-auto"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3, duration: 0.6 }}
               >
                 Compare the best cryptocurrency exchanges, wallets, and tools with exclusive sign-up bonuses.
               </motion.p>
+              
+              {/* Partner Logo Slider */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5, duration: 0.8 }}
+              >
+                <PartnerLogoSlider />
+              </motion.div>
               
               <div className="flex flex-wrap justify-center gap-4">
                 <motion.div
