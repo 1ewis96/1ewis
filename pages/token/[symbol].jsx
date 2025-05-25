@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowRight, ExternalLink, Check, Info, TrendingUp, Shield, Zap } from 'lucide-react';
 import { ButtonLink } from '../../components/ui/button';
 import PriceTicker from '../../components/PriceTicker';
+import TokenPriceChart from '../../components/TokenPriceChart';
 import tokenData from '../../data/tokenData.json';
 import { getExchangeReferral } from '../../utils/referralLinks';
 
@@ -21,8 +22,10 @@ export default function TokenPage() {
       const foundToken = tokenData.tokens[upperSymbol];
       
       if (foundToken) {
+        console.log('Found token data:', foundToken); // Debug log
         setToken(foundToken);
       } else {
+        console.log('Token not found:', upperSymbol); // Debug log
         // Token not found, redirect to home
         router.push('/');
       }
@@ -86,7 +89,7 @@ export default function TokenPage() {
       {/* Hero Section */}
       <div className="px-6 py-20 md:px-16">
         <motion.div 
-          className="text-center mb-16"
+          className="text-center mb-8"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -101,60 +104,78 @@ export default function TokenPage() {
             {token.description}
           </p>
         </motion.div>
+        
+        {/* Price Chart Section */}
+        <motion.div
+          className="mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <TokenPriceChart symbol={token.symbol} color={token.color} />
+        </motion.div>
 
         {/* Best Exchanges Section */}
         <motion.div
           className="mb-16"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
         >
           <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">Best Exchanges for {token.symbol}</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {token.bestExchanges.map((exchange, index) => {
-              const exchangeData = getExchangeReferral(exchange.id);
-              return (
-                <motion.div
-                  key={index}
-                  variants={itemVariants}
-                  className="bg-gray-800/30 backdrop-blur-sm rounded-xl p-6 border border-gray-700 hover:border-gray-600 transition-all duration-300 hover:shadow-lg hover:shadow-gray-900/50"
-                >
-                  <div className="flex items-center mb-4">
-                    <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center mr-3">
-                      <span className="text-lg font-bold">{index + 1}</span>
-                    </div>
-                    <h3 className="text-xl font-bold">{exchangeData?.name || exchange.id}</h3>
-                  </div>
-                  
-                  <p className="text-gray-300 mb-4">{exchange.reason}</p>
-                  
-                  {exchangeData?.referralLink ? (
-                    <div className="mt-auto">
-                      <div className="bg-gray-900/50 rounded-lg py-2 px-3 mb-4 text-xs text-gray-400">
-                        <span className="bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded mr-2">BONUS</span>
-                        {exchangeData.bonusDetails}
+            {token.bestExchanges && token.bestExchanges.length > 0 ? (
+              token.bestExchanges.map((exchange, index) => {
+                const exchangeData = getExchangeReferral(exchange.id);
+                return (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: 0.1 * index }}
+                    className="bg-gray-800/30 backdrop-blur-sm rounded-xl p-6 border border-gray-700 hover:border-gray-600 transition-all duration-300 hover:shadow-lg hover:shadow-gray-900/50"
+                  >
+                    <div className="flex items-center mb-4">
+                      <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center mr-3">
+                        <span className="text-lg font-bold">{index + 1}</span>
                       </div>
-                      <ButtonLink 
-                        href={exchangeData.referralLink}
-                        className="w-full bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg flex items-center justify-center"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Trade {token.symbol} on {exchangeData.name} <ExternalLink className="ml-2 w-4 h-4" />
-                      </ButtonLink>
+                      <h3 className="text-xl font-bold">{exchangeData?.name || exchange.id}</h3>
                     </div>
-                  ) : (
-                    <ButtonLink 
-                      href={`/${exchange.id}`}
-                      className="w-full bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg flex items-center justify-center mt-auto"
-                    >
-                      Learn More <ArrowRight className="ml-2 w-4 h-4" />
-                    </ButtonLink>
-                  )}
-                </motion.div>
-              );
-            })}
+                    
+                    <p className="text-gray-300 mb-4">{exchange.reason}</p>
+                    
+                    {exchangeData?.referralLink ? (
+                      <div className="mt-auto">
+                        <div className="bg-gray-900/50 rounded-lg py-2 px-3 mb-4 text-xs text-gray-400">
+                          <span className="bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded mr-2">BONUS</span>
+                          {exchangeData.bonusDetails}
+                        </div>
+                        <ButtonLink 
+                          href={exchangeData.referralLink}
+                          className="w-full bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg flex items-center justify-center"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Trade {token.symbol} on {exchangeData.name} <ExternalLink className="ml-2 w-4 h-4" />
+                        </ButtonLink>
+                      </div>
+                    ) : (
+                      <ButtonLink 
+                        href={`/${exchange.id}`}
+                        className="w-full bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg flex items-center justify-center mt-auto"
+                      >
+                        Learn More <ArrowRight className="ml-2 w-4 h-4" />
+                      </ButtonLink>
+                    )}
+                  </motion.div>
+                );
+              })
+            ) : (
+              <div className="col-span-3 text-center py-8 bg-gray-800/30 backdrop-blur-sm rounded-xl border border-gray-700">
+                <p className="text-gray-400">No exchange data available for {token.symbol}</p>
+              </div>
+            )}
           </div>
         </motion.div>
 

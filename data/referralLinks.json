@@ -91,21 +91,31 @@
       "color": "orange"
     }
   },
+  "cards": {
+    "revolut": {
+      "name": "Revolut",
+      "description": "All-in-one financial app with crypto trading and metal cards",
+      "referralLink": "https://www.revolut.com/referral/?referral-code=lewismhsy!MAY1-25-AR-RPH1-REVPRO",
+      "referralCode": "lewismhsy!MAY1-25-AR-RPH1-REVPRO",
+      "bonusDetails": "Free month of Revolut Premium for new users",
+      "color": "blue"
+    }
+  },
   "tools": {
     "tradingview": {
       "name": "TradingView",
       "description": "Professional-grade charting tools for market analysis",
-      "referralLink": "",
-      "referralCode": "",
-      "bonusDetails": "",
+      "referralLink": "https://www.tradingview.com/pricing/?share_your_love=LewisT",
+      "referralCode": "LewisT",
+      "bonusDetails": "Up to $30 off your first paid plan",
       "color": "indigo"
     },
     "cointracking": {
       "name": "CoinTracking",
       "description": "Track your portfolio and optimize your taxes",
-      "referralLink": "",
-      "referralCode": "",
-      "bonusDetails": "",
+      "referralLink": "https://cointracking.info?ref=0319654",
+      "referralCode": "0319654",
+      "bonusDetails": "10% lifetime discount on all paid plans",
       "color": "violet"
     },
     "nordvpn": {

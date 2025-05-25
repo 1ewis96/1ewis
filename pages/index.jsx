@@ -12,6 +12,7 @@ import CryptoNewsFeed from '../components/CryptoNewsFeed';
 import ExchangeProsConsCards from '../components/ExchangeProsConsCards';
 import BeginnersGuide from '../components/BeginnersGuide';
 import CookieConsent from '../components/CookieConsent';
+import ParticleBackground from '../components/ParticleBackground';
 import { useMemo } from 'react';
 
 export default function HomePage() {
@@ -134,42 +135,19 @@ export default function HomePage() {
       
       <main className="flex-1">
         {/* Hero Section with animated background */}
-        <section className="py-20 md:py-28 px-4 relative overflow-hidden">
-          {/* Animated background elements */}
-          <div className="absolute inset-0 overflow-hidden">
-            {useMemo(() => {
-              // Pre-calculate all random values to prevent re-renders
-              const particles = Array.from({ length: 15 }).map((_, i) => ({
-                id: i,
-                x: Math.random() * 100 + '%',
-                y: Math.random() * 100 + '%',
-                duration: 3 + Math.random() * 5,
-                delay: Math.random() * 5
-              }));
-              
-              return particles.map(particle => (
-                <motion.div
-                  key={particle.id}
-                  className="absolute w-1 h-1 bg-blue-500 rounded-full opacity-50"
-                  initial={{ 
-                    x: particle.x, 
-                    y: particle.y,
-                    scale: 0
-                  }}
-                  animate={{ 
-                    scale: [0, 1, 0],
-                    opacity: [0, 0.8, 0]
-                  }}
-                  transition={{ 
-                    duration: particle.duration,
-                    repeat: Infinity,
-                    delay: particle.delay
-                  }}
-                  style={{ filter: 'blur(1px)' }}
-                />
-              ));
-            }, [])}
-          </div>
+        <section className="py-24 px-4 bg-gradient-to-b from-black to-gray-950 relative overflow-hidden">
+          {/* Enhanced particle background */}
+          <ParticleBackground 
+            count={80} 
+            colors={['#3B82F6', '#8B5CF6', '#EC4899', '#10B981', '#F59E0B']} 
+            minSize={2} 
+            maxSize={8} 
+            minSpeed={20} 
+            maxSpeed={60} 
+            minOpacity={0.1} 
+            maxOpacity={0.4} 
+            blur={3} 
+          />
           
           <div className="max-w-5xl mx-auto text-center relative z-10">
             <motion.div

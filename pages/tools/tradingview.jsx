@@ -216,10 +216,10 @@ export default function TradingViewPage() {
         >
           <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to Elevate Your Trading?</h2>
           <p className="text-gray-300 max-w-2xl mx-auto mb-8">
-            Sign up for TradingView today and access professional-grade charting tools and a global community of traders. Use my referral link to support this site.
+            Sign up for TradingView today and access professional-grade charting tools and a global community of traders. Use my referral link to get up to $30 off your first paid plan.
           </p>
           <ButtonLink 
-            href="https://www.tradingview.com/gopro/?share_your_love=YOUR_REF_CODE" 
+            href="https://www.tradingview.com/pricing/?share_your_love=LewisT" 
             className="bg-indigo-500 hover:bg-indigo-600 text-white px-8 py-3 text-lg rounded-lg"
             target="_blank"
           >

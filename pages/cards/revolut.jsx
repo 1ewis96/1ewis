@@ -1,34 +1,36 @@
 import { Button, ButtonLink } from "../../components/ui/button";
-import { ArrowRight, ChevronDown, Shield, Zap, BarChart, LineChart, Github, Twitter } from "lucide-react";
+import { ArrowRight, ChevronDown, Shield, Zap, CreditCard, Smartphone, Globe, DollarSign } from "lucide-react";
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import PriceTicker from '../../components/PriceTicker';
 import AnimatedFeatures from '../../components/AnimatedFeatures';
 import { useState } from 'react';
+import { getReferralLink } from '../../utils/referralLinks';
 
-export default function CoinTrackingPage() {
+export default function RevolutPage() {
   const [showMore, setShowMore] = useState(false);
+  const referralLink = getReferralLink('cards', 'revolut');
   
   const features = [
     {
-      title: "Portfolio Tracking",
-      description: "Monitor your entire crypto portfolio across all exchanges and wallets in one dashboard.",
-      icon: LineChart
+      title: "Crypto Trading",
+      description: "Buy, sell, and hold 80+ cryptocurrencies directly in the app with competitive fees.",
+      icon: DollarSign
     },
     {
-      title: "Tax Reporting",
-      description: "Generate tax reports for 25+ countries with support for various accounting methods.",
-      icon: BarChart
+      title: "Metal Cards",
+      description: "Premium metal cards with exclusive perks, cashback, and airport lounge access.",
+      icon: CreditCard
     },
     {
-      title: "Exchange Integration",
-      description: "Connect to 110+ exchanges and 15+ blockchains with automatic data import.",
-      icon: Zap
+      title: "Global Spending",
+      description: "Spend in 150+ currencies at the interbank exchange rate with no hidden fees.",
+      icon: Globe
     },
     {
-      title: "Security & Privacy",
-      description: "Keep your financial data secure with industry-leading security measures and privacy controls.",
-      icon: Shield
+      title: "All-in-One App",
+      description: "Banking, investing, crypto, and payments all in one secure mobile application.",
+      icon: Smartphone
     }
   ];
   
@@ -57,23 +59,23 @@ export default function CoinTrackingPage() {
       <PriceTicker />
       
       {/* Hero Section */}
-      <div className="px-6 py-20 md:px-16 bg-gradient-to-b from-violet-900/30 to-black">
+      <div className="px-6 py-20 md:px-16 bg-gradient-to-b from-blue-900/30 to-black">
         <motion.div 
           className="text-center mb-16"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <h1 className="text-4xl md:text-6xl font-bold mb-4 text-violet-400">
-            CoinTracking
+          <h1 className="text-4xl md:text-6xl font-bold mb-4 text-blue-400">
+            Revolut
           </h1>
           <p className="text-lg md:text-xl max-w-2xl mx-auto text-gray-300">
-            The comprehensive crypto portfolio management and tax reporting solution.
+            The all-in-one financial super app with crypto trading and premium metal cards.
           </p>
         </motion.div>
 
         {/* Features Section */}
-        <AnimatedFeatures features={features} color="violet-400" />
+        <AnimatedFeatures features={features} color="blue-400" />
 
         {/* Stats Section */}
         <motion.div 
@@ -84,17 +86,17 @@ export default function CoinTrackingPage() {
           viewport={{ once: true }}
         >
           {[
-            { label: "Users", value: "1.2M+", unit: "Worldwide" },
-            { label: "Exchanges", value: "110+", unit: "Supported" },
-            { label: "Transactions", value: "25B+", unit: "Tracked" },
-            { label: "Countries", value: "25+", unit: "Tax Reports" }
+            { label: "Users", value: "25M+", unit: "Worldwide" },
+            { label: "Countries", value: "35+", unit: "Available" },
+            { label: "Currencies", value: "150+", unit: "Supported" },
+            { label: "Cryptos", value: "80+", unit: "For Trading" }
           ].map((stat, index) => (
             <motion.div 
               key={index}
               variants={itemVariants}
               className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-4 text-center border border-gray-700"
             >
-              <h3 className="text-3xl md:text-4xl font-bold text-violet-400">{stat.value}</h3>
+              <h3 className="text-3xl md:text-4xl font-bold text-blue-400">{stat.value}</h3>
               <p className="text-gray-400">{stat.label}</p>
               <span className="text-xs text-gray-500">{stat.unit}</span>
             </motion.div>
@@ -114,22 +116,22 @@ export default function CoinTrackingPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
-                name: "Free",
-                price: "$0",
+                name: "Standard",
+                price: "Free",
                 color: "bg-gray-800",
-                features: ["200 Transactions", "Basic Portfolio Tracking", "Limited Reporting", "Manual Imports"]
+                features: ["Free UK Account", "Free Euro IBAN Account", "Spend in 150+ Currencies", "Basic Crypto Trading", "Savings Vaults"]
               },
               {
-                name: "Pro",
-                price: "$10.99/month",
-                color: "bg-violet-800",
-                features: ["3,500 Transactions", "Advanced Portfolio Analysis", "Tax Reports for 1 Year", "API Imports", "Priority Support"]
+                name: "Premium",
+                price: "$9.99/month",
+                color: "bg-blue-800",
+                features: ["All Standard Features", "Global Express Delivery", "Overseas Medical Insurance", "Priority Customer Support", "Exclusive Card Designs"]
               },
               {
-                name: "Unlimited",
+                name: "Metal",
                 price: "$16.99/month",
-                color: "bg-violet-700",
-                features: ["Unlimited Transactions", "All Pro Features", "Tax Reports for All Years", "Customized Reports", "Premium Support"]
+                color: "bg-blue-700",
+                features: ["All Premium Features", "Exclusive Metal Card", "Up to 1% Cashback", "Airport Lounge Access", "Dedicated Concierge Service"]
               }
             ].map((plan, index) => (
               <motion.div
@@ -140,7 +142,7 @@ export default function CoinTrackingPage() {
                 <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
                 <div className="mb-4">
                   <p className="text-2xl font-semibold">{plan.price}</p>
-                  <span className="text-xs text-gray-300">billed annually</span>
+                  {plan.price !== "Free" && <span className="text-xs text-gray-300">billed annually</span>}
                 </div>
                 <div className="mt-auto">
                   <span className="text-xs text-gray-300 mb-2 block">Key Features</span>
@@ -165,29 +167,29 @@ export default function CoinTrackingPage() {
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">Why Choose CoinTracking?</h2>
+          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">Why Choose Revolut?</h2>
           
           <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700">
-            <h3 className="text-xl font-semibold mb-4 text-violet-400">Comprehensive Portfolio Management</h3>
+            <h3 className="text-xl font-semibold mb-4 text-blue-400">All-in-One Financial Solution</h3>
             <p className="text-gray-300 mb-4">
-              CoinTracking offers one of the most comprehensive portfolio tracking solutions in the crypto space. It allows you to monitor all your assets across multiple exchanges and wallets in one place, providing real-time updates on your portfolio value, gains/losses, and asset allocation. The platform supports over 13,000 cryptocurrencies, ensuring that even your most obscure altcoins are tracked accurately.
+              Revolut combines traditional banking services with modern financial tools, including cryptocurrency trading, stock investing, and global money transfers. This all-in-one approach eliminates the need for multiple apps and accounts, streamlining your financial life in one secure platform.
             </p>
             
             <div className={`overflow-hidden transition-all duration-500 ${showMore ? 'max-h-[1000px]' : 'max-h-0'}`}>
-              <h3 className="text-xl font-semibold mb-4 text-violet-400 mt-6">Tax Compliance Made Easy</h3>
+              <h3 className="text-xl font-semibold mb-4 text-blue-400 mt-6">Seamless Crypto Integration</h3>
               <p className="text-gray-300 mb-4">
-                Crypto tax reporting can be incredibly complex, but CoinTracking simplifies the process with automated tax reports for over 25 countries. The platform supports various accounting methods (FIFO, LIFO, HIFO, etc.) and can generate all the necessary documents for tax filing, including capital gains reports, realized and unrealized gains, income reports, and more. This comprehensive approach to tax reporting has made CoinTracking the preferred choice for both individual investors and tax professionals.
+                With Revolut, you can buy, sell, and hold over 80 cryptocurrencies directly within the same app you use for everyday banking. The platform offers competitive fees and real-time price alerts, making it easy to manage your crypto portfolio alongside your traditional finances. You can even round up your spare change from everyday purchases and automatically invest it in the cryptocurrency of your choice.
               </p>
               
-              <h3 className="text-xl font-semibold mb-4 text-violet-400 mt-6">Seamless Data Integration</h3>
+              <h3 className="text-xl font-semibold mb-4 text-blue-400 mt-6">Premium Metal Experience</h3>
               <p className="text-gray-300 mb-4">
-                With support for over 110 exchanges and 15 blockchains, CoinTracking makes it easy to import your transaction data automatically. The platform offers API connections, CSV imports, and blockchain analysis to ensure that all your transactions are captured accurately. This eliminates the need for manual data entry and reduces the risk of errors in your portfolio tracking and tax reporting.
+                Revolut's Metal plan offers a premium 18g metal card with exclusive perks, including up to 1% cashback on all payments, airport lounge access, and dedicated concierge service. Metal subscribers also enjoy higher ATM withdrawal limits, priority customer support, and exclusive rates on currency exchange and crypto trading, making it the ultimate choice for frequent travelers and crypto enthusiasts.
               </p>
             </div>
             
             <button
               onClick={() => setShowMore(!showMore)}
-              className="flex items-center text-violet-400 hover:text-violet-300 transition-colors mt-2 mx-auto"
+              className="flex items-center text-blue-400 hover:text-blue-300 transition-colors mt-2 mx-auto"
             >
               {showMore ? 'Show Less' : 'Show More'}
               <ChevronDown className={`ml-1 w-4 h-4 transition-transform duration-300 ${showMore ? 'rotate-180' : ''}`} />
@@ -208,16 +210,16 @@ export default function CoinTrackingPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
-                title: "Active Traders",
-                description: "Track profits and losses across multiple exchanges with real-time portfolio updates and performance analytics."
+                title: "Crypto Enthusiasts",
+                description: "Access 80+ cryptocurrencies with competitive fees and seamless integration with your everyday banking."
               },
               {
-                title: "Long-term Investors",
-                description: "Monitor your investment growth over time with detailed charts and historical performance data."
+                title: "Global Travelers",
+                description: "Spend abroad with no hidden fees, access airport lounges, and enjoy comprehensive travel insurance."
               },
               {
-                title: "Tax Professionals",
-                description: "Generate accurate tax reports for clients with support for various accounting methods and jurisdictions."
+                title: "Digital Nomads",
+                description: "Manage multiple currencies, receive payments globally, and access your money anywhere in the world."
               }
             ].map((item, index) => (
               <motion.div
@@ -225,7 +227,7 @@ export default function CoinTrackingPage() {
                 variants={itemVariants}
                 className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700"
               >
-                <h3 className="text-xl font-semibold mb-2 text-violet-400">{item.title}</h3>
+                <h3 className="text-xl font-semibold mb-2 text-blue-400">{item.title}</h3>
                 <p className="text-gray-300">{item.description}</p>
               </motion.div>
             ))}
@@ -240,17 +242,17 @@ export default function CoinTrackingPage() {
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to Simplify Your Crypto Tracking?</h2>
+          <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to Revolutionize Your Finances?</h2>
           <p className="text-gray-300 max-w-2xl mx-auto mb-8">
-            Sign up for CoinTracking today and take control of your crypto portfolio and tax reporting. Use my referral link to get a 10% discount on all plans.
+            Sign up for Revolut today and get a free month of Revolut Premium when you use my referral link. Experience the all-in-one financial super app with crypto trading and premium features.
           </p>
           <ButtonLink 
-            href="https://cointracking.info?ref=0319654" 
-            className="bg-violet-500 hover:bg-violet-600 text-white px-8 py-3 text-lg rounded-lg"
+            href={referralLink}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 text-lg rounded-lg"
             target="_blank"
           >
             <span className="flex items-center justify-center">
-              Try CoinTracking Free <ArrowRight className="ml-2 w-5 h-5" />
+              Join Revolut <ArrowRight className="ml-2 w-5 h-5" />
             </span>
           </ButtonLink>
         </motion.div>
@@ -270,7 +272,7 @@ export default function CoinTrackingPage() {
                 rel="noopener noreferrer"
                 className="flex items-center hover:text-gray-300 transition-colors duration-200"
               >
-                <Github className="w-5 h-5 mr-2" />
+                <Shield className="w-5 h-5 mr-2" />
                 GitHub
               </a>
               <a 
@@ -279,7 +281,7 @@ export default function CoinTrackingPage() {
                 rel="noopener noreferrer"
                 className="flex items-center hover:text-gray-300 transition-colors duration-200"
               >
-                <Twitter className="w-5 h-5 mr-2" />
+                <Zap className="w-5 h-5 mr-2" />
                 Twitter
               </a>
             </div>

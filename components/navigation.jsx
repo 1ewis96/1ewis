@@ -13,6 +13,33 @@ export default function Navigation() {
   const [cardsOpen, setCardsOpen] = useState(false);
   const [toolsOpen, setToolsOpen] = useState(false);
   const router = useRouter();
+  
+  // Function to toggle a dropdown and close others
+  const toggleDropdown = (dropdown) => {
+    // Close all dropdowns first
+    if (dropdown !== 'exchanges') setExchangesOpen(false);
+    if (dropdown !== 'wallets') setWalletsOpen(false);
+    if (dropdown !== 'cards') setCardsOpen(false);
+    if (dropdown !== 'tools') setToolsOpen(false);
+    
+    // Toggle the selected dropdown
+    switch(dropdown) {
+      case 'exchanges':
+        setExchangesOpen(prev => !prev);
+        break;
+      case 'wallets':
+        setWalletsOpen(prev => !prev);
+        break;
+      case 'cards':
+        setCardsOpen(prev => !prev);
+        break;
+      case 'tools':
+        setToolsOpen(prev => !prev);
+        break;
+      default:
+        break;
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -155,7 +182,7 @@ export default function Navigation() {
           {/* Exchanges Dropdown */}
           <div className="relative">
             <motion.button 
-              onClick={() => setExchangesOpen(!exchangesOpen)}
+              onClick={() => toggleDropdown('exchanges')}
               className="flex items-center px-4 py-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-md transition-all duration-300 relative group"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -214,7 +241,7 @@ export default function Navigation() {
           {/* Wallets Dropdown */}
           <div className="relative">
             <motion.button 
-              onClick={() => setWalletsOpen(!walletsOpen)}
+              onClick={() => toggleDropdown('wallets')}
               className="flex items-center px-4 py-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-md transition-all duration-300 relative group"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -261,7 +288,7 @@ export default function Navigation() {
           {/* Cards Dropdown */}
           <div className="relative">
             <motion.button 
-              onClick={() => setCardsOpen(!cardsOpen)}
+              onClick={() => toggleDropdown('cards')}
               className="flex items-center px-4 py-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-md transition-all duration-300 relative group"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -308,7 +335,7 @@ export default function Navigation() {
           {/* Tools Dropdown */}
           <div className="relative">
             <motion.button 
-              onClick={() => setToolsOpen(!toolsOpen)}
+              onClick={() => toggleDropdown('tools')}
               className="flex items-center px-4 py-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-md transition-all duration-300 relative group"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -380,13 +407,13 @@ export default function Navigation() {
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div 
-            className="md:hidden fixed inset-0 z-40 bg-black/95 backdrop-blur-md pt-20"
+            className="md:hidden fixed inset-0 z-40 bg-black/95 backdrop-blur-md pt-20 overflow-y-auto max-h-screen"
             initial={{ opacity: 0, x: '100%' }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: '100%' }}
             transition={{ duration: 0.3, ease: 'easeInOut' }}
           >
-            <div className="flex flex-col space-y-1 p-6">
+            <div className="flex flex-col space-y-1 p-6 pb-24">
               {mainNavItems.map((item) => (
                 <motion.div
                   key={item.path}
