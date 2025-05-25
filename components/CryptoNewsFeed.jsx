@@ -1,74 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Clock, ExternalLink, Filter } from 'lucide-react';
+import { Clock, ExternalLink, Filter, AlertTriangle } from 'lucide-react';
+import Image from 'next/image';
 
-const newsItems = [
-  {
-    title: "Bitcoin Surges Past $65,000 as Institutional Adoption Grows",
-    source: "CryptoNews",
-    url: "#",
-    image: "https://images.unsplash.com/photo-1518546305927-5a555bb7020d?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80",
-    category: "bitcoin",
-    timeAgo: "2 hours ago"
-  },
-  {
-    title: "Binance Launches $100M Innovation Fund for Web3 Startups",
-    source: "CoinDesk",
-    url: "#",
-    image: "https://images.unsplash.com/photo-1622630998477-20aa696ecb05?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80",
-    category: "exchange",
-    timeAgo: "5 hours ago"
-  },
-  {
-    title: "Ethereum Completes Major Network Upgrade, Gas Fees Drop 30%",
-    source: "Decrypt",
-    url: "#",
-    image: "https://images.unsplash.com/photo-1621761191319-c6fb62004040?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80",
-    category: "ethereum",
-    timeAgo: "1 day ago"
-  },
-  {
-    title: "Bybit Expands Futures Trading Options with 25 New Pairs",
-    source: "CryptoBriefing",
-    url: "#",
-    image: "https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80",
-    category: "exchange",
-    timeAgo: "8 hours ago"
-  },
-  {
-    title: "Kraken Secures Regulatory Approval in European Markets",
-    source: "The Block",
-    url: "#",
-    image: "https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80",
-    category: "exchange",
-    timeAgo: "12 hours ago"
-  },
-  {
-    title: "OKX Introduces Zero-Fee Trading for New Users",
-    source: "CoinTelegraph",
-    url: "#",
-    image: "https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80",
-    category: "exchange",
-    timeAgo: "1 day ago"
-  },
-  {
-    title: "Solana DeFi Ecosystem Surpasses $10B in Total Value Locked",
-    source: "DeFi Pulse",
-    url: "#",
-    image: "https://images.unsplash.com/photo-1639762681057-408e52192e55?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80",
-    category: "defi",
-    timeAgo: "3 days ago"
-  },
-  {
-    title: "NFT Market Shows Signs of Recovery with Trading Volume Up 40%",
-    source: "NFT Now",
-    url: "#",
-    image: "https://images.unsplash.com/photo-1620321023374-d1a68fbc720d?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80",
-    category: "nft",
-    timeAgo: "2 days ago"
-  }
-];
-
+// Categories for filtering
 const categories = [
   { id: 'all', label: 'All News' },
   { id: 'bitcoin', label: 'Bitcoin' },
@@ -78,16 +13,88 @@ const categories = [
   { id: 'nft', label: 'NFTs' }
 ];
 
+// Category to CryptoPanic currency mapping
+const categoryToCurrency = {
+  'bitcoin': 'BTC',
+  'ethereum': 'ETH',
+  'exchange': '',
+  'defi': '',
+  'nft': ''
+};
+
 export default function CryptoNewsFeed() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [expanded, setExpanded] = useState(false);
+  const [news, setNews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   
-  const filteredNews = activeCategory === 'all' 
-    ? newsItems 
-    : newsItems.filter(item => item.category === activeCategory);
+  // Fetch news from CryptoPanic API
+  useEffect(() => {
+    const fetchNews = async () => {
+      setLoading(true);
+      setError(null);
+      
+      try {
+        // Construct the API URL based on the active category
+        let apiUrl = 'https://cryptopanic.com/api/v1/posts/?auth_token=f022578b04fe8c9b65daa34a323e0370e5332a60&public=true&kind=news';
+        
+        // Add currency filter if category is not 'all'
+        if (activeCategory !== 'all' && categoryToCurrency[activeCategory]) {
+          apiUrl += `&currencies=${categoryToCurrency[activeCategory]}`;
+        }
+        
+        // Add filter based on category
+        if (activeCategory === 'defi') {
+          apiUrl += '&filter=defi';
+        } else if (activeCategory === 'nft') {
+          apiUrl += '&filter=nft';
+        } else if (activeCategory === 'exchange') {
+          apiUrl += '&filter=exchange';
+        }
+        
+        const response = await fetch(apiUrl);
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch news');
+        }
+        
+        const data = await response.json();
+        setNews(data.results || []);
+      } catch (err) {
+        console.error('Error fetching crypto news:', err);
+        setError('Failed to load news. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchNews();
+  }, [activeCategory]);
   
-  const displayedNews = expanded ? filteredNews : filteredNews.slice(0, 4);
+  // Format the relative time (e.g., "2 hours ago")
+  const formatTimeAgo = (dateString) => {
+    const now = new Date();
+    const past = new Date(dateString);
+    const diffMs = now - past;
+    
+    const diffMins = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    
+    if (diffMins < 60) {
+      return `${diffMins} minute${diffMins !== 1 ? 's' : ''} ago`;
+    } else if (diffHours < 24) {
+      return `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
+    } else {
+      return `${diffDays} day${diffDays !== 1 ? 's' : ''} ago`;
+    }
+  };
   
+  // Get display news items based on expanded state
+  const displayedNews = expanded ? news : news.slice(0, 4);
+  
+  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -105,6 +112,44 @@ export default function CryptoNewsFeed() {
       opacity: 1,
       transition: { duration: 0.4 }
     }
+  };
+  
+  // Get category label for a news item
+  const getCategoryLabel = (newsItem) => {
+    // Extract domain from source URL
+    const domain = new URL(newsItem.url).hostname.replace('www.', '');
+    
+    // Check if currencies array exists and has items
+    if (newsItem.currencies && newsItem.currencies.length > 0) {
+      return newsItem.currencies[0].code;
+    }
+    
+    // Check for specific keywords in title
+    const title = newsItem.title.toLowerCase();
+    if (title.includes('bitcoin') || title.includes('btc')) return 'Bitcoin';
+    if (title.includes('ethereum') || title.includes('eth')) return 'Ethereum';
+    if (title.includes('exchange') || title.includes('trading')) return 'Exchanges';
+    if (title.includes('defi') || title.includes('yield') || title.includes('lending')) return 'DeFi';
+    if (title.includes('nft') || title.includes('collectible')) return 'NFTs';
+    
+    return domain;
+  };
+  
+  // Get placeholder image for news without images
+  const getPlaceholderImage = (category) => {
+    const categoryLower = category.toLowerCase();
+    if (categoryLower.includes('bitcoin')) {
+      return 'https://images.unsplash.com/photo-1518546305927-5a555bb7020d?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80';
+    } else if (categoryLower.includes('ethereum')) {
+      return 'https://images.unsplash.com/photo-1621761191319-c6fb62004040?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80';
+    } else if (categoryLower.includes('exchange')) {
+      return 'https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80';
+    } else if (categoryLower.includes('defi')) {
+      return 'https://images.unsplash.com/photo-1639762681057-408e52192e55?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80';
+    } else if (categoryLower.includes('nft')) {
+      return 'https://images.unsplash.com/photo-1620321023374-d1a68fbc720d?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80';
+    }
+    return 'https://images.unsplash.com/photo-1621504450181-5fdb1eaeb4c8?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80';
   };
 
   return (
@@ -142,58 +187,81 @@ export default function CryptoNewsFeed() {
         </div>
       </div>
       
-      <motion.div 
-        className="grid gap-6 md:grid-cols-2 lg:grid-cols-4"
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
-        key={activeCategory} // Re-render animation when category changes
-      >
-        {displayedNews.map((news, index) => (
-          <motion.a
-            key={index}
-            href={news.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-gray-800/50 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group"
-            variants={itemVariants}
-          >
-            <div className="relative h-40 overflow-hidden">
-              <img 
-                src={news.image} 
-                alt={news.title}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-70"></div>
-              <div className="absolute bottom-3 left-3 bg-blue-500 text-white text-xs px-2 py-1 rounded-full">
-                {categories.find(c => c.id === news.category)?.label || news.category}
-              </div>
-            </div>
+      {loading ? (
+        <div className="flex justify-center items-center py-20">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+      ) : error ? (
+        <div className="text-center py-10">
+          <AlertTriangle size={48} className="mx-auto text-yellow-500 mb-4" />
+          <p className="text-gray-300">{error}</p>
+        </div>
+      ) : news.length === 0 ? (
+        <div className="text-center py-10">
+          <p className="text-gray-300">No news available for this category. Try another one.</p>
+        </div>
+      ) : (
+        <motion.div 
+          className="grid gap-6 md:grid-cols-2 lg:grid-cols-4"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          key={activeCategory} // Re-render animation when category changes
+        >
+          {displayedNews.map((newsItem, index) => {
+            const category = getCategoryLabel(newsItem);
+            const imageUrl = newsItem.metadata?.image?.url || getPlaceholderImage(category);
             
-            <div className="p-4">
-              <h3 className="font-semibold mb-2 group-hover:text-blue-400 transition-colors">
-                {news.title}
-              </h3>
-              
-              <div className="flex items-center justify-between text-sm text-gray-400">
-                <span>{news.source}</span>
-                <div className="flex items-center">
-                  <Clock size={14} className="mr-1" />
-                  <span>{news.timeAgo}</span>
+            return (
+              <motion.a
+                key={newsItem.id}
+                href={newsItem.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-gray-800/50 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group"
+                variants={itemVariants}
+              >
+                <div className="relative h-40 overflow-hidden">
+                  <img 
+                    src={imageUrl}
+                    alt={newsItem.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    onError={(e) => {
+                      e.target.src = getPlaceholderImage(category);
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-70"></div>
+                  <div className="absolute bottom-3 left-3 bg-blue-500 text-white text-xs px-2 py-1 rounded-full">
+                    {category}
+                  </div>
                 </div>
-              </div>
-            </div>
-            
-            <div className="px-4 pb-4 flex items-center text-sm text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity">
-              <span className="mr-1">Read more</span>
-              <ExternalLink size={14} />
-            </div>
-          </motion.a>
-        ))}
-      </motion.div>
+                
+                <div className="p-4">
+                  <h3 className="font-semibold mb-2 group-hover:text-blue-400 transition-colors">
+                    {newsItem.title}
+                  </h3>
+                  
+                  <div className="flex items-center justify-between text-sm text-gray-400">
+                    <span>{new URL(newsItem.url).hostname.replace('www.', '')}</span>
+                    <div className="flex items-center">
+                      <Clock size={14} className="mr-1" />
+                      <span>{formatTimeAgo(newsItem.published_at)}</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="px-4 pb-4 flex items-center text-sm text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span className="mr-1">Read more</span>
+                  <ExternalLink size={14} />
+                </div>
+              </motion.a>
+            );
+          })}
+        </motion.div>
+      )}
       
-      {filteredNews.length > 4 && (
+      {!loading && !error && news.length > 4 && (
         <div className="text-center mt-8">
           <motion.button
             whileHover={{ scale: 1.05 }}
