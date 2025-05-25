@@ -13,6 +13,7 @@ import ExchangeProsConsCards from '../components/ExchangeProsConsCards';
 import BeginnersGuide from '../components/BeginnersGuide';
 import CookieConsent from '../components/CookieConsent';
 import ParticleBackground from '../components/ParticleBackground';
+import Footer from '../components/Footer';
 import { useMemo } from 'react';
 
 export default function HomePage() {
@@ -532,35 +533,7 @@ export default function HomePage() {
         </div>
         
         {/* Footer */}
-        <footer className="px-6 md:px-16 py-8 text-center text-sm text-gray-500 bg-black border-t border-gray-800">
-          <div className="max-w-7xl mx-auto">
-            <div className="flex flex-col md:flex-row justify-between items-center">
-              <div>
-                © 2025 1ewis.com — All Rights Reserved
-              </div>
-              <div className="flex items-center space-x-4 mt-4 md:mt-0">
-                <a 
-                  href="https://github.com/1ewis96/1ewis" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex items-center hover:text-gray-300 transition-colors duration-200"
-                >
-                  <Github className="w-5 h-5 mr-2" />
-                  GitHub
-                </a>
-                <a 
-                  href="https://x.com/1ewis_" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex items-center hover:text-gray-300 transition-colors duration-200"
-                >
-                  <Twitter className="w-5 h-5 mr-2" />
-                  Twitter
-                </a>
-              </div>
-            </div>
-          </div>
-        </footer>
+        <Footer />
       </main>
       
       {/* Cookie Consent Banner */}
