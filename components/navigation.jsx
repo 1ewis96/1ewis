@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Menu, X, ChevronDown } from 'lucide-react';
+import { Menu, X, ChevronDown, Sparkles, Zap, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [pastPriceTicker, setPastPriceTicker] = useState(false);
   const [exchangesOpen, setExchangesOpen] = useState(false);
   const [walletsOpen, setWalletsOpen] = useState(false);
   const [cardsOpen, setCardsOpen] = useState(false);
@@ -16,6 +17,14 @@ export default function Navigation() {
   useEffect(() => {
     const handleScroll = () => {
       const offset = window.scrollY;
+      // Check if we've scrolled past the price ticker (approximately 36px height)
+      if (offset > 36) {
+        setPastPriceTicker(true);
+      } else {
+        setPastPriceTicker(false);
+      }
+      
+      // General scrolled state for visual effects
       if (offset > 50) {
         setScrolled(true);
       } else {
@@ -74,17 +83,42 @@ export default function Navigation() {
 
   return (
     <motion.nav 
-      className={`fixed w-full py-3 px-6 md:px-16 ${scrolled ? 'top-0' : 'top-8'} left-0 z-50 transition-all duration-300 ${scrolled ? 'bg-black/80 backdrop-blur-md shadow-lg' : 'bg-transparent'}`}
+      className={`fixed w-full py-3 px-6 md:px-16 ${scrolled ? 'top-0' : 'top-8'} left-0 z-50 transition-all duration-300 ${scrolled ? 'bg-black/90 backdrop-blur-md shadow-xl border-b border-white/10' : 'bg-transparent'}`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
+      style={{ marginTop: pastPriceTicker ? '0' : '36px' }} // Dynamic margin based on scroll position
     >
       <div className="flex justify-between items-center max-w-7xl mx-auto">
-        <Link href="/" className="relative group">
-          <span className="font-bold text-2xl bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
-            1ewis.com
-          </span>
-          <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-600 transition-all duration-300 group-hover:w-full"></span>
+        <Link href="/" className="relative group flex items-center">
+          <motion.div
+            className="mr-1 text-yellow-400"
+            animate={{ rotate: [0, 15, -15, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <Sparkles size={18} />
+          </motion.div>
+          <div className="flex flex-col">
+            <span className="font-bold text-2xl bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
+              1ewis.com
+            </span>
+            <span className="text-xs text-gray-400 font-medium mt-0.5 text-center">
+              Your home for exclusive crypto deals
+            </span>
+          </div>
+          <motion.span 
+            className="absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500"
+            initial={{ width: 0 }}
+            animate={{ width: isMenuOpen ? "100%" : 0 }}
+            exit={{ width: 0 }}
+            transition={{ duration: 0.3 }}
+          />
+          <motion.span 
+            className="absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500"
+            initial={{ width: 0 }}
+            whileHover={{ width: "100%" }}
+            transition={{ duration: 0.3 }}
+          />
         </Link>
         
         {/* Desktop Navigation */}
@@ -93,12 +127,18 @@ export default function Navigation() {
             <Link 
               key={item.path} 
               href={item.path}
-              className={`relative px-4 py-2 rounded-md transition-all duration-300 ${
+              className={`relative px-4 py-2 rounded-md transition-all duration-300 group ${
                 isActive(item.path) 
-                  ? 'text-white font-medium' 
+                  ? 'text-white font-medium bg-white/5' 
                   : 'text-gray-300 hover:text-white hover:bg-white/10'
               }`}
             >
+              <motion.span
+                className="absolute inset-0 rounded-md bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100"
+                initial={{ scale: 0.8 }}
+                whileHover={{ scale: 1 }}
+                transition={{ duration: 0.2 }}
+              />
               {isActive(item.path) && (
                 <motion.span 
                   className="absolute inset-0 bg-white/10 rounded-md z-0" 
@@ -114,13 +154,26 @@ export default function Navigation() {
           
           {/* Exchanges Dropdown */}
           <div className="relative">
-            <button 
-              className={`flex items-center px-4 py-2 rounded-md transition-all duration-300 ${exchangesOpen || exchangeItems.some(item => isActive(item.path)) ? 'text-white bg-white/10' : 'text-gray-300 hover:text-white hover:bg-white/10'}`}
+            <motion.button 
               onClick={() => setExchangesOpen(!exchangesOpen)}
+              className="flex items-center px-4 py-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-md transition-all duration-300 relative group"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
+              <motion.span
+                className="absolute inset-0 rounded-md bg-gradient-to-r from-yellow-500/20 to-orange-500/20 opacity-0 group-hover:opacity-100"
+                initial={{ scale: 0.8 }}
+                whileHover={{ scale: 1 }}
+                transition={{ duration: 0.2 }}
+              />
               <span>Exchanges</span>
-              <ChevronDown className={`ml-1 w-4 h-4 transition-transform duration-300 ${exchangesOpen ? 'rotate-180' : ''}`} />
-            </button>
+              <motion.div
+                animate={{ rotate: exchangesOpen ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <ChevronDown className="ml-1 w-4 h-4" />
+              </motion.div>
+            </motion.button>
             
             <AnimatePresence>
               {exchangesOpen && (
@@ -160,28 +213,41 @@ export default function Navigation() {
           
           {/* Wallets Dropdown */}
           <div className="relative">
-            <button 
-              className={`flex items-center px-4 py-2 rounded-md transition-all duration-300 ${walletItems.some(item => isActive(item.path)) ? 'text-white bg-white/10' : 'text-gray-300 hover:text-white hover:bg-white/10'}`}
+            <motion.button 
               onClick={() => setWalletsOpen(!walletsOpen)}
+              className="flex items-center px-4 py-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-md transition-all duration-300 relative group"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
+              <motion.span
+                className="absolute inset-0 rounded-md bg-gradient-to-r from-blue-500/20 to-cyan-500/20 opacity-0 group-hover:opacity-100"
+                initial={{ scale: 0.8 }}
+                whileHover={{ scale: 1 }}
+                transition={{ duration: 0.2 }}
+              />
               <span>Wallets</span>
-              <ChevronDown className={`ml-1 w-4 h-4 transition-transform duration-300 ${walletsOpen ? 'rotate-180' : ''}`} />
-            </button>
+              <motion.div
+                animate={{ rotate: walletsOpen ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <ChevronDown className="ml-1 w-4 h-4" />
+              </motion.div>
+            </motion.button>
             
             <AnimatePresence>
               {walletsOpen && (
                 <motion.div 
-                  className="absolute top-full right-0 mt-2 w-48 bg-gray-900/95 backdrop-blur-md rounded-lg overflow-hidden border border-gray-800 shadow-xl"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.2 }}
+                  className="absolute left-0 mt-2 w-48 rounded-md shadow-xl bg-gray-900/95 backdrop-blur-sm ring-1 ring-white/10 overflow-hidden z-50 border border-blue-500/20"
+                  initial={{ opacity: 0, y: -10, height: 0 }}
+                  animate={{ opacity: 1, y: 0, height: 'auto' }}
+                  exit={{ opacity: 0, y: -10, height: 0 }}
+                  transition={{ duration: 0.3 }}
                 >
                   {walletItems.map((item) => (
                     <Link 
                       key={item.path} 
                       href={item.path}
-                      className={`block px-4 py-3 transition-colors border-l-2 ${isActive(item.path) ? `border-${item.color}-500 bg-gray-800/50 text-white` : `border-transparent hover:border-${item.color}-500 text-gray-300 hover:bg-gray-800/30 hover:text-white`}`}
+                      className={`block px-4 py-3 transition-colors border-l-2 ${isActive(item.path) ? `border-${item.color}-500 bg-white/5 text-white font-medium` : `border-transparent text-gray-300 hover:border-${item.color}-500 hover:bg-white/5 hover:text-white`}`}
                       onClick={() => setWalletsOpen(false)}
                     >
                       {item.name}
@@ -194,28 +260,41 @@ export default function Navigation() {
           
           {/* Cards Dropdown */}
           <div className="relative">
-            <button 
-              className={`flex items-center px-4 py-2 rounded-md transition-all duration-300 ${cardItems.some(item => isActive(item.path)) ? 'text-white bg-white/10' : 'text-gray-300 hover:text-white hover:bg-white/10'}`}
+            <motion.button 
               onClick={() => setCardsOpen(!cardsOpen)}
+              className="flex items-center px-4 py-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-md transition-all duration-300 relative group"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
+              <motion.span
+                className="absolute inset-0 rounded-md bg-gradient-to-r from-green-500/20 to-emerald-500/20 opacity-0 group-hover:opacity-100"
+                initial={{ scale: 0.8 }}
+                whileHover={{ scale: 1 }}
+                transition={{ duration: 0.2 }}
+              />
               <span>Cards</span>
-              <ChevronDown className={`ml-1 w-4 h-4 transition-transform duration-300 ${cardsOpen ? 'rotate-180' : ''}`} />
-            </button>
+              <motion.div
+                animate={{ rotate: cardsOpen ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <ChevronDown className="ml-1 w-4 h-4" />
+              </motion.div>
+            </motion.button>
             
             <AnimatePresence>
               {cardsOpen && (
                 <motion.div 
-                  className="absolute top-full right-0 mt-2 w-48 bg-gray-900/95 backdrop-blur-md rounded-lg overflow-hidden border border-gray-800 shadow-xl"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.2 }}
+                  className="absolute left-0 mt-2 w-48 rounded-md shadow-xl bg-gray-900/95 backdrop-blur-sm ring-1 ring-white/10 overflow-hidden z-50 border border-yellow-500/20"
+                  initial={{ opacity: 0, y: -10, height: 0 }}
+                  animate={{ opacity: 1, y: 0, height: 'auto' }}
+                  exit={{ opacity: 0, y: -10, height: 0 }}
+                  transition={{ duration: 0.3 }}
                 >
                   {cardItems.map((item) => (
                     <Link 
                       key={item.path} 
                       href={item.path}
-                      className={`block px-4 py-3 transition-colors border-l-2 ${isActive(item.path) ? `border-${item.color}-500 bg-gray-800/50 text-white` : `border-transparent hover:border-${item.color}-500 text-gray-300 hover:bg-gray-800/30 hover:text-white`}`}
+                      className={`block px-4 py-3 transition-colors border-l-2 ${isActive(item.path) ? `border-${item.color}-500 bg-white/5 text-white font-medium` : `border-transparent text-gray-300 hover:border-${item.color}-500 hover:bg-white/5 hover:text-white`}`}
                       onClick={() => setCardsOpen(false)}
                     >
                       {item.name}
@@ -228,28 +307,41 @@ export default function Navigation() {
           
           {/* Tools Dropdown */}
           <div className="relative">
-            <button 
-              className={`flex items-center px-4 py-2 rounded-md transition-all duration-300 ${toolItems.some(item => isActive(item.path)) ? 'text-white bg-white/10' : 'text-gray-300 hover:text-white hover:bg-white/10'}`}
+            <motion.button 
               onClick={() => setToolsOpen(!toolsOpen)}
+              className="flex items-center px-4 py-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-md transition-all duration-300 relative group"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
+              <motion.span
+                className="absolute inset-0 rounded-md bg-gradient-to-r from-purple-500/20 to-pink-500/20 opacity-0 group-hover:opacity-100"
+                initial={{ scale: 0.8 }}
+                whileHover={{ scale: 1 }}
+                transition={{ duration: 0.2 }}
+              />
               <span>Tools</span>
-              <ChevronDown className={`ml-1 w-4 h-4 transition-transform duration-300 ${toolsOpen ? 'rotate-180' : ''}`} />
-            </button>
+              <motion.div
+                animate={{ rotate: toolsOpen ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <ChevronDown className="ml-1 w-4 h-4" />
+              </motion.div>
+            </motion.button>
             
             <AnimatePresence>
               {toolsOpen && (
                 <motion.div 
-                  className="absolute top-full right-0 mt-2 w-48 bg-gray-900/95 backdrop-blur-md rounded-lg overflow-hidden border border-gray-800 shadow-xl"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.2 }}
+                  className="absolute left-0 mt-2 w-48 rounded-md shadow-xl bg-gray-900/95 backdrop-blur-sm ring-1 ring-white/10 overflow-hidden z-50 border border-purple-500/20"
+                  initial={{ opacity: 0, y: -10, height: 0 }}
+                  animate={{ opacity: 1, y: 0, height: 'auto' }}
+                  exit={{ opacity: 0, y: -10, height: 0 }}
+                  transition={{ duration: 0.3 }}
                 >
                   {toolItems.map((item) => (
                     <Link 
                       key={item.path} 
                       href={item.path}
-                      className={`block px-4 py-3 transition-colors border-l-2 ${isActive(item.path) ? `border-${item.color}-500 bg-gray-800/50 text-white` : `border-transparent hover:border-${item.color}-500 text-gray-300 hover:bg-gray-800/30 hover:text-white`}`}
+                      className={`block px-4 py-3 transition-colors border-l-2 ${isActive(item.path) ? `border-${item.color}-500 bg-white/5 text-white font-medium` : `border-transparent text-gray-300 hover:border-${item.color}-500 hover:bg-white/5 hover:text-white`}`}
                       onClick={() => setToolsOpen(false)}
                     >
                       {item.name}
@@ -262,35 +354,26 @@ export default function Navigation() {
         </div>
         
         {/* Mobile Menu Button */}
-        <button 
-          className="md:hidden relative z-50 w-10 h-10 flex items-center justify-center text-gray-300 hover:text-white focus:outline-none"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-        >
-          <span className="sr-only">Menu</span>
-          <AnimatePresence mode="wait">
-            {isMenuOpen ? (
-              <motion.div
-                key="close"
-                initial={{ rotate: -90, opacity: 0 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                exit={{ rotate: 90, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                <X size={24} />
-              </motion.div>
-            ) : (
-              <motion.div
-                key="menu"
-                initial={{ rotate: 90, opacity: 0 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                exit={{ rotate: -90, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                <Menu size={24} />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </button>
+        <div className="md:hidden">
+          <motion.button 
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="p-2 text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white rounded-md"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <motion.div
+              initial={false}
+              animate={{ rotate: isMenuOpen ? 90 : 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              {isMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
+            </motion.div>
+          </motion.button>
+        </div>
       </div>
       
       {/* Mobile Navigation */}

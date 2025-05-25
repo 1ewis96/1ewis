@@ -1,0 +1,128 @@
+{
+  "exchanges": {
+    "binance": {
+      "name": "Binance",
+      "description": "Top global exchange with low fees",
+      "referralLink": "",
+      "referralCode": "",
+      "bonusDetails": "Up to 100 USDT + 20% fee discount",
+      "color": "yellow"
+    },
+    "bybit": {
+      "name": "Bybit",
+      "description": "Best for futures trading & bonuses",
+      "referralLink": "",
+      "referralCode": "",
+      "bonusDetails": "Up to $30,000 in rewards",
+      "color": "blue"
+    },
+    "kraken": {
+      "name": "Kraken",
+      "description": "Trusted, US-compliant crypto platform",
+      "referralLink": "",
+      "referralCode": "",
+      "bonusDetails": "$10 in BTC for $100+ trade",
+      "color": "purple"
+    },
+    "okx": {
+      "name": "OKX",
+      "description": "Advanced tools and Web3 wallet integration",
+      "referralLink": "",
+      "referralCode": "",
+      "bonusDetails": "Up to $10,000 mystery box",
+      "color": "green"
+    },
+    "kucoin": {
+      "name": "KuCoin",
+      "description": "The People's Exchange with vast altcoin selection",
+      "referralLink": "",
+      "referralCode": "",
+      "bonusDetails": "Up to $500 in rewards",
+      "color": "teal"
+    },
+    "gateio": {
+      "name": "Gate.io",
+      "description": "Comprehensive exchange with advanced tools",
+      "referralLink": "",
+      "referralCode": "",
+      "bonusDetails": "Up to 40% commission rebate",
+      "color": "blue"
+    },
+    "mexc": {
+      "name": "MEXC",
+      "description": "Early access to promising cryptocurrencies",
+      "referralLink": "",
+      "referralCode": "",
+      "bonusDetails": "Up to $1,700 in rewards",
+      "color": "red"
+    },
+    "bitget": {
+      "name": "Bitget",
+      "description": "Leading copy trading platform with low fees",
+      "referralLink": "",
+      "referralCode": "",
+      "bonusDetails": "15% fee discount + $5,000 bonus",
+      "color": "purple"
+    },
+    "coinex": {
+      "name": "CoinEx",
+      "description": "Zero-fee trading with fast transactions",
+      "referralLink": "",
+      "referralCode": "",
+      "bonusDetails": "Up to $5,000 in rewards",
+      "color": "green"
+    }
+  },
+  "wallets": {
+    "ledger": {
+      "name": "Ledger",
+      "description": "Industry-leading hardware wallet for secure crypto storage",
+      "referralLink": "https://shop.ledger.com/?r=e1060ced3e99",
+      "referralCode": "e1060ced3e99",
+      "bonusDetails": "Special discount for referred customers",
+      "color": "black"
+    },
+    "metamask": {
+      "name": "MetaMask",
+      "description": "The leading self-custody wallet for Web3 access",
+      "referralLink": "",
+      "referralCode": "",
+      "bonusDetails": "",
+      "color": "orange"
+    }
+  },
+  "tools": {
+    "tradingview": {
+      "name": "TradingView",
+      "description": "Professional-grade charting tools for market analysis",
+      "referralLink": "",
+      "referralCode": "",
+      "bonusDetails": "",
+      "color": "indigo"
+    },
+    "cointracking": {
+      "name": "CoinTracking",
+      "description": "Track your portfolio and optimize your taxes",
+      "referralLink": "",
+      "referralCode": "",
+      "bonusDetails": "",
+      "color": "violet"
+    },
+    "nordvpn": {
+      "name": "NordVPN",
+      "description": "Secure your crypto activities with the world's leading VPN",
+      "referralLink": "",
+      "referralCode": "",
+      "bonusDetails": "",
+      "color": "blue"
+    },
+    "debank": {
+      "name": "DeBank",
+      "description": "All-in-one DeFi portfolio tracker",
+      "referralLink": "",
+      "referralCode": "",
+      "bonusDetails": "",
+      "color": "rose"
+    }
+  }
+}

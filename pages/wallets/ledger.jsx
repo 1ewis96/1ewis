@@ -1,13 +1,15 @@
 import { Button, ButtonLink } from "../../components/ui/button";
-import { ArrowRight, ChevronDown, Shield, Zap, BarChart, Wallet, Github, Twitter } from "lucide-react";
+import { ArrowRight, ChevronDown, Shield, Zap, BarChart, Wallet, Github, Twitter, ExternalLink } from "lucide-react";
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import PriceTicker from '../../components/PriceTicker';
 import AnimatedFeatures from '../../components/AnimatedFeatures';
 import { useState } from 'react';
+import { getWalletReferral } from '../../utils/referralLinks';
 
 export default function LedgerPage() {
   const [showMore, setShowMore] = useState(false);
+  const ledgerReferral = getWalletReferral('ledger');
   
   const features = [
     {
@@ -178,18 +180,32 @@ export default function LedgerPage() {
           viewport={{ once: true }}
         >
           <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to Secure Your Crypto?</h2>
-          <p className="text-gray-300 max-w-2xl mx-auto mb-8">
+          <p className="text-gray-300 max-w-2xl mx-auto mb-6">
             Get your Ledger hardware wallet today and enjoy peace of mind knowing your assets are protected. Use my referral link to support this site.
           </p>
+          
+          {/* Referral Badge */}
+          <div className="bg-gray-800/70 rounded-lg py-3 px-4 mb-6 inline-block">
+            <p className="text-sm text-gray-300 flex items-center">
+              <span className="bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded mr-2">AFFILIATE LINK</span>
+              Special discount available through this referral
+            </p>
+          </div>
+          
           <ButtonLink 
-            href="https://shop.ledger.com/?r=YOUR_REF_CODE" 
-            className="bg-gray-600 hover:bg-gray-700 text-white px-8 py-3 text-lg rounded-lg"
+            href={ledgerReferral.referralLink} 
+            className="bg-gray-600 hover:bg-gray-500 text-white px-8 py-3 text-lg rounded-lg transition-colors duration-300 shadow-lg hover:shadow-gray-700/30"
             target="_blank"
+            rel="noopener noreferrer"
           >
             <span className="flex items-center justify-center">
-              Shop Ledger Wallets <ArrowRight className="ml-2 w-5 h-5" />
+              Shop Ledger Wallets <ExternalLink className="ml-2 w-4 h-4" />
             </span>
           </ButtonLink>
+          
+          <p className="text-xs text-gray-500 mt-4">
+            Referral Code: {ledgerReferral.referralCode}
+          </p>
         </motion.div>
       </div>
 

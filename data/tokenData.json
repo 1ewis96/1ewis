@@ -1,0 +1,264 @@
+{
+  "tokens": {
+    "BTC": {
+      "name": "Bitcoin",
+      "symbol": "BTC",
+      "description": "The original cryptocurrency and largest by market cap. Bitcoin operates on a decentralized network using blockchain technology.",
+      "bestExchanges": [
+        {
+          "id": "binance",
+          "reason": "Highest liquidity and lowest trading fees"
+        },
+        {
+          "id": "kraken",
+          "reason": "Best for security and regulated trading"
+        },
+        {
+          "id": "bybit",
+          "reason": "Excellent for futures trading with high leverage"
+        }
+      ],
+      "keyFeatures": [
+        "Limited supply of 21 million coins",
+        "Proof-of-Work consensus mechanism",
+        "Store of value ('digital gold')",
+        "Decentralized with no central authority"
+      ],
+      "color": "orange"
+    },
+    "ETH": {
+      "name": "Ethereum",
+      "symbol": "ETH",
+      "description": "A decentralized software platform that enables smart contracts and decentralized applications (dApps) to be built and run without downtime, fraud, control, or interference from a third party.",
+      "bestExchanges": [
+        {
+          "id": "binance",
+          "reason": "Highest ETH trading volume and staking options"
+        },
+        {
+          "id": "kraken",
+          "reason": "Secure ETH staking with good yields"
+        },
+        {
+          "id": "okx",
+          "reason": "Great for ETH derivatives and DeFi access"
+        }
+      ],
+      "keyFeatures": [
+        "Smart contract functionality",
+        "Proof-of-Stake consensus (post-Merge)",
+        "Foundation for DeFi and NFTs",
+        "Programmable blockchain"
+      ],
+      "color": "blue"
+    },
+    "SOL": {
+      "name": "Solana",
+      "symbol": "SOL",
+      "description": "Solana is a high-performance blockchain supporting builders around the world creating crypto apps that scale. It's known for its fast transactions and low fees.",
+      "bestExchanges": [
+        {
+          "id": "bybit",
+          "reason": "Best SOL futures trading with high leverage"
+        },
+        {
+          "id": "binance",
+          "reason": "Highest SOL spot liquidity and staking options"
+        },
+        {
+          "id": "okx",
+          "reason": "Great SOL ecosystem integration with Web3 wallet"
+        }
+      ],
+      "keyFeatures": [
+        "High throughput (65,000+ TPS)",
+        "Low transaction costs",
+        "Proof-of-History consensus mechanism",
+        "Growing DeFi and NFT ecosystem"
+      ],
+      "color": "purple"
+    },
+    "USDT": {
+      "name": "Tether",
+      "symbol": "USDT",
+      "description": "Tether (USDT) is a stablecoin pegged to the US dollar, designed to maintain a 1:1 value ratio. It's widely used for trading and moving funds between exchanges.",
+      "bestExchanges": [
+        {
+          "id": "binance",
+          "reason": "Highest USDT trading pairs and liquidity"
+        },
+        {
+          "id": "bybit",
+          "reason": "Great for USDT-margined futures contracts"
+        },
+        {
+          "id": "kucoin",
+          "reason": "Good for trading smaller altcoins with USDT pairs"
+        }
+      ],
+      "keyFeatures": [
+        "1:1 USD pegged stablecoin",
+        "Available on multiple blockchains (Ethereum, Tron, Solana, etc.)",
+        "High trading volume and liquidity",
+        "Used for trading, remittances, and DeFi"
+      ],
+      "color": "green"
+    },
+    "BNB": {
+      "name": "Binance Coin",
+      "symbol": "BNB",
+      "description": "Binance Coin (BNB) is the native cryptocurrency of the Binance exchange and BNB Chain ecosystem. It's used for trading fee discounts, payments, and various applications within the Binance ecosystem.",
+      "bestExchanges": [
+        {
+          "id": "binance",
+          "reason": "Native token with best liquidity and utility"
+        },
+        {
+          "id": "kucoin",
+          "reason": "Good alternative for BNB trading"
+        },
+        {
+          "id": "gate",
+          "reason": "Competitive fees for BNB trading"
+        }
+      ],
+      "keyFeatures": [
+        "Trading fee discounts on Binance",
+        "Powers the BNB Chain ecosystem",
+        "Regular token burns to reduce supply",
+        "Used for token sales on Binance Launchpad"
+      ],
+      "color": "yellow"
+    },
+    "XRP": {
+      "name": "XRP",
+      "symbol": "XRP",
+      "description": "XRP is the native cryptocurrency of the XRP Ledger, designed for payments and used by Ripple to facilitate cross-border transactions for financial institutions.",
+      "bestExchanges": [
+        {
+          "id": "kraken",
+          "reason": "Regulated exchange with strong XRP liquidity"
+        },
+        {
+          "id": "binance",
+          "reason": "Highest XRP trading volume globally"
+        },
+        {
+          "id": "kucoin",
+          "reason": "Good for XRP trading pairs with altcoins"
+        }
+      ],
+      "keyFeatures": [
+        "Fast settlement (3-5 seconds)",
+        "Low transaction costs",
+        "Designed for institutional payments",
+        "Energy-efficient consensus protocol"
+      ],
+      "color": "blue"
+    },
+    "ADA": {
+      "name": "Cardano",
+      "symbol": "ADA",
+      "description": "Cardano is a proof-of-stake blockchain platform that aims to enable 'changemakers, innovators and visionaries' to bring about positive global change.",
+      "bestExchanges": [
+        {
+          "id": "binance",
+          "reason": "Best liquidity and staking options for ADA"
+        },
+        {
+          "id": "kraken",
+          "reason": "Secure ADA staking with good yields"
+        },
+        {
+          "id": "kucoin",
+          "reason": "Good for trading ADA with various pairs"
+        }
+      ],
+      "keyFeatures": [
+        "Academically peer-reviewed development",
+        "Ouroboros proof-of-stake protocol",
+        "Focus on sustainability and scalability",
+        "Multi-layer architecture (settlement and computation)"
+      ],
+      "color": "teal"
+    },
+    "DOGE": {
+      "name": "Dogecoin",
+      "symbol": "DOGE",
+      "description": "Originally created as a joke, Dogecoin has evolved into a popular cryptocurrency with a dedicated community. It's known for its Shiba Inu dog logo and meme culture.",
+      "bestExchanges": [
+        {
+          "id": "binance",
+          "reason": "Highest DOGE trading volume and pairs"
+        },
+        {
+          "id": "kraken",
+          "reason": "Regulated and secure DOGE trading"
+        },
+        {
+          "id": "okx",
+          "reason": "Good for DOGE derivatives trading"
+        }
+      ],
+      "keyFeatures": [
+        "Inflationary supply (no cap)",
+        "Fast and low-cost transactions",
+        "Strong community and cultural presence",
+        "Used for tipping and charitable donations"
+      ],
+      "color": "yellow"
+    },
+    "DOT": {
+      "name": "Polkadot",
+      "symbol": "DOT",
+      "description": "Polkadot is a next-generation blockchain protocol connecting multiple specialized blockchains into a unified network, allowing them to operate seamlessly together.",
+      "bestExchanges": [
+        {
+          "id": "kraken",
+          "reason": "Best DOT staking options with good yields"
+        },
+        {
+          "id": "binance",
+          "reason": "Highest DOT liquidity and trading options"
+        },
+        {
+          "id": "kucoin",
+          "reason": "Good for DOT trading with various pairs"
+        }
+      ],
+      "keyFeatures": [
+        "Interoperability between blockchains",
+        "Shared security model (parachains)",
+        "On-chain governance",
+        "Scalable multi-chain architecture"
+      ],
+      "color": "pink"
+    },
+    "SHIB": {
+      "name": "Shiba Inu",
+      "symbol": "SHIB",
+      "description": "Shiba Inu is a decentralized meme token that evolved into a vibrant ecosystem. It was created as a 'Dogecoin killer' and has developed its own community and DeFi applications.",
+      "bestExchanges": [
+        {
+          "id": "binance",
+          "reason": "Highest SHIB liquidity and trading volume"
+        },
+        {
+          "id": "kucoin",
+          "reason": "Early listing of SHIB with good trading options"
+        },
+        {
+          "id": "okx",
+          "reason": "Strong SHIB ecosystem support with Web3 wallet"
+        }
+      ],
+      "keyFeatures": [
+        "Massive supply with token burns",
+        "ShibaSwap DEX platform",
+        "Strong community ('SHIB Army')",
+        "Expanding ecosystem (LEASH, BONE tokens)"
+      ],
+      "color": "red"
+    }
+  }
+}
