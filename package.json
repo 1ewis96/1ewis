@@ -18,7 +18,14 @@
     "postcss": "^8.4.32",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
-    "tailwind-merge": "^2.1.0"
+    "tailwind-merge": "^2.1.0",
+    "framer-motion": "^10.16.4",
+    "react-countup": "^6.4.2",
+    "react-intersection-observer": "^9.5.2",
+    "chart.js": "^4.4.0",
+    "react-chartjs-2": "^5.2.0",
+    "react-confetti": "^6.1.0",
+    "react-compare-slider": "^2.2.0"
   },
   "devDependencies": {
     "@types/node": "^20.10.4",
