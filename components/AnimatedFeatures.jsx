@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import { getBgColor, getTextColor, getBorderColor } from '../utils/colorUtils';
 
 export default function AnimatedFeatures({ features, color }) {
   const containerVariants = {
@@ -41,11 +42,11 @@ export default function AnimatedFeatures({ features, color }) {
             key={index}
             ref={ref}
             variants={itemVariants}
-            className={`bg-${color.split('-')[0]}-900/40 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-${color.split('-')[0]}-800 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group`}
+            className={`backdrop-blur-sm rounded-2xl p-6 shadow-lg border hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group ${color ? `${getBgColor(color.split('-')[0], '900', '/40')} ${getBorderColor(color.split('-')[0], '800')}` : 'bg-blue-900/40 border-blue-800'}`}
           >
             {feature.icon && (
               <motion.div 
-                className={`text-${color} mb-3`}
+                className={`${color ? getTextColor(color) : 'text-blue-400'} mb-3`}
                 initial={{ scale: 1 }}
                 animate={inView ? { scale: [1, 1.2, 1] } : { scale: 1 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}

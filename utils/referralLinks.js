@@ -9,6 +9,19 @@ export function getAllReferralLinks() {
 }
 
 /**
+ * Get referral link for any category and ID
+ * @param {string} category - The category (e.g., 'exchanges', 'wallets', 'tools', 'cards')
+ * @param {string} id - The ID of the item
+ * @returns {string} Referral link or empty string if not found
+ */
+export function getReferralLink(category, id) {
+  if (referralData[category] && referralData[category][id.toLowerCase()]) {
+    return referralData[category][id.toLowerCase()].referralLink || '';
+  }
+  return '';
+}
+
+/**
  * Get referral link for a specific exchange
  * @param {string} exchangeId - The ID of the exchange (e.g., 'binance', 'bybit')
  * @returns {Object} Exchange referral data or null if not found

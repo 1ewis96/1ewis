@@ -74,6 +74,14 @@
     }
   },
   "wallets": {
+    "youhodler": {
+      "name": "YouHodler",
+      "description": "Crypto lending platform with high-yield savings accounts",
+      "referralLink": "https://affiliates.youhodler.com/v2/sign/up?ref=5124",
+      "referralCode": "5124",
+      "bonusDetails": "Exclusive bonuses for new users",
+      "color": "teal"
+    },
     "ledger": {
       "name": "Ledger",
       "description": "Industry-leading hardware wallet for secure crypto storage",

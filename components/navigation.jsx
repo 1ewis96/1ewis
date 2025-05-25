@@ -85,13 +85,15 @@ export default function Navigation() {
   ];
   
   const walletItems = [
-    { name: 'MetaMask', path: '/wallets/metamask', color: 'orange' },
+    { name: 'YouHodler', path: '/wallets/youhodler', color: 'teal' },
     { name: 'Ledger', path: '/wallets/ledger', color: 'gray' },
+    { name: 'MetaMask', path: '/wallets/metamask', color: 'orange' },
     { name: 'Trezor', path: '/wallets/trezor', color: 'slate' },
     { name: 'Rabby', path: '/wallets/rabby', color: 'zinc' },
   ];
   
   const cardItems = [
+    { name: 'Revolut', path: '/cards/revolut', color: 'blue' },
     { name: 'Crypto.com', path: '/cards/crypto-com', color: 'blue' },
     { name: 'Wirex', path: '/cards/wirex', color: 'sky' },
     { name: 'Transak', path: '/cards/transak', color: 'cyan' },
@@ -110,11 +112,11 @@ export default function Navigation() {
 
   return (
     <motion.nav 
-      className={`fixed w-full py-3 px-6 md:px-16 ${scrolled ? 'top-0' : 'top-8'} left-0 z-50 transition-all duration-300 ${scrolled ? 'bg-black/90 backdrop-blur-md shadow-xl border-b border-white/10' : 'bg-transparent'}`}
+      className={`fixed w-full py-3 px-6 md:px-16 ${scrolled ? 'top-0' : 'top-0'} left-0 z-50 transition-all duration-300 ${scrolled ? 'bg-black/90 backdrop-blur-md shadow-xl border-b border-white/10' : 'bg-transparent'}`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
-      style={{ marginTop: pastPriceTicker ? '0' : '36px' }} // Dynamic margin based on scroll position
+      style={{ top: pastPriceTicker ? '0' : '36px' }} // Dynamic position based on scroll position
     >
       <div className="flex justify-between items-center max-w-7xl mx-auto">
         <Link href="/" className="relative group flex items-center">
