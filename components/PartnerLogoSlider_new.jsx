@@ -1,21 +1,18 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 export default function PartnerLogoSlider() {
   // Define partner logos with their names and paths
   const partnerLogos = [
-    { name: 'Bitrue', path: '/logos/bittrue.webp', color: 'blue', link: '/bitrue' },
-    { name: 'Ledger', path: '/logos/ledger.webp', color: 'black', link: '/wallets/ledger' },
-    { name: 'YouHodler', path: '/logos/youhodler.webp', color: 'teal', link: '/wallets/youhodler' },
-    { name: 'Revolut', path: '/logos/revolut.webp', color: 'blue', link: '/cards/revolut' },
-    { name: 'TradingView', path: '/logos/tradingview.webp', color: 'indigo', link: '/tools/tradingview' },
-    { name: 'CoinTracking', path: '/logos/cointracking.webp', color: 'violet', link: '/tools/cointracking' },
-    { name: 'NordVPN', path: '/logos/nordvpn.webp', color: 'blue', link: '/tools/nordvpn' },
-    { name: 'Trezor', path: '/logos/trezor.webp', color: 'slate', link: '/wallets/trezor' },
-    { name: 'Wirex', path: '/logos/wirex.webp', color: 'sky', link: '/cards/wirex' },
+    { name: 'Bitrue', path: '/logos/bittrue.webp', color: 'blue' },
+    { name: 'Ledger', path: '/logos/ledger.webp', color: 'black' },
+    { name: 'YouHodler', path: '/logos/youhodler.webp', color: 'teal' },
+    { name: 'Revolut', path: '/logos/revolut.webp', color: 'blue' },
+    { name: 'TradingView', path: '/logos/tradingview.webp', color: 'indigo' },
+    { name: 'CoinTracking', path: '/logos/cointracking.webp', color: 'violet' },
+    { name: 'NordVPN', path: '/logos/nordvpn.webp', color: 'blue' },
   ];
 
   // Fallback colors for logos in case the image fails to load
@@ -60,19 +57,17 @@ export default function PartnerLogoSlider() {
             <div key={`logo-1-${index}`} className="flex-shrink-0">
               <div className="w-24 h-12 flex items-center justify-center">
                 {imagesLoaded ? (
-                  <Link href={logo.link}>
-                    <Image 
-                      src={logo.path}
-                      alt={logo.name}
-                      width={96}
-                      height={48}
-                      className="max-h-10 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity cursor-pointer"
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                        e.target.nextSibling.style.display = 'flex';
-                      }}
-                    />
-                  </Link>
+                  <Image 
+                    src={logo.path}
+                    alt={logo.name}
+                    width={96}
+                    height={48}
+                    className="max-h-10 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'flex';
+                    }}
+                  />
                 ) : null}
                 <div className="hidden">{getLogoFallback(logo.name, logo.color)}</div>
               </div>
@@ -97,19 +92,17 @@ export default function PartnerLogoSlider() {
             <div key={`logo-2-${index}`} className="flex-shrink-0">
               <div className="w-24 h-12 flex items-center justify-center">
                 {imagesLoaded ? (
-                  <Link href={logo.link}>
-                    <Image 
-                      src={logo.path}
-                      alt={logo.name}
-                      width={96}
-                      height={48}
-                      className="max-h-10 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity cursor-pointer"
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                        e.target.nextSibling.style.display = 'flex';
-                      }}
-                    />
-                  </Link>
+                  <Image 
+                    src={logo.path}
+                    alt={logo.name}
+                    width={96}
+                    height={48}
+                    className="max-h-10 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'flex';
+                    }}
+                  />
                 ) : null}
                 <div className="hidden">{getLogoFallback(logo.name, logo.color)}</div>
               </div>

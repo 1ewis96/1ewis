@@ -9,7 +9,7 @@ import BonusCalculator from '../components/BonusCalculator';
 import ComparisonTable from '../components/ComparisonTable';
 import FaqSection from '../components/FaqSection';
 import CryptoNewsFeed from '../components/CryptoNewsFeed';
-import ExchangeProsConsCards from '../components/ExchangeProsConsCards';
+import ExchangeBenefitsCards from '../components/ExchangeBenefitsCards';
 import BeginnersGuide from '../components/BeginnersGuide';
 import CookieConsent from '../components/CookieConsent';
 import ParticleBackground from '../components/ParticleBackground';
@@ -268,15 +268,15 @@ export default function HomePage() {
                 transition={{ duration: 0.5 }}
               >
                 <h2 className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-400">
-                  Pros & Cons of Each Exchange
+                  Key Benefits of Each Exchange
                 </h2>
                 <p className="text-gray-400 max-w-2xl mx-auto">
-                  Make an informed decision with our balanced overview of the strengths and weaknesses of each platform.
+                  Make an informed decision with our overview of the key features and benefits of each platform.
                 </p>
               </motion.div>
             </div>
             
-            <ExchangeProsConsCards />
+            <ExchangeBenefitsCards />
           </div>
         </section>
 
@@ -385,20 +385,7 @@ export default function HomePage() {
           <div className="absolute bottom-1/4 left-1/4 w-1/4 h-1/4 bg-blue-500/10 rounded-full blur-[100px] -z-10"></div>
           
           <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-12">
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <h2 className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
-                  Latest Crypto News
-                </h2>
-                <p className="text-gray-400 max-w-2xl mx-auto">
-                  Stay updated with the latest developments in the cryptocurrency world.
-                </p>
-              </motion.div>
-            </div>
+
             
             <CryptoNewsFeed />
           </div>
@@ -451,26 +438,7 @@ export default function HomePage() {
           </div>
         </div>
         
-        {/* Bonus Calculator Section */}
-        <div className="px-6 md:px-16 py-16 bg-gradient-to-b from-gray-950 to-black">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-12">
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <h2 className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-400">
-                  Calculate Your Potential Bonuses
-                </h2>
-                <p className="text-gray-400 max-w-2xl mx-auto">
-                  See how much you can earn with our exclusive sign-up bonuses and referral programs.
-                </p>
-              </motion.div>
-            </div>
-            <BonusCalculator />
-          </div>
-        </div>
+
 
         {/* Call to Action */}
         <div className="px-6 md:px-16 py-16 text-center bg-black">

@@ -57,7 +57,8 @@ const ComparisonTable = () => {
 
   return (
     <div className="w-full overflow-hidden rounded-lg shadow-lg">
-      <div className="overflow-x-auto">
+      {/* Desktop View - Table */}
+      <div className="hidden lg:block overflow-x-auto">
         <table className="min-w-full bg-gray-900 border-collapse">
           <thead>
             <tr className="bg-gray-800 text-gray-200">
@@ -136,6 +137,70 @@ const ComparisonTable = () => {
             ))}
           </tbody>
         </table>
+      </div>
+      
+      {/* Mobile View - Cards */}
+      <div className="lg:hidden">
+        <div className="grid grid-cols-1 gap-6">
+          {displayedExchanges.map((exchange, index) => (
+            <motion.div
+              key={exchange.name}
+              className={`bg-gray-900 border border-gray-800 rounded-xl overflow-hidden hover:border-${exchange.color}-500/50 transition-all duration-300`}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05 }}
+            >
+              <div className={`px-6 py-4 border-b border-gray-800 bg-gradient-to-r from-gray-900 to-${exchange.color}-900/20`}>
+                <div className="flex items-center">
+                  <div className={`w-8 h-8 rounded-full mr-3 bg-${exchange.color}-500/20 flex items-center justify-center`}>
+                    <span className={`font-bold text-${exchange.color}-400`}>{exchange.name.charAt(0)}</span>
+                  </div>
+                  <h3 className={`text-xl font-bold text-${exchange.color}-400`}>{exchange.name}</h3>
+                </div>
+              </div>
+              
+              <div className="px-6 py-4 space-y-4">
+                <div>
+                  <p className="text-sm text-gray-500 mb-1">Spot Fees</p>
+                  <p className="font-medium">{exchange.spotFees}</p>
+                </div>
+                
+                <div>
+                  <p className="text-sm text-gray-500 mb-1">Futures Fees</p>
+                  <p className="font-medium">{exchange.futuresFees}</p>
+                </div>
+                
+                <div>
+                  <p className="text-sm text-gray-500 mb-1">Cryptocurrencies</p>
+                  <p className="font-medium">{exchange.cryptoCount}</p>
+                </div>
+                
+                <div>
+                  <p className="text-sm text-gray-500 mb-1">Key Features</p>
+                  <ul className="list-disc list-inside text-sm">
+                    {exchange.features.map((feature, i) => (
+                      <li key={i} className="text-gray-400">{feature}</li>
+                    ))}
+                  </ul>
+                </div>
+                
+                <div>
+                  <p className="text-sm text-gray-500 mb-1">Sign-up Bonus</p>
+                  <p className={`text-${exchange.color}-400 font-medium`}>{exchange.bonus}</p>
+                </div>
+              </div>
+              
+              <div className="px-6 py-4 border-t border-gray-800">
+                <a 
+                  href={exchange.link} 
+                  className={`block w-full text-center px-4 py-2 rounded-md bg-${exchange.color}-500/20 text-${exchange.color}-400 hover:bg-${exchange.color}-500/30 transition-colors`}
+                >
+                  View Deal
+                </a>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
       
       {exchanges.length > 4 && (

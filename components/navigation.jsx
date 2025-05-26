@@ -400,6 +400,18 @@ export default function Navigation() {
             exit={{ opacity: 0, x: '100%' }}
             transition={{ duration: 0.3, ease: 'easeInOut' }}
           >
+            {/* Close button in top-right corner */}
+            <motion.button
+              className="absolute top-6 right-6 p-2 rounded-full bg-gray-800/70 text-white z-50"
+              onClick={() => setIsMenuOpen(false)}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              <X className="w-5 h-5" />
+            </motion.button>
             <div className="flex flex-col space-y-1 p-6 pb-24">
               {mainNavItems.map((item) => (
                 <motion.div
