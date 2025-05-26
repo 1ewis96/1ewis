@@ -13,9 +13,9 @@
     "youhodler": {
       "name": "YouHodler",
       "description": "Crypto lending platform with high-yield savings accounts",
-      "referralLink": "https://affiliates.youhodler.com/v2/sign/up?ref=5124",
-      "referralCode": "5124",
-      "bonusDetails": "Exclusive bonuses for new users",
+      "referralLink": "https://www.youhodler.com",
+      "referralCode": "",
+      "bonusDetails": "Earn up to 13% APY on your crypto assets",
       "color": "teal"
     },
     "ledger": {
@@ -65,9 +65,17 @@
     "nordvpn": {
       "name": "NordVPN",
       "description": "Secure your crypto activities with the world's leading VPN",
-      "referralLink": "",
-      "referralCode": "",
-      "bonusDetails": "",
+      "referralLink": "https://go.nordvpn.net/aff_c?offer_id=15&aff_id=124233&url_id=902",
+      "referralCode": "124233",
+      "bonusDetails": "72% off NordVPN with 30-day money-back guarantee",
+      "color": "blue"
+    },
+    "nordpass": {
+      "name": "NordPass",
+      "description": "Secure password manager from the makers of NordVPN",
+      "referralLink": "https://go.nordpass.io/aff_c?offer_id=488&aff_id=124233&url_id=9356",
+      "referralCode": "124233",
+      "bonusDetails": "50% savings on NordPass Premium",
       "color": "blue"
     }
   }

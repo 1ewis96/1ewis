@@ -79,7 +79,6 @@ export default function Navigation() {
     { name: 'YouHodler', path: '/wallets/youhodler', color: 'teal' },
     { name: 'Ledger', path: '/wallets/ledger', color: 'gray' },
     { name: 'MetaMask', path: '/wallets/metamask', color: 'orange' },
-    { name: 'Trezor', path: '/wallets/trezor', color: 'slate' },
   ];
   
   const cardItems = [
