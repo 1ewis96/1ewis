@@ -11,7 +11,7 @@ const BeginnersGuide = () => {
       id: 1,
       title: "Choose the Right Exchange",
       icon: <HelpCircle className="w-6 h-6" />,
-      content: "Selecting the right exchange is crucial for your crypto journey. Consider factors like fees, available cryptocurrencies, security features, and user interface. For beginners, we recommend Binance or Bybit for their comprehensive features and user-friendly interfaces.",
+      content: "Selecting the right exchange is crucial for your crypto journey. Consider factors like fees, available cryptocurrencies, security features, and user interface. For beginners, we recommend Bitrue for its comprehensive features, user-friendly interface, and excellent XRP trading options.",
       cta: {
         text: "Compare Exchanges",
         link: "#comparison-table"

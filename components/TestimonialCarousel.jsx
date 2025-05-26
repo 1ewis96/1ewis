@@ -6,41 +6,41 @@ const testimonials = [
   {
     name: "Alex Thompson",
     avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-    exchange: "Binance",
+    exchange: "Bitrue",
     rating: 5,
-    text: "Using the affiliate link saved me 10% on trading fees. The sign-up bonus was credited instantly, and I've already earned back my initial investment through staking rewards.",
+    text: "Using the Bitrue affiliate link saved me 10% on trading fees. The sign-up bonus was credited instantly, and I've already earned back my initial investment through their excellent yield products.",
     date: "2 weeks ago"
   },
   {
     name: "Sarah Wilson",
     avatar: "https://randomuser.me/api/portraits/women/44.jpg",
-    exchange: "Bybit",
+    exchange: "Bitrue",
     rating: 5,
-    text: "The welcome bonus from Bybit was incredible! I received over $200 in bonuses from my initial deposit, and their futures trading platform is by far the best I've used.",
+    text: "The welcome bonus from Bitrue was incredible! I received over $200 in bonuses from my initial deposit, and their XRP trading platform is by far the best I've used.",
     date: "1 month ago"
   },
   {
     name: "Michael Chen",
     avatar: "https://randomuser.me/api/portraits/men/62.jpg",
-    exchange: "Kraken",
+    exchange: "Bitrue",
     rating: 4,
-    text: "As someone concerned with security, Kraken was the perfect choice. Their regulatory compliance gives me peace of mind, and the affiliate bonus was a nice added benefit.",
+    text: "As someone concerned with security, Bitrue was the perfect choice. Their regulatory compliance gives me peace of mind, and the affiliate bonus was a nice added benefit.",
     date: "3 weeks ago"
   },
   {
     name: "Emily Rodriguez",
     avatar: "https://randomuser.me/api/portraits/women/28.jpg",
-    exchange: "OKX",
+    exchange: "Bitrue",
     rating: 5,
-    text: "The Web3 wallet integration on OKX is game-changing. I can manage all my DeFi investments in one place, and the trading bots have significantly improved my returns.",
+    text: "The wallet integration on Bitrue is game-changing. I can manage all my investments in one place, and the trading features have significantly improved my returns.",
     date: "5 days ago"
   },
   {
     name: "David Park",
     avatar: "https://randomuser.me/api/portraits/men/22.jpg",
-    exchange: "Binance",
+    exchange: "Bitrue",
     rating: 4,
-    text: "I've tried several exchanges, but Binance offers the best combination of low fees and deep liquidity. The staking options are also excellent for passive income.",
+    text: "I've tried several exchanges, but Bitrue offers the best combination of low fees and deep liquidity. The staking options are also excellent for passive income.",
     date: "2 months ago"
   }
 ];

@@ -71,17 +71,8 @@ export default function Navigation() {
   ];
   
   const exchangeItems = [
-    // Main Exchanges
-    { name: 'Binance', path: '/binance', color: 'yellow' },
-    { name: 'Bybit', path: '/bybit', color: 'blue' },
-    { name: 'Kraken', path: '/kraken', color: 'purple' },
-    { name: 'OKX', path: '/okx', color: 'green' },
-    // Additional Exchanges
-    { name: 'MEXC', path: '/mexc', color: 'red' },
-    { name: 'KuCoin', path: '/kucoin', color: 'teal' },
-    { name: 'Gate.io', path: '/gateio', color: 'indigo' },
-    { name: 'Bitget', path: '/bitget', color: 'amber' },
-    { name: 'CoinEx', path: '/coinex', color: 'emerald' },
+    // Only Bitrue
+    { name: 'Bitrue', path: '/bitrue', color: 'blue' },
   ];
   
   const walletItems = [
@@ -89,23 +80,17 @@ export default function Navigation() {
     { name: 'Ledger', path: '/wallets/ledger', color: 'gray' },
     { name: 'MetaMask', path: '/wallets/metamask', color: 'orange' },
     { name: 'Trezor', path: '/wallets/trezor', color: 'slate' },
-    { name: 'Rabby', path: '/wallets/rabby', color: 'zinc' },
   ];
   
   const cardItems = [
     { name: 'Revolut', path: '/cards/revolut', color: 'blue' },
-    { name: 'Crypto.com', path: '/cards/crypto-com', color: 'blue' },
     { name: 'Wirex', path: '/cards/wirex', color: 'sky' },
-    { name: 'Transak', path: '/cards/transak', color: 'cyan' },
-    { name: 'Ramp', path: '/cards/ramp', color: 'blue' },
   ];
   
   const toolItems = [
     { name: 'TradingView', path: '/tools/tradingview', color: 'indigo' },
     { name: 'NordVPN', path: '/tools/nordvpn', color: 'blue' },
     { name: 'CoinTracking', path: '/tools/cointracking', color: 'violet' },
-    { name: 'DeBank', path: '/tools/debank', color: 'rose' },
-    { name: 'Zerion', path: '/tools/zerion', color: 'pink' },
   ];
 
   const isActive = (path) => router.pathname === path;

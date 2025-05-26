@@ -13,22 +13,22 @@ export default function WirexPage() {
     {
       title: "Crypto Cashback",
       description: "Earn up to 8% crypto rewards on all in-store and online purchases with Wirex Cryptoback™.",
-      icon: Percent
+      icon: () => <Percent size={24} />
     },
     {
       title: "Multi-Currency Card",
       description: "Spend 150+ traditional and cryptocurrencies at over 80 million merchants worldwide.",
-      icon: CreditCard
+      icon: () => <CreditCard size={24} />
     },
     {
       title: "Real-Time Conversion",
       description: "Convert between crypto and fiat currencies instantly with competitive exchange rates.",
-      icon: Zap
+      icon: () => <Zap size={24} />
     },
     {
       title: "Global Acceptance",
       description: "Use your card anywhere Visa or Mastercard is accepted, with no foreign transaction fees.",
-      icon: Globe
+      icon: () => <Globe size={24} />
     }
   ];
   

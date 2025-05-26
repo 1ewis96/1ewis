@@ -3,59 +3,59 @@ import { ReactCompareSlider, ReactCompareSliderImage } from 'react-compare-slide
 import { motion } from 'framer-motion';
 
 const exchangeData = {
-  binance: {
-    name: 'Binance',
-    color: 'yellow-400',
-    features: [
-      { name: 'Trading Fee', value: '0.1%' },
-      { name: 'Number of Coins', value: '350+' },
-      { name: 'Mobile App Rating', value: '4.7/5' },
-      { name: 'Fiat Currencies', value: '50+' },
-      { name: 'Leverage Trading', value: 'Up to 125x' },
-      { name: 'Staking Rewards', value: 'Up to 120% APY' },
-    ]
-  },
-  bybit: {
-    name: 'Bybit',
+  bittrue: {
+    name: 'Bitrue',
     color: 'blue-400',
     features: [
-      { name: 'Trading Fee', value: '0.1%' },
-      { name: 'Number of Coins', value: '180+' },
-      { name: 'Mobile App Rating', value: '4.3/5' },
+      { name: 'Trading Fee', value: '0.098%' },
+      { name: 'Number of Coins', value: '200+' },
+      { name: 'Mobile App Rating', value: '4.5/5' },
       { name: 'Fiat Currencies', value: '30+' },
       { name: 'Leverage Trading', value: 'Up to 100x' },
+      { name: 'Staking Rewards', value: 'Up to 80% APY' },
+    ]
+  },
+  coinbase: {
+    name: 'Coinbase',
+    color: 'blue-500',
+    features: [
+      { name: 'Trading Fee', value: '0.6%' },
+      { name: 'Number of Coins', value: '150+' },
+      { name: 'Mobile App Rating', value: '4.7/5' },
+      { name: 'Fiat Currencies', value: '20+' },
+      { name: 'Leverage Trading', value: 'Limited' },
+      { name: 'Staking Rewards', value: 'Up to 5% APY' },
+    ]
+  },
+  huobi: {
+    name: 'Huobi',
+    color: 'green-400',
+    features: [
+      { name: 'Trading Fee', value: '0.2%' },
+      { name: 'Number of Coins', value: '350+' },
+      { name: 'Mobile App Rating', value: '4.2/5' },
+      { name: 'Fiat Currencies', value: '15+' },
+      { name: 'Leverage Trading', value: 'Up to 125x' },
       { name: 'Staking Rewards', value: 'Up to 30% APY' },
     ]
   },
-  kraken: {
-    name: 'Kraken',
-    color: 'purple-400',
+  bitstamp: {
+    name: 'Bitstamp',
+    color: 'red-400',
     features: [
-      { name: 'Trading Fee', value: '0.16%' },
-      { name: 'Number of Coins', value: '120+' },
-      { name: 'Mobile App Rating', value: '4.2/5' },
-      { name: 'Fiat Currencies', value: '7+' },
-      { name: 'Leverage Trading', value: 'Up to 5x' },
-      { name: 'Staking Rewards', value: 'Up to 20% APY' },
-    ]
-  },
-  okx: {
-    name: 'OKX',
-    color: 'green-400',
-    features: [
-      { name: 'Trading Fee', value: '0.08%' },
-      { name: 'Number of Coins', value: '300+' },
-      { name: 'Mobile App Rating', value: '4.4/5' },
-      { name: 'Fiat Currencies', value: '40+' },
-      { name: 'Leverage Trading', value: 'Up to 125x' },
-      { name: 'Staking Rewards', value: 'Up to 40% APY' },
+      { name: 'Trading Fee', value: '0.5%' },
+      { name: 'Number of Coins', value: '70+' },
+      { name: 'Mobile App Rating', value: '4.1/5' },
+      { name: 'Fiat Currencies', value: '5+' },
+      { name: 'Leverage Trading', value: 'No' },
+      { name: 'Staking Rewards', value: 'Limited options' },
     ]
   }
 };
 
 export default function ExchangeCompare() {
-  const [leftExchange, setLeftExchange] = useState('binance');
-  const [rightExchange, setRightExchange] = useState('bybit');
+  const [leftExchange, setLeftExchange] = useState('bittrue');
+  const [rightExchange, setRightExchange] = useState('coinbase');
   
   const fadeInVariants = {
     hidden: { opacity: 0, y: 20 },

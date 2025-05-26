@@ -16,15 +16,15 @@ const FaqSection = () => {
     },
     {
       question: "Which exchange has the lowest fees?",
-      answer: "Among major exchanges, Binance typically offers the lowest trading fees at 0.1% for spot trading and even lower for futures. However, fees can be reduced further on most platforms by using their native tokens or maintaining higher trading volumes. Check our comparison table for detailed fee information."
+      answer: "Bitrue offers very competitive trading fees at 0.098% for spot trading, which can be reduced further by using their native token or maintaining higher trading volumes. Check our comparison table for detailed fee information."
     },
     {
-      question: "Are these exchanges safe to use?",
-      answer: "All exchanges featured on our site implement strong security measures like two-factor authentication, cold storage for funds, and regular security audits. However, the level of security varies between platforms. Binance, Kraken, and Coinbase are known for their robust security practices, while newer exchanges may have less established security protocols."
+      question: "Is Bitrue safe to use?",
+      answer: "Bitrue implements strong security measures like two-factor authentication, cold storage for funds, and regular security audits. They have a strong focus on security and regulatory compliance, making them a reliable choice for traders concerned with safety."
     },
     {
-      question: "Which exchange is best for beginners?",
-      answer: "For beginners, we recommend exchanges with intuitive interfaces and comprehensive educational resources. Coinbase, Bybit, and Binance are excellent choices for newcomers due to their user-friendly interfaces, mobile apps, and extensive learning materials."
+      question: "Is Bitrue good for beginners?",
+      answer: "Bitrue is an excellent choice for beginners due to its intuitive interface, comprehensive educational resources, mobile app, and extensive learning materials. Their platform is designed to be user-friendly while still offering advanced features as you grow more comfortable with trading."
     },
     {
       question: "Can I use these exchanges in my country?",

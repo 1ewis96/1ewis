@@ -4,35 +4,22 @@ import { DollarSign, Calculator, Gift } from 'lucide-react';
 import { Button } from '../components/ui/button';
 
 const exchangeBonuses = {
-  binance: {
-    name: 'Binance',
-    color: 'yellow',
-    tiers: [
-      { min: 0, max: 1000, rate: 0.10 },
-      { min: 1000, max: 5000, rate: 0.12 },
-      { min: 5000, max: 25000, rate: 0.15 },
-      { min: 25000, max: 100000, rate: 0.18 },
-      { min: 100000, max: Infinity, rate: 0.20 }
-    ],
-    maxBonus: 5000,
-    tradingFeeDiscount: '10% off trading fees for 180 days'
-  },
-  bybit: {
-    name: 'Bybit',
+  bittrue: {
+    name: 'Bitrue',
     color: 'blue',
     tiers: [
       { min: 0, max: 1000, rate: 0.15 },
       { min: 1000, max: 5000, rate: 0.18 },
       { min: 5000, max: 25000, rate: 0.20 },
-      { min: 25000, max: 100000, rate: 0.22 },
-      { min: 100000, max: Infinity, rate: 0.25 }
+      { min: 25000, max: 100000, rate: 0.25 },
+      { min: 100000, max: Infinity, rate: 0.30 }
     ],
-    maxBonus: 4100,
-    tradingFeeDiscount: '20% off trading fees for 90 days'
+    maxBonus: 5000,
+    tradingFeeDiscount: '20% off trading fees for 180 days'
   },
-  kraken: {
-    name: 'Kraken',
-    color: 'purple',
+  coinbase: {
+    name: 'Coinbase',
+    color: 'blue',
     tiers: [
       { min: 0, max: 1000, rate: 0.05 },
       { min: 1000, max: 5000, rate: 0.08 },
@@ -43,24 +30,37 @@ const exchangeBonuses = {
     maxBonus: 1000,
     tradingFeeDiscount: '5% off trading fees for 60 days'
   },
-  okx: {
-    name: 'OKX',
+  huobi: {
+    name: 'Huobi',
     color: 'green',
     tiers: [
-      { min: 0, max: 1000, rate: 0.12 },
-      { min: 1000, max: 5000, rate: 0.15 },
-      { min: 5000, max: 25000, rate: 0.18 },
-      { min: 25000, max: 100000, rate: 0.20 },
-      { min: 100000, max: Infinity, rate: 0.22 }
+      { min: 0, max: 1000, rate: 0.10 },
+      { min: 1000, max: 5000, rate: 0.12 },
+      { min: 5000, max: 25000, rate: 0.15 },
+      { min: 25000, max: 100000, rate: 0.18 },
+      { min: 100000, max: Infinity, rate: 0.20 }
     ],
     maxBonus: 3000,
-    tradingFeeDiscount: '15% off trading fees for 120 days'
+    tradingFeeDiscount: '10% off trading fees for 90 days'
+  },
+  bitstamp: {
+    name: 'Bitstamp',
+    color: 'red',
+    tiers: [
+      { min: 0, max: 1000, rate: 0.08 },
+      { min: 1000, max: 5000, rate: 0.10 },
+      { min: 5000, max: 25000, rate: 0.12 },
+      { min: 25000, max: 100000, rate: 0.15 },
+      { min: 100000, max: Infinity, rate: 0.18 }
+    ],
+    maxBonus: 2000,
+    tradingFeeDiscount: '8% off trading fees for 120 days'
   }
 };
 
 export default function BonusCalculator() {
   const [depositAmount, setDepositAmount] = useState(1000);
-  const [selectedExchange, setSelectedExchange] = useState('binance');
+  const [selectedExchange, setSelectedExchange] = useState('bittrue');
   const [bonusAmount, setBonusAmount] = useState(0);
   const [showConfetti, setShowConfetti] = useState(false);
 

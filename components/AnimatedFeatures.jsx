@@ -51,7 +51,7 @@ export default function AnimatedFeatures({ features, color }) {
                 animate={inView ? { scale: [1, 1.2, 1] } : { scale: 1 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <feature.icon size={28} />
+                {typeof feature.icon === 'function' ? feature.icon() : feature.icon}
               </motion.div>
             )}
             <motion.h3 

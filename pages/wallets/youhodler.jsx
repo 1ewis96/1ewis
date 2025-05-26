@@ -15,22 +15,22 @@ export default function YouHodlerPage() {
     {
       title: "Crypto Savings",
       description: "Earn up to 13% APY on your crypto with flexible terms and weekly payouts.",
-      icon: Percent
+      icon: () => <Percent size={24} />
     },
     {
       title: "Crypto Loans",
       description: "Get instant cash loans using your crypto as collateral with up to 90% LTV.",
-      icon: DollarSign
+      icon: () => <DollarSign size={24} />
     },
     {
       title: "Multi HODL",
       description: "Multiply your crypto holdings with leverage trading up to 30x.",
-      icon: Zap
+      icon: () => <Zap size={24} />
     },
     {
       title: "Crypto Credit Card",
       description: "Spend your crypto assets anywhere with the YouHodler Visa card.",
-      icon: CreditCard
+      icon: () => <CreditCard size={24} />
     }
   ];
   

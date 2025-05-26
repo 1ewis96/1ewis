@@ -13,22 +13,22 @@ export default function MetaMaskPage() {
     {
       title: "Self-Custody Wallet",
       description: "Maintain full control of your private keys and digital assets with this non-custodial wallet solution.",
-      icon: Wallet
+      icon: () => <Wallet size={24} />
     },
     {
       title: "DApp Browser",
       description: "Access thousands of decentralized applications directly from your wallet interface.",
-      icon: BarChart
+      icon: () => <BarChart size={24} />
     },
     {
       title: "Multi-Chain Support",
       description: "Connect to Ethereum, Binance Smart Chain, Polygon, Avalanche, and many other EVM-compatible networks.",
-      icon: Zap
+      icon: () => <Zap size={24} />
     },
     {
       title: "Enhanced Security",
       description: "Protect your assets with industry-standard encryption and optional hardware wallet integration.",
-      icon: Shield
+      icon: () => <Shield size={24} />
     }
   ];
   

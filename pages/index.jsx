@@ -19,61 +19,12 @@ import { useMemo } from 'react';
 
 export default function HomePage() {
   const exchanges = [
-    // Main Exchanges
+    // Only Bitrue
     {
-      name: "Binance",
-      tagline: "Top global exchange with low fees",
-      link: "/binance",
-      color: "yellow"
-    },
-    {
-      name: "Bybit",
-      tagline: "Best for futures trading & bonuses",
-      link: "/bybit",
+      name: "Bitrue",
+      tagline: "Exchange focused on XRP and crypto yield products",
+      link: "/bitrue",
       color: "blue"
-    },
-    {
-      name: "Kraken",
-      tagline: "Trusted, US-compliant crypto platform",
-      link: "/kraken",
-      color: "purple"
-    },
-    {
-      name: "OKX",
-      tagline: "Advanced tools and Web3 wallet integration",
-      link: "/okx",
-      color: "green"
-    },
-    // Additional Exchanges
-    {
-      name: "MEXC",
-      tagline: "Early access to promising cryptocurrencies",
-      link: "/mexc",
-      color: "red"
-    },
-    {
-      name: "KuCoin",
-      tagline: "The People's Exchange with vast altcoin selection",
-      link: "/kucoin",
-      color: "teal"
-    },
-    {
-      name: "Gate.io",
-      tagline: "Comprehensive exchange with advanced tools",
-      link: "/gateio",
-      color: "blue"
-    },
-    {
-      name: "Bitget",
-      tagline: "Leading copy trading platform with low fees",
-      link: "/bitget",
-      color: "purple"
-    },
-    {
-      name: "CoinEx",
-      tagline: "Zero-fee trading with fast transactions",
-      link: "/coinex",
-      color: "green"
     },
   ];
   
@@ -103,10 +54,10 @@ export default function HomePage() {
       color: "violet"
     },
     {
-      name: "DeBank",
-      tagline: "All-in-one DeFi portfolio tracker",
-      link: "/tools/debank",
-      color: "rose"
+      name: "NordVPN",
+      tagline: "Secure your crypto activities with the world's leading VPN",
+      link: "/tools/nordvpn",
+      color: "blue"
     },
   ];
 
@@ -199,7 +150,7 @@ export default function HomePage() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <ButtonLink href="/binance" variant="outline" size="lg" className="border-2 border-yellow-500/30 hover:bg-yellow-500/10 text-yellow-400 hover:text-yellow-300 shadow-lg hover:shadow-yellow-500/20">
+                  <ButtonLink href="/bitrue" variant="outline" size="lg" className="border-2 border-blue-500/30 hover:bg-blue-500/10 text-blue-400 hover:text-blue-300 shadow-lg hover:shadow-blue-500/20">
                     <span>Explore Top Exchange</span>
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </ButtonLink>

@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 const cryptoIds = [
   { id: 'bitcoin', name: 'Bitcoin', symbol: 'BTC' },
   { id: 'ethereum', name: 'Ethereum', symbol: 'ETH' },
-  { id: 'binancecoin', name: 'Binance Coin', symbol: 'BNB' },
+  { id: 'avalanche-2', name: 'Avalanche', symbol: 'AVAX' },
   { id: 'solana', name: 'Solana', symbol: 'SOL' },
   { id: 'cardano', name: 'Cardano', symbol: 'ADA' },
   { id: 'ripple', name: 'XRP', symbol: 'XRP' },
@@ -20,7 +20,7 @@ const cryptoIds = [
 const mockPriceData = {
   bitcoin: { usd: 64253.12, usd_24h_change: 2.4 },
   ethereum: { usd: 3478.65, usd_24h_change: 1.8 },
-  binancecoin: { usd: 567.23, usd_24h_change: -0.7 },
+  'avalanche-2': { usd: 35.76, usd_24h_change: 2.1 },
   solana: { usd: 142.87, usd_24h_change: 5.2 },
   cardano: { usd: 0.58, usd_24h_change: -1.3 },
   ripple: { usd: 0.62, usd_24h_change: 0.9 },

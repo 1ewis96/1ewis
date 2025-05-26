@@ -13,22 +13,22 @@ export default function CoinTrackingPage() {
     {
       title: "Portfolio Tracking",
       description: "Monitor your entire crypto portfolio across all exchanges and wallets in one dashboard.",
-      icon: LineChart
+      icon: () => <LineChart size={24} />
     },
     {
       title: "Tax Reporting",
       description: "Generate tax reports for 25+ countries with support for various accounting methods.",
-      icon: BarChart
+      icon: () => <BarChart size={24} />
     },
     {
       title: "Exchange Integration",
       description: "Connect to 110+ exchanges and 15+ blockchains with automatic data import.",
-      icon: Zap
+      icon: () => <Zap size={24} />
     },
     {
       title: "Security & Privacy",
       description: "Keep your financial data secure with industry-leading security measures and privacy controls.",
-      icon: Shield
+      icon: () => <Shield size={24} />
     }
   ];
   

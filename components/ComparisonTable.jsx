@@ -9,100 +9,16 @@ const ComparisonTable = () => {
   // Exchange data with comparison metrics
   const exchanges = [
     {
-      name: 'Binance',
-      logo: '/images/binance-logo.png', // You'll need to add these logo images
-      spotFees: '0.1%',
-      futuresFees: '0.02%',
-      cryptoCount: '350+',
-      countries: '180+',
-      features: ['Lowest fees', 'Highest liquidity', 'Advanced trading tools'],
-      bonus: 'Up to 100 USDT + 20% fee discount',
-      link: '/binance',
-      color: 'yellow'
-    },
-    {
-      name: 'Bybit',
-      logo: '/images/bybit-logo.png',
-      spotFees: '0.1%',
-      futuresFees: '0.01%',
-      cryptoCount: '300+',
-      countries: '160+',
-      features: ['Best for futures', 'High bonuses', 'User-friendly'],
-      bonus: 'Up to $30,000 in rewards',
-      link: '/bybit',
-      color: 'blue'
-    },
-    {
-      name: 'Kraken',
-      logo: '/images/kraken-logo.png',
-      spotFees: '0.16%',
-      futuresFees: '0.02%',
-      cryptoCount: '200+',
-      countries: '190+',
-      features: ['High security', 'Regulatory compliance', 'Staking rewards'],
-      bonus: '$10 in BTC for $100+ trade',
-      link: '/kraken',
-      color: 'purple'
-    },
-    {
-      name: 'OKX',
-      logo: '/images/okx-logo.png',
-      spotFees: '0.08%',
-      futuresFees: '0.02%',
-      cryptoCount: '350+',
-      countries: '175+',
-      features: ['Web3 wallet', 'DeFi integration', 'Copy trading'],
-      bonus: 'Up to $10,000 mystery box',
-      link: '/okx',
-      color: 'green'
-    },
-    {
-      name: 'KuCoin',
-      logo: '/images/kucoin-logo.png',
-      spotFees: '0.1%',
-      futuresFees: '0.02%',
-      cryptoCount: '700+',
-      countries: '200+',
-      features: ['Vast altcoin selection', 'Trading bots', 'Lending platform'],
-      bonus: 'Up to $500 in rewards',
-      link: '/kucoin',
-      color: 'teal'
-    },
-    {
-      name: 'Gate.io',
-      logo: '/images/gateio-logo.png',
-      spotFees: '0.2%',
-      futuresFees: '0.045%',
-      cryptoCount: '1400+',
-      countries: '190+',
-      features: ['Extensive token list', 'Startup projects', 'NFT marketplace'],
-      bonus: 'Up to 40% commission rebate',
-      link: '/gateio',
-      color: 'blue'
-    },
-    {
-      name: 'MEXC',
-      logo: '/images/mexc-logo.png',
-      spotFees: '0.2%',
-      futuresFees: '0.02%',
-      cryptoCount: '1500+',
+      name: 'Bitrue',
+      logo: '/images/bitrue-logo.png', // You'll need to add this logo image
+      spotFees: '0.09%',
+      futuresFees: '0.03%',
+      cryptoCount: '400+',
       countries: '170+',
-      features: ['Early listings', 'MX token benefits', 'Launchpad'],
-      bonus: 'Up to $1,700 in rewards',
-      link: '/mexc',
-      color: 'red'
-    },
-    {
-      name: 'Bitget',
-      logo: '/images/bitget-logo.png',
-      spotFees: '0.1%',
-      futuresFees: '0.02%',
-      cryptoCount: '500+',
-      countries: '170+',
-      features: ['Copy trading', 'One-click copy', 'Low fees'],
-      bonus: '15% fee discount + $5,000 bonus',
-      link: '/bitget',
-      color: 'purple'
+      features: ['XRP focus', 'Yield products', 'Power Piggy staking'],
+      bonus: '30% commission on trading fees',
+      link: '/bitrue',
+      color: 'blue'
     }
   ];
 

@@ -13,22 +13,22 @@ export default function TradingViewPage() {
     {
       title: "Advanced Charting",
       description: "Access professional-grade charting tools with over 100 technical indicators and drawing tools.",
-      icon: LineChart
+      icon: () => <LineChart size={24} />
     },
     {
       title: "Real-Time Data",
       description: "Get real-time market data across global markets including stocks, forex, crypto, and commodities.",
-      icon: Zap
+      icon: () => <Zap size={24} />
     },
     {
       title: "Customizable Screeners",
       description: "Find trading opportunities with powerful stock, forex, and crypto screeners based on your criteria.",
-      icon: BarChart
+      icon: () => <BarChart size={24} />
     },
     {
       title: "Community Insights",
       description: "Access ideas and analysis from millions of traders in the world's largest social network for investors.",
-      icon: Shield
+      icon: () => <Shield size={24} />
     }
   ];
   

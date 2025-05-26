@@ -15,22 +15,22 @@ export default function RevolutPage() {
     {
       title: "Crypto Trading",
       description: "Buy, sell, and hold 80+ cryptocurrencies directly in the app with competitive fees.",
-      icon: DollarSign
+      icon: () => <DollarSign size={24} />
     },
     {
       title: "Metal Cards",
       description: "Premium metal cards with exclusive perks, cashback, and airport lounge access.",
-      icon: CreditCard
+      icon: () => <CreditCard size={24} />
     },
     {
       title: "Global Spending",
       description: "Spend in 150+ currencies at the interbank exchange rate with no hidden fees.",
-      icon: Globe
+      icon: () => <Globe size={24} />
     },
     {
       title: "All-in-One App",
       description: "Banking, investing, crypto, and payments all in one secure mobile application.",
-      icon: Smartphone
+      icon: () => <Smartphone size={24} />
     }
   ];
   

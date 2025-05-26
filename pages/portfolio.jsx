@@ -9,44 +9,14 @@ import TradingVolumeChart from '../components/TradingVolumeChart';
 export default function PortfolioPage() {
   const exchanges = [
     {
-      name: "Binance",
-      color: "yellow-400",
-      description: "The world's largest crypto exchange by trading volume, offering 350+ cryptocurrencies with fees as low as 0.1%.",
-      pros: ["Lowest trading fees", "Highest liquidity", "Wide range of products", "User-friendly mobile app"],
-      cons: ["Complex for beginners", "Limited customer support"],
-      bestFor: "Active traders looking for low fees and high liquidity",
-      link: "/binance",
-      refLink: "https://www.binance.com/en/activity/referral-entry?ref=YOUR_REF_CODE"
-    },
-    {
-      name: "Bybit",
+      name: "Bitrue",
       color: "blue-400",
-      description: "A derivatives-focused exchange offering up to $4,100 in sign-up bonuses and competitive trading fees.",
-      pros: ["Generous sign-up bonuses", "Advanced futures trading", "Low fees", "Intuitive interface"],
-      cons: ["Fewer spot trading pairs", "Limited educational resources"],
-      bestFor: "Futures traders and those looking for sign-up bonuses",
-      link: "/bybit",
-      refLink: "https://www.bybit.com/en-US/register?affiliate_id=YOUR_REF_CODE"
-    },
-    {
-      name: "Kraken",
-      color: "purple-400",
-      description: "A highly secure, US-regulated exchange with a focus on compliance and security.",
-      pros: ["Bank-level security", "Regulatory compliance", "Excellent customer support", "Fiat on-ramps"],
-      cons: ["Higher fees than some competitors", "Less intuitive interface"],
-      bestFor: "Security-focused traders and US-based users",
-      link: "/kraken",
-      refLink: "https://www.kraken.com/sign-up?ref=YOUR_REF_CODE"
-    },
-    {
-      name: "OKX",
-      color: "green-400",
-      description: "A comprehensive crypto platform with advanced trading tools and Web3 wallet integration.",
-      pros: ["Web3 wallet integration", "Trading bots", "NFT marketplace", "DeFi access"],
-      cons: ["Less regulatory clarity", "Complex for beginners"],
-      bestFor: "Advanced traders interested in DeFi and Web3",
-      link: "/okx",
-      refLink: "https://www.okx.com/join/YOUR_REF_CODE"
+      description: "An exchange focused on XRP and crypto yield products, offering competitive trading fees and excellent staking options.",
+      pros: ["Competitive trading fees", "XRP ecosystem focus", "High-yield staking products", "User-friendly mobile app"],
+      cons: ["Fewer trading pairs than some competitors", "Limited advanced trading tools"],
+      bestFor: "XRP enthusiasts and yield-focused traders looking for competitive rates",
+      link: "/bitrue",
+      refLink: "https://www.bitrue.com/referral/landing?cn=600000&inviteCode=TWLQHQZ"
     }
   ];
 

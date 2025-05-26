@@ -15,22 +15,22 @@ export default function LedgerPage() {
     {
       title: "Hardware Security",
       description: "Store your private keys offline in a secure chip, protected from online threats and hackers.",
-      icon: Shield
+      icon: () => <Shield size={24} />
     },
     {
       title: "Multi-Currency Support",
       description: "Manage 5,500+ cryptocurrencies and tokens from a single device with dedicated apps.",
-      icon: Wallet
+      icon: () => <Wallet size={24} />
     },
     {
       title: "DApp Integration",
       description: "Connect securely to decentralized applications while keeping your keys protected.",
-      icon: Zap
+      icon: () => <Zap size={24} />
     },
     {
       title: "Recovery Options",
       description: "Restore your wallet on a new device with your 24-word recovery phrase if your device is lost.",
-      icon: BarChart
+      icon: () => <BarChart size={24} />
     }
   ];
   

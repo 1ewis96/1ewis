@@ -6,75 +6,21 @@ import Link from 'next/link';
 const ExchangeProsConsCards = () => {
   const exchanges = [
     {
-      name: 'Binance',
-      link: '/binance',
-      color: 'yellow',
-      pros: [
-        'Lowest trading fees in the industry',
-        'Highest trading volume and liquidity',
-        'Extensive selection of cryptocurrencies',
-        'Advanced trading tools and charts',
-        'Comprehensive educational resources'
-      ],
-      cons: [
-        'Complex interface for beginners',
-        'Regulatory challenges in some countries',
-        'Customer support can be slow',
-        'Verification process can be lengthy'
-      ]
-    },
-    {
-      name: 'Bybit',
-      link: '/bybit',
+      name: 'Bitrue',
+      link: '/bitrue',
       color: 'blue',
       pros: [
-        'Excellent futures trading platform',
-        'Generous sign-up bonuses and rewards',
-        'User-friendly mobile app',
-        'Strong security measures',
-        'Good customer support'
+        'Specialized in XRP trading pairs',
+        'Power Piggy yield-generating products',
+        'Competitive trading fees (0.09% spot)',
+        'User-friendly interface',
+        'Regular promotions and airdrops'
       ],
       cons: [
-        'Fewer cryptocurrencies than larger exchanges',
-        'Not available in all countries',
-        'Higher fees than some competitors',
-        'Limited payment methods'
-      ]
-    },
-    {
-      name: 'Kraken',
-      link: '/kraken',
-      color: 'purple',
-      pros: [
-        'Strong regulatory compliance',
-        'Excellent security track record',
-        'Good for institutional investors',
-        'Reliable customer support',
-        'Advanced trading features'
-      ],
-      cons: [
-        'Higher fees than some competitors',
-        'User interface not as intuitive',
-        'Slower verification process',
-        'Limited payment options in some regions'
-      ]
-    },
-    {
-      name: 'OKX',
-      link: '/okx',
-      color: 'green',
-      pros: [
-        'Integrated Web3 wallet',
-        'Comprehensive DeFi ecosystem',
-        'Copy trading features',
-        'Competitive fee structure',
-        'Advanced trading tools'
-      ],
-      cons: [
-        'Less regulatory clarity in some regions',
-        'Interface can be overwhelming',
-        'Customer support response times vary',
-        'Fewer educational resources'
+        'Smaller exchange compared to market leaders',
+        'Limited advanced trading features',
+        'Fewer payment methods than some competitors',
+        'Not available in all countries'
       ]
     }
   ];

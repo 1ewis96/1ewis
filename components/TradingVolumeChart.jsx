@@ -25,7 +25,7 @@ export default function TradingVolumeChart() {
 
   const data = {
     weekly: {
-      labels: ['Binance', 'Bybit', 'Kraken', 'OKX', 'Coinbase', 'KuCoin'],
+      labels: ['Bitrue', 'Coinbase', 'Huobi', 'Bitstamp', 'Bitfinex', 'Gemini'],
       datasets: [
         {
           label: 'Weekly Trading Volume (Billions $)',
@@ -51,7 +51,7 @@ export default function TradingVolumeChart() {
       ],
     },
     monthly: {
-      labels: ['Binance', 'Bybit', 'Kraken', 'OKX', 'Coinbase', 'KuCoin'],
+      labels: ['Bitrue', 'Coinbase', 'Huobi', 'Bitstamp', 'Bitfinex', 'Gemini'],
       datasets: [
         {
           label: 'Monthly Trading Volume (Billions $)',
@@ -77,7 +77,7 @@ export default function TradingVolumeChart() {
       ],
     },
     yearly: {
-      labels: ['Binance', 'Bybit', 'Kraken', 'OKX', 'Coinbase', 'KuCoin'],
+      labels: ['Bitrue', 'Coinbase', 'Huobi', 'Bitstamp', 'Bitfinex', 'Gemini'],
       datasets: [
         {
           label: 'Yearly Trading Volume (Billions $)',

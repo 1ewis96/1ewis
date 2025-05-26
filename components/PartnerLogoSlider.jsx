@@ -6,15 +6,13 @@ import { useEffect, useState } from 'react';
 export default function PartnerLogoSlider() {
   // Define partner logos with their names and paths
   const partnerLogos = [
-    { name: 'Binance', path: '/logos/binance.svg', color: 'yellow' },
-    { name: 'Bybit', path: '/logos/bybit.svg', color: 'blue' },
-    { name: 'Kraken', path: '/logos/kraken.svg', color: 'purple' },
-    { name: 'OKX', path: '/logos/okx.svg', color: 'green' },
-    { name: 'Ledger', path: '/logos/ledger.svg', color: 'black' },
-    { name: 'YouHodler', path: '/logos/youhodler.svg', color: 'teal' },
-    { name: 'Revolut', path: '/logos/revolut.svg', color: 'blue' },
-    { name: 'TradingView', path: '/logos/tradingview.svg', color: 'indigo' },
-    { name: 'CoinTracking', path: '/logos/cointracking.svg', color: 'violet' },
+    { name: 'Bitrue', path: '/logos/bittrue.webp', color: 'blue' },
+    { name: 'Ledger', path: '/logos/ledger.webp', color: 'black' },
+    { name: 'YouHodler', path: '/logos/youhodler.webp', color: 'teal' },
+    { name: 'Revolut', path: '/logos/revolut.webp', color: 'blue' },
+    { name: 'TradingView', path: '/logos/tradingview.webp', color: 'indigo' },
+    { name: 'CoinTracking', path: '/logos/cointracking.webp', color: 'violet' },
+    { name: 'NordVPN', path: '/logos/nordvpn.webp', color: 'blue' },
   ];
 
   // Fallback colors for logos in case the image fails to load

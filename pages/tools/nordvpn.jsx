@@ -13,22 +13,22 @@ export default function NordVPNPage() {
     {
       title: "Enhanced Privacy",
       description: "Protect your online activities with military-grade encryption and a strict no-logs policy.",
-      icon: Shield
+      icon: () => <Shield size={24} />
     },
     {
       title: "Lightning-Fast Speeds",
       description: "Experience minimal speed loss with NordLynx protocol, perfect for streaming and downloading.",
-      icon: Zap
+      icon: () => <Zap size={24} />
     },
     {
       title: "Global Server Network",
       description: "Connect to 5,500+ servers in 60+ countries to access content from anywhere in the world.",
-      icon: Globe
+      icon: () => <Globe size={24} />
     },
     {
       title: "Threat Protection",
       description: "Block malware, trackers, and intrusive ads with advanced security features.",
-      icon: Lock
+      icon: () => <Lock size={24} />
     }
   ];
   
