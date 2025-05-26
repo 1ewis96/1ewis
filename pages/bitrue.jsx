@@ -130,24 +130,8 @@ export default function Bitrue() {
                 className="relative w-full max-w-md"
               >
                 <div className="bg-gradient-to-r from-yellow-500 to-yellow-300 rounded-full w-64 h-64 absolute -top-10 -right-10 blur-3xl opacity-20 z-0"></div>
-                <div className="relative z-10 bg-gray-800 p-6 rounded-2xl border border-yellow-500/30 shadow-xl">
-                  <div className="flex justify-center mb-6">
-                    <div className="w-32 h-32 bg-yellow-500 rounded-full flex items-center justify-center">
-                      <span className="text-black text-4xl font-bold">BTT</span>
-                    </div>
-                  </div>
-                  <h3 className="text-2xl font-bold text-center mb-4 text-yellow-400">Bitrue Token</h3>
-                  <div className="grid grid-cols-2 gap-4 text-center">
-                    <div className="bg-gray-900 p-3 rounded-lg">
-                      <p className="text-sm text-gray-400">Current Price</p>
-                      <p className="text-lg font-bold text-yellow-400">$0.0142</p>
-                    </div>
-                    <div className="bg-gray-900 p-3 rounded-lg">
-                      <p className="text-sm text-gray-400">24h Change</p>
-                      <p className="text-lg font-bold text-green-500">+5.8%</p>
-                    </div>
-                  </div>
-                </div>
+             
+              
               </motion.div>
             </div>
           </div>
