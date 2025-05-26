@@ -1,6 +1,6 @@
 import { Card, CardContent } from "../components/ui/card";
 import { Button, ButtonLink } from "../components/ui/button";
-import { ArrowRight, Github, Twitter, Sparkles, Zap, TrendingUp, Star, Award, HelpCircle, ChevronDown, ExternalLink } from "lucide-react";
+import { ArrowRight, Github, Twitter, Sparkles, Zap, TrendingUp, Star, Award, HelpCircle, ChevronDown, ExternalLink, Tags } from "lucide-react";
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import PriceTicker from '../components/PriceTicker';
@@ -480,7 +480,7 @@ export default function HomePage() {
         <Link href="/bitrue" className="flex items-center bg-gradient-to-r from-pink-600/80 to-purple-600/80 hover:from-pink-600 hover:to-purple-600 text-white font-medium py-3 px-5 rounded-full shadow-lg hover:shadow-purple-500/30 transition-all duration-300">
             <div className="mr-3 relative">
               <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
-                <Zap className="w-5 h-5 text-yellow-300" />
+                <Tags className="w-5 h-5 text-yellow-300" />
               </div>
               <motion.span 
                 className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-purple-600"
