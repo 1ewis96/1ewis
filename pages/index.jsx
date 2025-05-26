@@ -1,6 +1,6 @@
 import { Card, CardContent } from "../components/ui/card";
 import { Button, ButtonLink } from "../components/ui/button";
-import { ArrowRight, Github, Twitter, Sparkles, Zap, TrendingUp, Star, Award, HelpCircle, ChevronDown, ExternalLink, Tags } from "lucide-react";
+import { ArrowRight, Github, Twitter, Sparkles, Zap, TrendingUp, Star, Award, HelpCircle, ChevronDown, ExternalLink, Tags, Lock } from "lucide-react";
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import PriceTicker from '../components/PriceTicker';
@@ -16,8 +16,10 @@ import ParticleBackground from '../components/ParticleBackground';
 import PartnerLogoSlider from '../components/PartnerLogoSlider';
 import Footer from '../components/Footer';
 import { useMemo } from 'react';
+import { getWalletReferral } from '../utils/referralLinks';
 
 export default function HomePage() {
+  const ledgerReferral = getWalletReferral('ledger');
   const exchanges = [
     // Only Bitrue
     {
@@ -416,27 +418,7 @@ export default function HomePage() {
             <FaqSection />
           </div>
         </section>
-        
-        {/* Crypto Stats Section */}
-        <div className="px-6 md:px-16 py-16 bg-gradient-to-b from-black to-gray-950">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-12">
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <h2 className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
-                  Live Crypto Market Stats
-                </h2>
-                <p className="text-gray-400 max-w-2xl mx-auto">
-                  Track the performance of major cryptocurrencies in real-time.
-                </p>
-              </motion.div>
-            </div>
-            <CryptoStats />
-          </div>
-        </div>
+
         
 
 
@@ -454,7 +436,7 @@ export default function HomePage() {
             </p>
             <ButtonLink 
               href="/portfolio" 
-              className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 text-lg"
+              className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 text-lg rounded-lg"
             >
               View Full Comparison
             </ButtonLink>

@@ -137,11 +137,29 @@ export default function MailingListPage() {
       setSubmitStatus('success');
       setEmail('');
       setName('');
+      
+      // Reset reCAPTCHA
+      if (window.grecaptcha) {
+        try {
+          window.grecaptcha.reset(recaptchaRef.current);
+        } catch (error) {
+          console.warn('Error resetting reCAPTCHA:', error);
+        }
+      }
     } catch (error) {
       // Error handling
       console.error('Subscription error:', error);
       setSubmitStatus('error');
       setErrorMessage(error.message || 'Something went wrong. Please try again later.');
+      
+      // Reset reCAPTCHA on error too
+      if (window.grecaptcha) {
+        try {
+          window.grecaptcha.reset(recaptchaRef.current);
+        } catch (error) {
+          console.warn('Error resetting reCAPTCHA:', error);
+        }
+      }
     } finally {
       setSubmitting(false);
     }
@@ -229,7 +247,17 @@ export default function MailingListPage() {
                       You've been added to our mailing list. Get ready for exclusive crypto deals and insights.
                     </p>
                     <Button 
-                      onClick={() => setSubmitStatus(null)} 
+                      onClick={() => {
+                        setSubmitStatus(null);
+                        // Reset reCAPTCHA when going back to the form
+                        if (window.grecaptcha) {
+                          try {
+                            window.grecaptcha.reset(recaptchaRef.current);
+                          } catch (error) {
+                            console.warn('Error resetting reCAPTCHA:', error);
+                          }
+                        }
+                      }} 
                       className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 border-0 shadow-lg"
                     >
                       Subscribe Another Email
