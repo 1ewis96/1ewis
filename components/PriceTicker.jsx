@@ -101,16 +101,17 @@ export default function PriceTicker() {
   // Get a color for each crypto based on its symbol
   const getCryptoColor = (symbol) => {
     const colorMap = {
-      'BTC': 'from-yellow-500 to-orange-500',
-      'ETH': 'from-indigo-500 to-purple-500',
-      'BNB': 'from-yellow-400 to-yellow-600',
-      'SOL': 'from-purple-500 to-pink-500',
-      'ADA': 'from-blue-500 to-cyan-500',
-      'XRP': 'from-blue-400 to-blue-600',
-      'DOT': 'from-pink-500 to-rose-500',
-      'DOGE': 'from-yellow-500 to-yellow-600',
+      'BTC': 'from-yellow-500/60 to-orange-500/60',
+      'ETH': 'from-indigo-500/60 to-purple-500/60',
+      'BNB': 'from-yellow-400/60 to-yellow-600/60',
+      'SOL': 'from-purple-500/60 to-pink-500/60',
+      'ADA': 'from-blue-500/60 to-cyan-500/60',
+      'XRP': 'from-blue-400/60 to-blue-600/60',
+      'DOT': 'from-pink-500/60 to-rose-500/60',
+      'DOGE': 'from-yellow-500/60 to-yellow-600/60',
+      'AVAX': 'from-red-500/60 to-red-600/60',
     };
-    return colorMap[symbol] || 'from-blue-500 to-purple-500';
+    return colorMap[symbol] || 'from-blue-500/60 to-purple-500/60';
   };
 
   // Get a background pulse animation class based on price change
@@ -184,7 +185,7 @@ export default function PriceTicker() {
       {error && prices.length === 0 && <ErrorMessage />}
       
       {prices.length > 0 && (
-        <div className="w-full bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 border-b border-gray-700 overflow-hidden py-2 shadow-lg relative">
+        <div className="w-full bg-gradient-to-r from-black via-gray-900 to-black border-b border-gray-800/50 overflow-hidden py-2 backdrop-blur-sm relative z-50">
           {/* Sparkle overlay effect */}
           <div className="absolute inset-0 overflow-hidden opacity-10">
             {Array.from({ length: 20 }).map((_, i) => (

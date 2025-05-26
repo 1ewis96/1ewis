@@ -1,6 +1,6 @@
 import { Card, CardContent } from "../components/ui/card";
 import { Button, ButtonLink } from "../components/ui/button";
-import { ArrowRight, Github, Twitter, Sparkles, Zap, TrendingUp, Star, Award, HelpCircle, ChevronDown } from "lucide-react";
+import { ArrowRight, Github, Twitter, Sparkles, Zap, TrendingUp, Star, Award, HelpCircle, ChevronDown, ExternalLink } from "lucide-react";
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import PriceTicker from '../components/PriceTicker';
@@ -86,7 +86,7 @@ export default function HomePage() {
       {/* Price Ticker */}
       <PriceTicker />
       
-      <main className="flex-1">
+      <main className="flex-1 relative">
         {/* Hero Section with animated background */}
         <section className="py-24 px-4 bg-gradient-to-b from-black to-gray-950 relative overflow-hidden">
           {/* Enhanced particle background */}
@@ -467,6 +467,36 @@ export default function HomePage() {
       
       {/* Cookie Consent Banner */}
       <CookieConsent />
+      
+      {/* Floating Call-to-Action Button */}
+      <motion.div 
+        className="fixed bottom-6 right-6 z-50"
+        initial={{ y: 100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 1.5, duration: 0.5, type: "spring" }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <Link href="/bitrue" className="flex items-center bg-gradient-to-r from-pink-600/80 to-purple-600/80 hover:from-pink-600 hover:to-purple-600 text-white font-medium py-3 px-5 rounded-full shadow-lg hover:shadow-purple-500/30 transition-all duration-300">
+            <div className="mr-3 relative">
+              <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
+                <Zap className="w-5 h-5 text-yellow-300" />
+              </div>
+              <motion.span 
+                className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-purple-600"
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              />
+            </div>
+            <div>
+              <div className="text-xs font-semibold text-blue-200">FEATURED EXCHANGE</div>
+              <div className="flex items-center">
+                <span>Join Bitrue</span>
+                <ExternalLink className="ml-1 w-3 h-3" />
+              </div>
+            </div>
+        </Link>
+      </motion.div>
     </div>
   );
 }
