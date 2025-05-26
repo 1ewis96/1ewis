@@ -155,16 +155,15 @@ export default function NordVPNPage() {
         <meta name="description" content="Secure your crypto activities with NordVPN and NordPass. Get 72% off NordVPN and 50% savings on NordPass Premium with our exclusive referral links." />
       </Head>
       
+      {/* Background elements */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+        <div className="absolute top-1/4 right-1/4 w-1/2 h-1/2 bg-blue-900/10 rounded-full blur-[120px]"></div>
+        <div className="absolute bottom-1/4 left-1/4 w-1/3 h-1/3 bg-blue-900/5 rounded-full blur-[100px]"></div>
+      </div>
+      
       {/* Hero Section */}
       <main className="container mx-auto px-4 pt-32 pb-16">
-      <div className="bg-gradient-to-b from-gray-900 to-black relative overflow-hidden rounded-2xl p-8 mb-16 border border-blue-900/20">
-        {/* Background elements */}
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
-          <div className="absolute top-1/4 right-1/4 w-1/2 h-1/2 bg-blue-900/10 rounded-full blur-[120px]"></div>
-          <div className="absolute bottom-1/4 left-1/4 w-1/3 h-1/3 bg-blue-900/5 rounded-full blur-[100px]"></div>
-        </div>
-        
-        <div className="relative z-10">
+        <section className="mb-16">
           <div className="flex flex-col md:flex-row items-center justify-between mb-12">
             <div className="md:w-1/2 mb-8 md:mb-0">
               <motion.h1 
@@ -276,6 +275,7 @@ export default function NordVPNPage() {
           </motion.div>
           
           {/* Product Tabs */}
+          <section className="mb-16">
           <div className="flex justify-center mb-12 overflow-x-auto pb-2">
             <div className="flex space-x-2 p-1 bg-gray-900/80 backdrop-blur-sm rounded-lg border border-gray-800">
               <button
@@ -294,9 +294,10 @@ export default function NordVPNPage() {
               </button>
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Tab Content */}
+        <section className="mb-16">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
@@ -766,6 +767,7 @@ export default function NordVPNPage() {
             )}
           </motion.div>
         </AnimatePresence>
+        </section>
 
         {/* Combined Security Section */}
         <motion.div
@@ -974,7 +976,7 @@ export default function NordVPNPage() {
             </div>
           </div>
         </motion.div>
-      </div>
+      </section>
 
       {/* Footer */}
       <footer className="px-6 md:px-16 py-8 text-center text-sm text-gray-500 bg-black border-t border-gray-800">
@@ -1006,15 +1008,15 @@ export default function NordVPNPage() {
           </div>
         </div>
       </footer>
-      </main>
       
       {/* Floating Call-to-Action Buttons */}
-      <motion.div 
-        className="fixed bottom-6 right-6 z-50 flex flex-col gap-3"
-        initial={{ y: 100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 1.5, duration: 0.5, type: "spring" }}
-      >
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
+        <motion.div
+          initial={{ y: 100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 1.5, duration: 0.5, type: "spring" }}
+          className="flex flex-col gap-3"
+        >
         <motion.a 
           href={nordVPNReferralLink}
           target="_blank"
@@ -1068,7 +1070,9 @@ export default function NordVPNPage() {
             </div>
           </div>
         </motion.a>
-      </motion.div>
+        </motion.div>
+      </div>
+      </main>
     </div>
   );
 }

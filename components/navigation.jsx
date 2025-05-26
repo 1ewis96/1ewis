@@ -83,7 +83,6 @@ export default function Navigation() {
   
   const cardItems = [
     { name: 'Revolut', path: '/cards/revolut', color: 'blue' },
-    { name: 'Wirex', path: '/cards/wirex', color: 'sky' },
   ];
   
   const toolItems = [

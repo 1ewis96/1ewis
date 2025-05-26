@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { Button } from "../components/ui/button";
 import { Mail, CheckCircle, AlertCircle } from "lucide-react";
 import Footer from '../components/Footer';
-import PriceTicker from '../components/PriceTicker';
 import ParticleBackground from '../components/ParticleBackground';
 import Head from 'next/head';
 
@@ -172,13 +171,10 @@ export default function MailingListPage() {
         <meta name="description" content="Subscribe to our mailing list for exclusive crypto deals, market insights, and early access to new features." />
       </Head>
       
-      <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-black text-white">
-        {/* Price Ticker */}
-        <PriceTicker />
-        
-        <main className="flex-1">
+      <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-black text-white">
+        <main className="pt-0">
           {/* Hero Section with animated background */}
-          <section className="py-24 px-4 bg-gradient-to-b from-black to-gray-950 relative overflow-hidden">
+          <section className="pt-32 pb-16 px-4 bg-gradient-to-b from-black to-gray-950 relative overflow-hidden">
             {/* Enhanced particle background */}
             <ParticleBackground 
               count={80} 
@@ -208,7 +204,7 @@ export default function MailingListPage() {
                 </h1>
                 
                 <motion.p 
-                  className="text-xl md:text-2xl text-gray-300 mb-10 max-w-3xl mx-auto"
+                  className="text-xl md:text-2xl text-gray-300 -mb-2 max-w-3xl mx-auto"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.3, duration: 0.6 }}
@@ -220,14 +216,14 @@ export default function MailingListPage() {
           </section>
           
           {/* Subscription Form Section */}
-          <section className="py-16 px-4 bg-gradient-to-b from-gray-950 to-black relative overflow-hidden">
+          <section className="py-8 px-4 bg-gradient-to-b from-gray-950 to-black relative overflow-hidden">{/* Reduced vertical padding */}
             {/* Background glow effects */}
             <div className="absolute top-1/4 left-1/4 w-1/2 h-1/2 bg-blue-500/10 rounded-full blur-[100px] -z-10"></div>
             <div className="absolute bottom-1/4 right-1/4 w-1/3 h-1/3 bg-purple-500/10 rounded-full blur-[100px] -z-10"></div>
             
             <div className="max-w-3xl mx-auto">
               <motion.div
-                className="bg-gray-900/80 backdrop-blur-md border border-gray-800 rounded-2xl p-8 shadow-xl"
+                className="bg-gray-900/80 backdrop-blur-md border border-gray-800 rounded-2xl p-6 shadow-xl" /* Reduced padding */
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
@@ -265,7 +261,7 @@ export default function MailingListPage() {
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit}>
-                    <h3 className="text-2xl font-bold mb-6 text-center">Subscribe to Our Newsletter</h3>
+                    <h3 className="text-xl font-bold mb-4 text-center">Subscribe to Our Newsletter</h3>{/* Reduced font size and margin */}
                     
                     {submitStatus === 'error' && (
                       <motion.div 
@@ -278,7 +274,7 @@ export default function MailingListPage() {
                       </motion.div>
                     )}
                     
-                    <div className="mb-6">
+                    <div className="mb-4">{/* Reduced margin */}
                       <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
                         Your Name (Optional)
                       </label>
@@ -292,7 +288,7 @@ export default function MailingListPage() {
                       />
                     </div>
                     
-                    <div className="mb-8">
+                    <div className="mb-5">{/* Reduced margin */}
                       <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
                         Email Address <span className="text-red-400">*</span>
                       </label>
@@ -308,7 +304,7 @@ export default function MailingListPage() {
                     </div>
                     
                     {/* reCAPTCHA container */}
-                    <div className="mb-6 flex justify-center">
+                    <div className="mb-4 flex justify-center">{/* Reduced margin */}
                       <div id="recaptcha-container" className="g-recaptcha"></div>
                     </div>
                     
@@ -389,6 +385,46 @@ export default function MailingListPage() {
                   <p className="text-gray-400">Get special promotional codes and bonus offers from our partners.</p>
                 </motion.div>
               </div>
+            </div>
+          </section>
+          
+          {/* Social Media Section */}
+          <section className="py-16 px-4 bg-gradient-to-b from-gray-950 to-black relative overflow-hidden">
+            <div className="max-w-4xl mx-auto text-center">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true }}
+                className="bg-gray-900/80 backdrop-blur-md border border-gray-800 rounded-2xl p-8 shadow-xl"
+              >
+                <div className="inline-flex items-center mb-6 bg-gradient-to-r from-blue-900/30 to-purple-900/30 px-4 py-2 rounded-full">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="text-white w-5 h-5 mr-2" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+                  </svg>
+                  <span className="text-blue-300 font-medium">Follow Us on X</span>
+                </div>
+                
+                <h2 className="text-2xl md:text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400">
+                  Stay Connected on X
+                </h2>
+                
+                <p className="text-lg text-gray-300 mb-8">
+                  Follow <span className="text-blue-400 font-semibold">@1ewis_com</span> on X for real-time updates, crypto insights, and exclusive announcements.
+                </p>
+                
+                <a 
+                  href="https://x.com/1ewis_com" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="inline-flex items-center bg-black hover:bg-black text-white font-medium py-3 px-8 rounded-lg shadow-lg transition-all duration-300"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 mr-2" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+                  </svg>
+                  Follow @1ewis_com
+                </a>
+              </motion.div>
             </div>
           </section>
           

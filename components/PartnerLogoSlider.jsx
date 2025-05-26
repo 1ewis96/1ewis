@@ -14,8 +14,6 @@ export default function PartnerLogoSlider() {
     { name: 'TradingView', path: '/logos/tradingview.webp', color: 'indigo', link: '/tools/tradingview' },
     { name: 'CoinTracking', path: '/logos/cointracking.webp', color: 'violet', link: '/tools/cointracking' },
     { name: 'NordVPN', path: '/logos/nordvpn.webp', color: 'blue', link: '/tools/nordvpn' },
-    { name: 'Trezor', path: '/logos/trezor.webp', color: 'slate', link: '/wallets/trezor' },
-    { name: 'Wirex', path: '/logos/wirex.webp', color: 'sky', link: '/cards/wirex' },
   ];
 
   // Fallback colors for logos in case the image fails to load

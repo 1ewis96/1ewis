@@ -191,45 +191,11 @@ export default function RevolutPage() {
                 transition={{ duration: 0.8, delay: 0.2 }}
                 className="relative"
               >
-                <div className="relative h-[400px] w-full max-w-[400px] mx-auto">
-                  {/* Card animation */}
-                  <motion.div 
-                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[280px] h-[170px] rounded-2xl bg-gradient-to-br from-blue-900 to-purple-900 shadow-xl z-20"
-                    animate={animateCard ? {
-                      rotateY: [0, 180],
-                      scale: [1, 1.05, 1],
-                      y: [0, -10, 0]
-                    } : {}}
-                    transition={{
-                      duration: 1.5,
-                      ease: "easeInOut",
-                      times: [0, 0.5, 1],
-                      repeat: Infinity,
-                      repeatDelay: 5
-                    }}
-                  >
-                    <div className="absolute inset-0 rounded-2xl overflow-hidden">
-                      <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-purple-600/20 backdrop-blur-sm"></div>
-                      <div className="absolute top-4 left-4">
-                        <div className="text-xs font-bold text-blue-200 mb-1">REVOLUT METAL</div>
-                        <div className="text-sm font-medium text-white">1234 5678 9012 3456</div>
-                      </div>
-                      <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
-                        <div>
-                          <div className="text-xs text-blue-200 mb-1">CARD HOLDER</div>
-                          <div className="text-sm font-medium text-white">LEWIS</div>
-                        </div>
-                        <div className="flex items-center">
-                          <div className="w-8 h-8 rounded-full bg-red-500 opacity-70"></div>
-                          <div className="w-8 h-8 rounded-full bg-yellow-500 opacity-70 -ml-4"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                  
+                <div className="relative h-[300px] w-full max-w-[400px] mx-auto flex items-center justify-center">
                   {/* Background elements */}
                   <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full bg-blue-500/20 blur-[50px] z-10"></div>
                   <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] rounded-full bg-purple-500/20 blur-[30px] z-10"></div>
+                  
                 </div>
               </motion.div>
             </div>
@@ -469,19 +435,19 @@ export default function RevolutPage() {
             {[
               {
                 name: "Standard",
-                price: "Free",
+                price: "",
                 color: "bg-gray-800",
                 features: ["Free UK Account", "Free Euro IBAN Account", "Spend in 150+ Currencies", "Basic Crypto Trading", "Savings Vaults"]
               },
               {
                 name: "Premium",
-                price: "$9.99/month",
+                price: "",
                 color: "bg-blue-800",
                 features: ["All Standard Features", "Global Express Delivery", "Overseas Medical Insurance", "Priority Customer Support", "Exclusive Card Designs"]
               },
               {
                 name: "Metal",
-                price: "$16.99/month",
+                price: "",
                 color: "bg-blue-700",
                 features: ["All Premium Features", "Exclusive Metal Card", "Up to 1% Cashback", "Airport Lounge Access", "Dedicated Concierge Service"]
               }
@@ -493,8 +459,7 @@ export default function RevolutPage() {
               >
                 <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
                 <div className="mb-4">
-                  <p className="text-2xl font-semibold">{plan.price}</p>
-                  {plan.price !== "Free" && <span className="text-xs text-gray-300">billed annually</span>}
+                  <p className="text-sm text-blue-300">Contact for pricing</p>
                 </div>
                 <div className="mt-auto">
                   <span className="text-xs text-gray-300 mb-2 block">Key Features</span>
@@ -619,20 +584,22 @@ export default function RevolutPage() {
             <div className="bg-gray-800/70 backdrop-blur-sm rounded-lg py-3 px-4 mb-8 inline-block">
               <p className="text-sm text-gray-300 flex items-center justify-center">
                 <span className="bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded mr-2">REFERRAL BONUS</span>
-                Free month of Revolut Premium (£6.99 value)
+                Free month of Revolut Premium
               </p>
             </div>
             
-            <ButtonLink 
-              href={referralLink}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-10 py-4 text-lg rounded-lg shadow-lg hover:shadow-blue-500/20 transition-all duration-300"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span className="flex items-center justify-center">
-                Join Revolut Now <ArrowRight className="ml-2 w-5 h-5" />
-              </span>
-            </ButtonLink>
+            <div className="mt-6">
+              <ButtonLink 
+                href={referralLink}
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-10 py-4 text-lg rounded-lg shadow-lg hover:shadow-blue-500/20 transition-all duration-300"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span className="flex items-center justify-center">
+                  Join Revolut Now <ArrowRight className="ml-2 w-5 h-5" />
+                </span>
+              </ButtonLink>
+            </div>
           </div>
         </motion.div>
       </div>
