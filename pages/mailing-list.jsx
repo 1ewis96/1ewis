@@ -40,10 +40,12 @@ export default function MailingListPage() {
     window.grecaptchaCallback = () => {
       try {
         if (document.getElementById('recaptcha-container')) {
-          window.grecaptcha.render('recaptcha-container', {
+          // Store the widget ID so we can get the response later
+          recaptchaRef.current = window.grecaptcha.render('recaptcha-container', {
             'sitekey': '6LemJEkrAAAAANVTNR5-X4y9ywJz8VmOMobnirh3',
             'theme': 'dark'
           });
+          console.log('reCAPTCHA widget ID:', recaptchaRef.current);
         }
       } catch (error) {
         console.error('Error rendering reCAPTCHA:', error);
@@ -77,7 +79,15 @@ export default function MailingListPage() {
     let recaptchaToken = '';
     try {
       if (window.grecaptcha) {
+        // Try to get the response using the stored widget ID
         recaptchaToken = window.grecaptcha.getResponse(recaptchaRef.current);
+        console.log('Retrieved reCAPTCHA token:', recaptchaToken ? 'Token present' : 'No token');
+        
+        // If no token, try getting it without the widget ID
+        if (!recaptchaToken && typeof window.grecaptcha.getResponse === 'function') {
+          recaptchaToken = window.grecaptcha.getResponse();
+          console.log('Retrieved reCAPTCHA token (fallback):', recaptchaToken ? 'Token present' : 'No token');
+        }
         
         if (!recaptchaToken) {
           setSubmitStatus('error');
@@ -87,9 +97,17 @@ export default function MailingListPage() {
         }
       } else {
         console.warn('reCAPTCHA not loaded');
+        setSubmitStatus('error');
+        setErrorMessage('reCAPTCHA verification failed to load. Please refresh the page and try again.');
+        setSubmitting(false);
+        return;
       }
     } catch (error) {
       console.error('Error getting reCAPTCHA response:', error);
+      setSubmitStatus('error');
+      setErrorMessage('Error with reCAPTCHA verification. Please try again.');
+      setSubmitting(false);
+      return;
     }
 
     try {
