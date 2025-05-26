@@ -17,51 +17,48 @@ export default function MailingListPage() {
   
   // Load reCAPTCHA script
   useEffect(() => {
-    // Add reCAPTCHA script if it doesn't exist
-    if (!window.grecaptcha) {
-      const script = document.createElement('script');
-      script.src = 'https://www.google.com/recaptcha/api.js';
-      script.async = true;
-      script.defer = true;
-      document.head.appendChild(script);
-      
-      script.onload = () => {
-        if (window.grecaptcha && window.grecaptcha.ready) {
-          window.grecaptcha.ready(() => {
-            try {
-              recaptchaRef.current = window.grecaptcha.render('recaptcha-container', {
-                'sitekey': '6LemJEkrAAAAANVTNR5-X4y9ywJz8VmOMobnirh3',
-                'theme': 'dark'
-              });
-            } catch (error) {
-              console.error('Error rendering reCAPTCHA:', error);
-            }
-          });
-        }
-      };
-    } else if (window.grecaptcha && window.grecaptcha.ready) {
-      // If script already loaded, just render the widget
-      window.grecaptcha.ready(() => {
-        try {
-          recaptchaRef.current = window.grecaptcha.render('recaptcha-container', {
-            'sitekey': '6LemJEkrAAAAANVTNR5-X4y9ywJz8VmOMobnirh3',
-            'theme': 'dark'
-          });
-        } catch (error) {
-          console.error('Error rendering reCAPTCHA:', error);
-        }
-      });
-    }
+    // Only run this in the browser
+    if (typeof window === 'undefined') return;
     
-    // Cleanup
-    return () => {
-      const scripts = document.querySelectorAll('script[src="https://www.google.com/recaptcha/api.js"]');
-      scripts.forEach(script => {
-        if (script.parentNode) {
+    // Cleanup function to remove any existing scripts
+    const cleanup = () => {
+      if (window.grecaptchaCallback) {
+        delete window.grecaptchaCallback;
+      }
+      const existingScripts = document.querySelectorAll('script[src^="https://www.google.com/recaptcha/api.js"]');
+      existingScripts.forEach(script => {
+        if (script && script.parentNode) {
           script.parentNode.removeChild(script);
         }
       });
     };
+    
+    // Clean up any existing reCAPTCHA scripts
+    cleanup();
+    
+    // Define the callback function for when reCAPTCHA script loads
+    window.grecaptchaCallback = () => {
+      try {
+        if (document.getElementById('recaptcha-container')) {
+          window.grecaptcha.render('recaptcha-container', {
+            'sitekey': '6LemJEkrAAAAANVTNR5-X4y9ywJz8VmOMobnirh3',
+            'theme': 'dark'
+          });
+        }
+      } catch (error) {
+        console.error('Error rendering reCAPTCHA:', error);
+      }
+    };
+    
+    // Create and append the script
+    const script = document.createElement('script');
+    script.src = `https://www.google.com/recaptcha/api.js?onload=grecaptchaCallback&render=explicit`;
+    script.async = true;
+    script.defer = true;
+    document.head.appendChild(script);
+    
+    // Cleanup on unmount
+    return cleanup;
   }, []);
 
   const handleSubmit = async (e) => {
