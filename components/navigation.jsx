@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Menu, X, ChevronDown, Sparkles, Zap, ArrowRight, Mail } from 'lucide-react';
+import { Menu, X, ChevronDown, Sparkles, Zap, ArrowRight, Mail, Book } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Navigation() {
@@ -161,7 +161,7 @@ export default function Navigation() {
               <span className="relative z-10">{item.name}</span>
             </Link>
           ))}
-          
+         
           {/* Categories Dropdowns */}
           
           {/* Exchanges Dropdown */}
@@ -375,6 +375,19 @@ export default function Navigation() {
               <span>Newsletter</span>
             </motion.a>
           </Link>
+
+                    
+          {/* eBooks Call to Action */}
+          <Link href="/ebooks" passHref legacyBehavior>
+            <motion.a 
+              className="flex items-center px-4 py-2 text-white bg-gradient-to-r from-blue-600/80 to-purple-600/80 hover:from-blue-600 hover:to-purple-600 rounded-md transition-all duration-300 relative group ml-2"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Book className="mr-2 h-4 w-4" />
+              <span>eBooks</span>
+            </motion.a>
+          </Link>
         </div>
         
         {/* Mobile Menu Button */}
@@ -458,6 +471,28 @@ export default function Navigation() {
                   <span className="flex items-center">
                     <Mail className="w-5 h-5 mr-2" />
                     Newsletter
+                  </span>
+                </Link>
+              </motion.div>
+              
+              {/* Mobile eBooks Button */}
+              <motion.div
+                initial={{ x: 50, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.2 }}
+              >
+                <Link 
+                  href="/ebooks"
+                  className={`block py-3 px-4 text-lg rounded-md transition-colors mb-2 ${
+                    isActive('/ebooks') 
+                      ? 'bg-gradient-to-r from-blue-600/80 to-purple-600/80 text-white font-medium' 
+                      : 'bg-gradient-to-r from-blue-600/60 to-purple-600/60 text-white hover:from-blue-600/80 hover:to-purple-600/80'
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <span className="flex items-center">
+                    <Book className="w-5 h-5 mr-2" />
+                    Free eBooks
                   </span>
                 </Link>
               </motion.div>

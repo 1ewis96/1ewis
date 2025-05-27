@@ -1,6 +1,6 @@
 import { Card, CardContent } from "../components/ui/card";
 import { Button, ButtonLink } from "../components/ui/button";
-import { ArrowRight, Github, Twitter, Sparkles, Zap, TrendingUp, Star, Award, HelpCircle, ChevronDown, ExternalLink, Tags, Lock } from "lucide-react";
+import { ArrowRight, Github, Twitter, Sparkles, Zap, TrendingUp, Star, Award, HelpCircle, ChevronDown, ExternalLink, Tags, Lock, Youtube } from "lucide-react";
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import PriceTicker from '../components/PriceTicker';
@@ -158,6 +158,38 @@ export default function HomePage() {
                   </ButtonLink>
                 </motion.div>
               </div>
+              
+              {/* Social Media Buttons */}
+              <motion.div 
+                className="mt-8 flex flex-wrap justify-center gap-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7, duration: 0.6 }}
+              >
+                <a 
+                  href="https://x.com/1ewis_com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center px-6 py-3 rounded-lg bg-black text-white shadow-md"
+                >
+                  <svg className="mr-3 h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" fill="currentColor"/>
+                  </svg>
+                  <span className="font-bold">Follow @1ewis_com on X</span>
+                </a>
+                
+                <a 
+                  href="https://youtube.com/@1ewis_com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center px-6 py-3 rounded-lg bg-red-800/90 text-white shadow-md"
+                >
+                  <svg className="mr-3 h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="white"/>
+                  </svg>
+                  <span className="font-bold">Subscribe @1ewis_com</span>
+                </a>
+              </motion.div>
             </motion.div>
           </div>
         </section>
