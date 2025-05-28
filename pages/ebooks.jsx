@@ -154,8 +154,38 @@ export default function EbooksPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-gray-900 to-black text-white">
       <Head>
-        <title>Crypto eBooks | Free Educational Resources | 1ewis.com</title>
-        <meta name="description" content="Download free cryptocurrency eBooks covering everything from beginner basics to advanced trading strategies and emerging trends." />
+        <title>Free Crypto eBooks 2025 | Beginner to Advanced Trading Guides | 1ewis.com</title>
+        <meta name="description" content="Download free cryptocurrency eBooks (2025) covering beginner basics, investing strategies, DeFi, NFTs, and advanced trading techniques. Start your crypto journey today." />
+        <meta name="keywords" content="crypto for beginners, crypto educational resources, free crypto ebooks, crypto investing guide, defi explained, how to start investing in crypto" />
+        <link rel="canonical" href="https://1ewis.com/ebooks" />
+        <meta property="og:title" content="Free Crypto eBooks 2025 | Beginner to Advanced Trading Guides" />
+        <meta property="og:description" content="Download free cryptocurrency eBooks covering beginner basics, investing strategies, DeFi, NFTs, and advanced trading techniques." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://1ewis.com/ebooks" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Free Crypto eBooks 2025 | Learning Resources" />
+        <meta name="twitter:description" content="Download free cryptocurrency eBooks covering beginner basics to advanced trading strategies." />
+        
+        {/* Schema.org structured data for educational content */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            "name": "Free Cryptocurrency eBooks Collection",
+            "description": "Comprehensive guides to help you navigate the cryptocurrency ecosystem, from beginner concepts to advanced strategies.",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD",
+              "availability": "https://schema.org/InStock"
+            },
+            "educationalUse": "Self-learning resource",
+            "audience": {
+              "@type": "Audience",
+              "audienceType": "Cryptocurrency enthusiasts and investors"
+            }
+          })}
+        </script>
       </Head>
       
       <main className="pt-28">

@@ -1,15 +1,78 @@
 import '../styles/globals.css';
 import Head from 'next/head';
+import Script from 'next/script';
+import { useRouter } from 'next/router';
 import Navigation from '../components/navigation';
 
 function MyApp({ Component, pageProps }) {
+  const router = useRouter();
+  const canonicalUrl = `https://1ewis.com${router.asPath === '/' ? '' : router.asPath}`;
+  
   return (
     <>
       <Head>
-        <title>1ewis.com - Crypto Affiliate Portfolio</title>
-        <meta name="description" content="Your gateway to the top crypto platforms. Compare the best, claim bonuses, and start trading smarter." />
+        {/* Default meta tags - will be overridden by page-specific ones */}
+        <title>1ewis.com | Best Crypto Exchanges, Wallets & Tools with Exclusive Bonuses</title>
+        <meta name="description" content="Compare the best cryptocurrency exchanges, wallets, and tools with exclusive sign-up bonuses. Find low-fee exchanges, secure wallets, and earn passive income with crypto." />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" href="/favicon.ico" />
+        
+        {/* Default canonical URL - will be overridden by page-specific ones */}
+        <link rel="canonical" href={canonicalUrl} />
+        
+        {/* Common SEO tags */}
+        <meta name="robots" content="index, follow" />
+        <meta name="language" content="English" />
+        <meta charSet="UTF-8" />
+        
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:site_name" content="1ewis.com" />
+        
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@1ewis_com" />
+        
+        {/* Preconnect to external domains to improve performance */}
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://www.google-analytics.com" />
       </Head>
+      
+      {/* Global site tag - Google Analytics */}
+      <Script
+        strategy="afterInteractive"
+        src={`https://www.googletagmanager.com/gtag/js?id=G-36XZJNJHRF`}
+      />
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-36XZJNJHRF');
+        `}
+      </Script>
+      
+      {/* Global structured data for organization */}
+      <Script
+        id="organization-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Organization',
+            'name': '1ewis.com',
+            'url': 'https://1ewis.com',
+            'logo': 'https://1ewis.com/logo.png',
+            'sameAs': [
+              'https://twitter.com/1ewis_com',
+              'https://youtube.com/@1ewis_com'
+            ],
+            'description': 'Compare the best cryptocurrency exchanges, wallets, and tools with exclusive sign-up bonuses.'
+          })
+        }}
+      />
+      
       <Navigation />
       <Component {...pageProps} />
     </>

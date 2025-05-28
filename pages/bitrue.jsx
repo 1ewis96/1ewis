@@ -81,8 +81,40 @@ export default function Bitrue() {
   return (
     <div className="min-h-screen bg-black text-white">
       <Head>
-        <title>Bitrue | XRP-Focused Crypto Exchange with Yield Products</title>
-        <meta name="description" content="Bitrue is a cryptocurrency exchange with a focus on XRP and crypto yield products. Sign up with our referral link for a 30% commission on trading fees." />
+        <title>Bitrue Review 2025 | XRP Trading, Fees & 30% Commission Bonus</title>
+        <meta name="description" content="Honest Bitrue review (2025): Compare fees, trading features, and security. Sign up with our referral link for exclusive 30% commission on trading fees and yield products." />
+        <meta name="keywords" content="bitrue review, bitrue vs binance, best crypto exchange for XRP, low fee crypto exchange 2025, bitrue referral code, bitrue power piggy" />
+        <link rel="canonical" href="https://1ewis.com/bitrue" />
+        <meta property="og:title" content="Bitrue Review 2025 | XRP Trading & 30% Commission Bonus" />
+        <meta property="og:description" content="Honest Bitrue review: Compare fees, trading features, and security. Get 30% commission on trading fees with our referral link." />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="https://1ewis.com/bitrue" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Bitrue Review 2025 | XRP Trading & Bonuses" />
+        <meta name="twitter:description" content="Honest Bitrue review: Compare fees, trading features, and security. Get 30% commission on trading fees." />
+        
+        {/* Schema.org structured data for review */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Review",
+            "name": "Bitrue Exchange Review",
+            "reviewRating": {
+              "@type": "Rating",
+              "ratingValue": "4.5",
+              "bestRating": "5"
+            },
+            "author": {
+              "@type": "Person",
+              "name": "1ewis.com"
+            },
+            "itemReviewed": {
+              "@type": "Product",
+              "name": "Bitrue Exchange",
+              "description": "XRP-focused exchange with innovative crypto yield products"
+            }
+          })}
+        </script>
       </Head>
 
       <main className="container mx-auto px-4 pt-32 pb-16">

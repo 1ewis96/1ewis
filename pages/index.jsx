@@ -2,6 +2,7 @@ import { Card, CardContent } from "../components/ui/card";
 import { Button, ButtonLink } from "../components/ui/button";
 import { ArrowRight, Github, Twitter, Sparkles, Zap, TrendingUp, Star, Award, HelpCircle, ChevronDown, ExternalLink, Tags, Lock, Youtube } from "lucide-react";
 import Link from 'next/link';
+import Head from 'next/head';
 import { motion, AnimatePresence } from 'framer-motion';
 import PriceTicker from '../components/PriceTicker';
 import CryptoStats from '../components/CryptoStats';
@@ -84,6 +85,19 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-black text-white">
+      <Head>
+        <title>1ewis.com | Best Crypto Exchanges, Wallets & Tools with Exclusive Bonuses</title>
+        <meta name="description" content="Compare the best cryptocurrency exchanges, wallets, and tools with exclusive sign-up bonuses. Find low-fee exchanges, secure wallets, and earn passive income with crypto." />
+        <meta name="keywords" content="best crypto exchange, low fee crypto exchange 2025, crypto trading fees, best cold wallet, earn interest on crypto, crypto portfolio tracker" />
+        <link rel="canonical" href="https://1ewis.com" />
+        <meta property="og:title" content="1ewis.com | Best Crypto Exchanges, Wallets & Tools with Exclusive Bonuses" />
+        <meta property="og:description" content="Compare the best cryptocurrency exchanges, wallets, and tools with exclusive sign-up bonuses." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://1ewis.com" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="1ewis.com | Best Crypto Exchanges & Tools" />
+        <meta name="twitter:description" content="Compare the best cryptocurrency exchanges, wallets, and tools with exclusive sign-up bonuses." />
+      </Head>
       
       {/* Price Ticker */}
       <PriceTicker />

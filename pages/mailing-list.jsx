@@ -167,8 +167,17 @@ export default function MailingListPage() {
   return (
     <>
       <Head>
-        <title>Join Our Mailing List | 1ewis.com</title>
-        <meta name="description" content="Subscribe to our mailing list for exclusive crypto deals, market insights, and early access to new features." />
+        <title>Crypto Newsletter | Exclusive Deals & Market Insights | 1ewis.com</title>
+        <meta name="description" content="Subscribe to our free crypto newsletter for exclusive deals, trading tips, and market insights. Get early access to exchange promotions and referral bonuses." />
+        <meta name="keywords" content="crypto newsletter, crypto trading tips, crypto market insights, crypto referral bonuses, crypto exchange deals, crypto passive income" />
+        <link rel="canonical" href="https://1ewis.com/mailing-list" />
+        <meta property="og:title" content="Crypto Newsletter | Exclusive Deals & Market Insights" />
+        <meta property="og:description" content="Subscribe to our free crypto newsletter for exclusive deals, trading tips, and market insights." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://1ewis.com/mailing-list" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Crypto Newsletter | 1ewis.com" />
+        <meta name="twitter:description" content="Subscribe for exclusive crypto deals and insights." />
       </Head>
       
       <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-black text-white">

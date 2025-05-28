@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Disallow admin or private areas if you add them in the future
+# Disallow: /admin/
+# Disallow: /private/
+
+# Sitemap location
+Sitemap: https://1ewis.com/api/sitemap
