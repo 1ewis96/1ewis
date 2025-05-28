@@ -2,11 +2,23 @@ import '../styles/globals.css';
 import Head from 'next/head';
 import Script from 'next/script';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import Navigation from '../components/navigation';
+import ConsentManager from '../components/ConsentManager';
+import { initializeGoogleConsentMode, initializeTCF } from '../utils/consentManager';
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
   const canonicalUrl = `https://1ewis.com${router.asPath === '/' ? '' : router.asPath}`;
+  
+  // Initialize Google Consent Mode and TCF API on client-side only
+  useEffect(() => {
+    // Initialize Google's Consent Mode with default settings
+    initializeGoogleConsentMode();
+    
+    // Initialize TCF API for IAB Transparency & Consent Framework
+    initializeTCF();
+  }, []);
   
   return (
     <>
@@ -79,6 +91,7 @@ function MyApp({ Component, pageProps }) {
       
       <Navigation />
       <Component {...pageProps} />
+      <ConsentManager />
     </>
   );
 }
