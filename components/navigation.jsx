@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Menu, X, ChevronDown, Sparkles, Zap, ArrowRight, Mail, Book } from 'lucide-react';
+import { Menu, X, ChevronDown, Sparkles, Zap, ArrowRight, Mail, Book, Newspaper } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Navigation() {
@@ -12,6 +12,7 @@ export default function Navigation() {
   const [walletsOpen, setWalletsOpen] = useState(false);
   const [cardsOpen, setCardsOpen] = useState(false);
   const [toolsOpen, setToolsOpen] = useState(false);
+  const [newsOpen, setNewsOpen] = useState(false);
   const router = useRouter();
   
   // Function to toggle a dropdown and close others
@@ -21,6 +22,7 @@ export default function Navigation() {
     if (dropdown !== 'wallets') setWalletsOpen(false);
     if (dropdown !== 'cards') setCardsOpen(false);
     if (dropdown !== 'tools') setToolsOpen(false);
+    if (dropdown !== 'news') setNewsOpen(false);
     
     // Toggle the selected dropdown
     switch(dropdown) {
@@ -35,6 +37,9 @@ export default function Navigation() {
         break;
       case 'tools':
         setToolsOpen(prev => !prev);
+        break;
+      case 'news':
+        setNewsOpen(prev => !prev);
         break;
       default:
         break;
@@ -89,6 +94,12 @@ export default function Navigation() {
     { name: 'TradingView', path: '/tools/tradingview', color: 'indigo' },
     { name: 'NordVPN', path: '/tools/nordvpn', color: 'blue' },
     { name: 'CoinTracking', path: '/tools/cointracking', color: 'violet' },
+  ];
+  
+  const newsItems = [
+    { name: 'Latest News', path: '/news', color: 'green' },
+    { name: 'Market Updates', path: '/news/market', color: 'emerald' },
+    { name: 'Trending Topics', path: '/news/trending', color: 'teal' },
   ];
 
   const isActive = (path) => router.pathname === path;
@@ -364,6 +375,53 @@ export default function Navigation() {
             </AnimatePresence>
           </div>
           
+          {/* News Dropdown */}
+          <div className="relative">
+            <motion.button 
+              onClick={() => toggleDropdown('news')}
+              className="flex items-center px-4 py-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-md transition-all duration-300 relative group"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <motion.span
+                className="absolute inset-0 rounded-md bg-gradient-to-r from-green-500/20 to-teal-500/20 opacity-0 group-hover:opacity-100"
+                initial={{ scale: 0.8 }}
+                whileHover={{ scale: 1 }}
+                transition={{ duration: 0.2 }}
+              />
+              <span>News</span>
+              <motion.div
+                animate={{ rotate: newsOpen ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <ChevronDown className="ml-1 w-4 h-4" />
+              </motion.div>
+            </motion.button>
+            
+            <AnimatePresence>
+              {newsOpen && (
+                <motion.div 
+                  className="absolute left-0 mt-2 w-48 rounded-md shadow-xl bg-gray-900/95 backdrop-blur-sm ring-1 ring-white/10 overflow-hidden z-50 border border-green-500/20"
+                  initial={{ opacity: 0, y: -10, height: 0 }}
+                  animate={{ opacity: 1, y: 0, height: 'auto' }}
+                  exit={{ opacity: 0, y: -10, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {newsItems.map((item) => (
+                    <Link 
+                      key={item.path} 
+                      href={item.path}
+                      className={`block px-4 py-3 transition-colors border-l-2 ${isActive(item.path) ? `border-${item.color}-500 bg-white/5 text-white font-medium` : `border-transparent text-gray-300 hover:border-${item.color}-500 hover:bg-white/5 hover:text-white`}`}
+                      onClick={() => setNewsOpen(false)}
+                    >
+                      {item.name}
+                    </Link>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+          
           {/* Mailing List Button (at the end of navbar) */}
           <Link href="/mailing-list" passHref legacyBehavior>
             <motion.a 
@@ -596,6 +654,34 @@ export default function Navigation() {
                       initial={{ x: 50, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
                       transition={{ delay: 0.5 + (index * 0.05) }}
+                    >
+                      <Link 
+                        href={item.path}
+                        className={`block py-3 px-4 text-lg rounded-md transition-colors border-l-2 ${isActive(item.path) ? `border-${item.color}-500 bg-white/5 text-white font-medium` : `border-transparent text-gray-300 hover:border-${item.color}-500 hover:bg-white/5 hover:text-white`}`}
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        {item.name}
+                      </Link>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+              
+              {/* News Section */}
+              <motion.div 
+                className="mt-4 pt-4 border-t border-gray-800"
+                initial={{ x: 50, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.6 }}
+              >
+                <h3 className="px-4 text-sm font-medium text-gray-400 uppercase tracking-wider mb-2">Crypto News</h3>
+                <div className="space-y-1">
+                  {newsItems.map((item, index) => (
+                    <motion.div
+                      key={item.path}
+                      initial={{ x: 50, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      transition={{ delay: 0.6 + (index * 0.05) }}
                     >
                       <Link 
                         href={item.path}
