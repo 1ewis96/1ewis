@@ -89,9 +89,11 @@ function MyApp({ Component, pageProps }) {
         }}
       />
       
-      <Navigation />
+      {/* Only show Navigation on non-admin pages */}
+      {!router.pathname.startsWith('/admin') && <Navigation />}
       <Component {...pageProps} />
-      <ConsentManager />
+      {/* Only show ConsentManager on non-admin pages */}
+      {!router.pathname.startsWith('/admin') && <ConsentManager />}
     </>
   );
 }

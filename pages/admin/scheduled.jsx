@@ -1,0 +1,286 @@
+import React, { useState, useEffect } from 'react';
+import Head from 'next/head';
+import { motion } from 'framer-motion';
+import AdminNavigation from '../../components/AdminNavigation';
+import { Calendar, Clock, Edit, Eye, Trash2, AlertTriangle } from 'lucide-react';
+import withAdminAuth from '../../components/withAdminAuth';
+
+function ScheduledArticles() {
+  // Scheduled articles state
+  const [scheduledArticles, setScheduledArticles] = useState([]);
+
+  // Mock scheduled articles data
+  const mockScheduledArticles = [
+    {
+      id: '1',
+      title: 'Upcoming Crypto Events in June 2025',
+      category: 'Trending Topics',
+      scheduledDate: '2025-06-01T09:00:00',
+      author: 'Admin',
+      status: 'scheduled'
+    },
+    {
+      id: '2',
+      title: 'Q2 2025 Crypto Market Review',
+      category: 'Market Updates',
+      scheduledDate: '2025-06-05T12:00:00',
+      author: 'Admin',
+      status: 'scheduled'
+    },
+    {
+      id: '3',
+      title: 'Top 10 DeFi Platforms to Watch in 2025',
+      category: 'DeFi',
+      scheduledDate: '2025-06-10T15:30:00',
+      author: 'Admin',
+      status: 'scheduled'
+    },
+    {
+      id: '4',
+      title: 'How to Secure Your Crypto in 2025',
+      category: 'Guides',
+      scheduledDate: '2025-06-15T08:00:00',
+      author: 'Admin',
+      status: 'scheduled'
+    },
+    {
+      id: '5',
+      title: 'The Evolution of NFT Gaming',
+      category: 'NFTs',
+      scheduledDate: '2025-06-20T10:00:00',
+      author: 'Admin',
+      status: 'scheduled'
+    }
+  ];
+
+  useEffect(() => {
+    // Load mock scheduled articles
+    setScheduledArticles(mockScheduledArticles);
+  }, []);
+
+  // Format date for display
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  // Format time for display
+  const formatTime = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  // Calculate time remaining
+  const getTimeRemaining = (dateString) => {
+    const now = new Date();
+    const scheduledDate = new Date(dateString);
+    const diffTime = scheduledDate - now;
+    
+    if (diffTime <= 0) {
+      return 'Publishing soon';
+    }
+    
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    const diffHours = Math.floor((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const diffMinutes = Math.floor((diffTime % (1000 * 60 * 60)) / (1000 * 60));
+    
+    if (diffDays > 0) {
+      return `${diffDays} day${diffDays > 1 ? 's' : ''} ${diffHours} hr${diffHours > 1 ? 's' : ''}`;
+    } else if (diffHours > 0) {
+      return `${diffHours} hour${diffHours > 1 ? 's' : ''} ${diffMinutes} min${diffMinutes > 1 ? 's' : ''}`;
+    } else {
+      return `${diffMinutes} minute${diffMinutes > 1 ? 's' : ''}`;
+    }
+  };
+
+  // Handle edit scheduled article
+  const handleEdit = (id) => {
+    // In a real app, this would navigate to an edit page with the article ID
+    alert(`Edit scheduled article with ID: ${id}`);
+    // router.push(`/admin/edit-article/${id}`);
+  };
+
+  // Handle preview article
+  const handlePreview = (id) => {
+    // In a real app, this would navigate to a preview page
+    alert(`Preview article with ID: ${id}`);
+    // router.push(`/admin/preview/${id}`);
+  };
+
+  // Handle delete scheduled article
+  const handleDelete = (id) => {
+    if (confirm('Are you sure you want to delete this scheduled article?')) {
+      setScheduledArticles(scheduledArticles.filter(article => article.id !== id));
+    }
+  };
+
+  // Sort articles by scheduled date
+  const sortedArticles = [...scheduledArticles].sort((a, b) => 
+    new Date(a.scheduledDate) - new Date(b.scheduledDate)
+  );
+
+  return (
+    <>
+      <Head>
+        <title>Scheduled Articles | Admin Dashboard | 1ewis.com</title>
+        <meta name="robots" content="noindex, nofollow" />
+      </Head>
+
+      <AdminNavigation />
+
+      <main className="min-h-screen pt-24 pb-16 px-6 md:px-16 bg-gradient-to-br from-gray-900 to-black">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-8">
+            <motion.h1 
+              className="text-3xl md:text-4xl font-bold text-white"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              Scheduled Publications
+            </motion.h1>
+            <motion.p 
+              className="text-gray-400 mt-2"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              Manage articles scheduled for future publication
+            </motion.p>
+          </div>
+
+          <motion.div
+            className="mb-6 p-4 bg-blue-900/20 border border-blue-800/30 rounded-lg flex items-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <div className="p-2 bg-blue-500/20 text-blue-400 rounded-full mr-3">
+              <AlertTriangle className="w-5 h-5" />
+            </div>
+            <div className="text-gray-300 text-sm">
+              <span className="font-medium text-blue-400">Note:</span> Scheduled articles will be automatically published at the specified date and time. Make sure all content is finalized before the scheduled publication time.
+            </div>
+          </motion.div>
+
+          <motion.div
+            className="bg-black/60 backdrop-blur-xl rounded-xl border border-white/10 overflow-hidden"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            {sortedArticles.length > 0 ? (
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-800">
+                  <thead className="bg-gray-900/50">
+                    <tr>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                        Title
+                      </th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                        Category
+                      </th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                        Publication Date
+                      </th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                        Time
+                      </th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                        Time Remaining
+                      </th>
+                      <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-800">
+                    {sortedArticles.map((article) => (
+                      <tr key={article.id}>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">
+                          {article.title}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+                          {article.category}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+                          <div className="flex items-center">
+                            <Calendar className="w-4 h-4 mr-2 text-blue-400" />
+                            {formatDate(article.scheduledDate)}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+                          <div className="flex items-center">
+                            <Clock className="w-4 h-4 mr-2 text-purple-400" />
+                            {formatTime(article.scheduledDate)}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm">
+                          <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                            {getTimeRemaining(article.scheduledDate)}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                          <div className="flex justify-end space-x-2">
+                            <button
+                              onClick={() => handleEdit(article.id)}
+                              className="p-1.5 rounded-md bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 transition-colors"
+                              title="Edit"
+                            >
+                              <Edit className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => handlePreview(article.id)}
+                              className="p-1.5 rounded-md bg-green-500/20 text-green-400 hover:bg-green-500/30 transition-colors"
+                              title="Preview"
+                            >
+                              <Eye className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => handleDelete(article.id)}
+                              className="p-1.5 rounded-md bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors"
+                              title="Delete"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className="p-8 text-center">
+                <div className="w-16 h-16 mx-auto bg-gray-800/50 rounded-full flex items-center justify-center">
+                  <Calendar className="w-8 h-8 text-gray-500" />
+                </div>
+                <h3 className="mt-4 text-lg font-medium text-white">No Scheduled Articles</h3>
+                <p className="mt-2 text-gray-400 max-w-md mx-auto">
+                  You don't have any articles scheduled for publication. Create a new article and choose the "Schedule" option to set a future publication date.
+                </p>
+                <button
+                  onClick={() => router.push('/admin/new-article')}
+                  className="mt-6 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-colors"
+                >
+                  Create New Article
+                </button>
+              </div>
+            )}
+          </motion.div>
+        </div>
+      </main>
+    </>
+  );
+}
+
+// Wrap the component with the authentication HOC
+export default withAdminAuth(ScheduledArticles);
