@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { motion } from 'framer-motion';
 import AdminNavigation from '../../components/AdminNavigation';
-import { Plus, Edit, Trash2, Save, X } from 'lucide-react';
+import { Plus, Edit, Trash2, Save, X, AlertCircle, CheckCircle, Loader } from 'lucide-react';
 import withAdminAuth from '../../components/withAdminAuth';
+import { withApiKey } from '../../utils/authUtils';
 
 function Categories() {
   
@@ -14,39 +15,98 @@ function Categories() {
   const [editingId, setEditingId] = useState(null);
   const [editName, setEditName] = useState('');
   const [editColor, setEditColor] = useState('');
+  
+  // UI state
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
-  // Mock categories data
-  const mockCategories = [
-    { id: '1', name: 'Market Updates', color: '#10B981', articleCount: 24 }, // emerald
-    { id: '2', name: 'Guides', color: '#3B82F6', articleCount: 18 }, // blue
-    { id: '3', name: 'Trending Topics', color: '#8B5CF6', articleCount: 15 }, // violet
-    { id: '4', name: 'Exchanges', color: '#EC4899', articleCount: 12 }, // pink
-    { id: '5', name: 'Wallets', color: '#F59E0B', articleCount: 9 }, // amber
-    { id: '6', name: 'NFTs', color: '#6366F1', articleCount: 8 }, // indigo
-    { id: '7', name: 'DeFi', color: '#EF4444', articleCount: 7 }, // red
-    { id: '8', name: 'Regulation', color: '#14B8A6', articleCount: 5 }  // teal
-  ];
+  // Fetch categories from API
+  const fetchCategories = async () => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const response = await fetch('https://api.1ewis.com/news/categories');
+      
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      
+      // Map the categories to include article count (if not provided by API)
+      const mappedCategories = data.categories.map(cat => ({
+        id: cat.id || cat.categoryName,
+        name: cat.categoryName,
+        color: cat.colorHex,
+        articleCount: cat.articleCount || 0
+      }));
+      
+      setCategories(mappedCategories);
+    } catch (err) {
+      console.error('Error fetching categories:', err);
+      setError('Failed to load categories. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    // Load mock categories
-    setCategories(mockCategories);
+    // Load categories from API
+    fetchCategories();
   }, []);
 
   // Handle adding a new category
-  const handleAddCategory = (e) => {
+  const handleAddCategory = async (e) => {
     e.preventDefault();
     if (newCategory.trim() === '') return;
     
-    const newCategoryObj = {
-      id: Date.now().toString(),
-      name: newCategory.trim(),
-      color: newCategoryColor,
-      articleCount: 0
-    };
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
     
-    setCategories([...categories, newCategoryObj]);
-    setNewCategory('');
-    setNewCategoryColor('#3B82F6'); // Reset to default blue
+    try {
+      // Get the API key from authUtils
+      const { getStoredApiKey } = require('../../utils/authUtils');
+      const { apiKey } = getStoredApiKey();
+      
+      if (!apiKey) {
+        throw new Error('No API key found. Please log in again.');
+      }
+      
+      const response = await fetch('https://api.1ewis.com/admin/create/category', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          categoryName: newCategory.trim(),
+          colorHex: newCategoryColor
+        })
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `Error: ${response.status} ${response.statusText}`);
+      }
+      
+      // Refresh categories list
+      await fetchCategories();
+      
+      setSuccess(`Category "${newCategory.trim()}" created successfully`);
+      setNewCategory('');
+      setNewCategoryColor('#3B82F6'); // Reset to default blue
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      console.error('Error creating category:', err);
+      setError(err.message || 'Failed to create category. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Start editing a category
@@ -64,20 +124,78 @@ function Categories() {
   };
 
   // Save edited category
-  const saveEditing = (id) => {
+  const saveEditing = async (id) => {
     if (editName.trim() === '') return;
     
-    setCategories(categories.map(category => 
-      category.id === id 
-        ? { ...category, name: editName.trim(), color: editColor }
-        : category
-    ));
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
     
-    setEditingId(null);
+    try {
+      // Get the API key from authUtils
+      const { getStoredApiKey } = require('../../utils/authUtils');
+      const { apiKey } = getStoredApiKey();
+      
+      if (!apiKey) {
+        throw new Error('No API key found. Please log in again.');
+      }
+      
+      // First delete the old category
+      const categoryToEdit = categories.find(cat => cat.id === id);
+      
+      const deleteResponse = await fetch('https://api.1ewis.com/admin/delete/category', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          categoryName: categoryToEdit.name
+        })
+      });
+      
+      if (!deleteResponse.ok) {
+        const errorData = await deleteResponse.json().catch(() => ({}));
+        throw new Error(errorData.message || `Error: ${deleteResponse.status} ${deleteResponse.statusText}`);
+      }
+      
+      // Then create the new category with updated values
+      const createResponse = await fetch('https://api.1ewis.com/admin/create/category', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          categoryName: editName.trim(),
+          colorHex: editColor
+        })
+      });
+      
+      if (!createResponse.ok) {
+        const errorData = await createResponse.json().catch(() => ({}));
+        throw new Error(errorData.message || `Error: ${createResponse.status} ${createResponse.statusText}`);
+      }
+      
+      // Refresh categories list
+      await fetchCategories();
+      
+      setSuccess(`Category "${editName.trim()}" updated successfully`);
+      setEditingId(null);
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      console.error('Error updating category:', err);
+      setError(err.message || 'Failed to update category. Please try again.');
+      setEditingId(null);
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Delete a category
-  const handleDeleteCategory = (id) => {
+  const handleDeleteCategory = async (id) => {
     const categoryToDelete = categories.find(cat => cat.id === id);
     
     if (categoryToDelete.articleCount > 0) {
@@ -90,7 +208,48 @@ function Categories() {
       }
     }
     
-    setCategories(categories.filter(category => category.id !== id));
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+    
+    try {
+      // Get the API key from authUtils
+      const { getStoredApiKey } = require('../../utils/authUtils');
+      const { apiKey } = getStoredApiKey();
+      
+      if (!apiKey) {
+        throw new Error('No API key found. Please log in again.');
+      }
+      
+      const response = await fetch('https://api.1ewis.com/admin/delete/category', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          categoryName: categoryToDelete.name
+        })
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `Error: ${response.status} ${response.statusText}`);
+      }
+      
+      // Refresh categories list
+      await fetchCategories();
+      
+      setSuccess(`Category "${categoryToDelete.name}" deleted successfully`);
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      console.error('Error deleting category:', err);
+      setError(err.message || 'Failed to delete category. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
 
@@ -124,6 +283,31 @@ function Categories() {
               Manage the categories used to organize your articles
             </motion.p>
           </div>
+          
+          {/* Status Messages */}
+          {error && (
+            <motion.div 
+              className="mb-6 p-4 bg-red-900/50 border border-red-700 rounded-lg flex items-center text-red-200"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0" />
+              <span>{error}</span>
+            </motion.div>
+          )}
+          
+          {success && (
+            <motion.div 
+              className="mb-6 p-4 bg-green-900/50 border border-green-700 rounded-lg flex items-center text-green-200"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <CheckCircle className="w-5 h-5 mr-2 flex-shrink-0" />
+              <span>{success}</span>
+            </motion.div>
+          )}
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Categories List */}
@@ -135,10 +319,20 @@ function Categories() {
             >
               <div className="bg-black/60 backdrop-blur-xl rounded-xl border border-white/10 overflow-hidden">
                 <div className="p-6 border-b border-gray-800">
-                  <h2 className="text-xl font-semibold text-white">Existing Categories</h2>
-                  <p className="text-gray-400 text-sm mt-1">
-                    {categories.length} {categories.length === 1 ? 'category' : 'categories'} available
-                  </p>
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h2 className="text-xl font-semibold text-white">Existing Categories</h2>
+                      <p className="text-gray-400 text-sm mt-1">
+                        {categories.length} {categories.length === 1 ? 'category' : 'categories'} available
+                      </p>
+                    </div>
+                    {loading && (
+                      <div className="flex items-center text-purple-400 text-sm">
+                        <Loader className="w-4 h-4 mr-2 animate-spin" />
+                        <span>Loading...</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 
                 <ul className="divide-y divide-gray-800">
