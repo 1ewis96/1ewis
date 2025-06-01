@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/router';
 import AdminNavigation from '../../components/AdminNavigation';
-import { Edit, Eye, Trash2, Search, Filter, ChevronDown, ChevronUp } from 'lucide-react';
+import { Edit, Eye, Trash2, Search, Filter, ChevronDown, ChevronUp, AlertCircle, Loader } from 'lucide-react';
 import withAdminAuth from '../../components/withAdminAuth';
+// Import API key utilities but don't use as HOC
+import { getStoredApiKey } from '../../utils/authUtils';
 
 function EditArticles() {
+  const router = useRouter();
   
   // Articles state
   const [articles, setArticles] = useState([]);
@@ -13,119 +17,123 @@ function EditArticles() {
   const [categoryFilter, setCategoryFilter] = useState('');
   const [sortField, setSortField] = useState('date');
   const [sortDirection, setSortDirection] = useState('desc');
+  
+  // API state
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [nextToken, setNextToken] = useState(null);
+  const [limit, setLimit] = useState(10);
 
-  // Mock categories
-  const categories = [
-    'All Categories',
-    'Market Updates',
-    'Guides',
-    'Trending Topics',
-    'Exchanges',
-    'Wallets',
-    'NFTs',
-    'DeFi',
-    'Regulation'
-  ];
+  // Categories state
+  const [categories, setCategories] = useState(['All Categories']);
+  const [categoriesLoading, setCategoriesLoading] = useState(false);
 
-  // Mock articles data
-  const mockArticles = [
-    {
-      id: '1',
-      title: 'Bitcoin Surges to New All-Time High',
-      category: 'Market Updates',
-      date: '2025-05-28',
-      status: 'published',
-      views: 12453,
-      comments: 87
-    },
-    {
-      id: '2',
-      title: 'Top 5 Crypto Wallets for Beginners',
-      category: 'Guides',
-      date: '2025-05-27',
-      status: 'published',
-      views: 8721,
-      comments: 42
-    },
-    {
-      id: '3',
-      title: 'NFT Market Shows Signs of Recovery',
-      category: 'Trending Topics',
-      date: '2025-05-26',
-      status: 'published',
-      views: 6543,
-      comments: 31
-    },
-    {
-      id: '4',
-      title: 'Ethereum 2.0: What You Need to Know',
-      category: 'Guides',
-      date: '2025-05-25',
-      status: 'published',
-      views: 9876,
-      comments: 64
-    },
-    {
-      id: '5',
-      title: 'DeFi Protocols Reach $50B in Total Value Locked',
-      category: 'DeFi',
-      date: '2025-05-24',
-      status: 'published',
-      views: 5432,
-      comments: 28
-    },
-    {
-      id: '6',
-      title: 'Regulatory Developments in Crypto: May 2025',
-      category: 'Regulation',
-      date: '2025-05-23',
-      status: 'published',
-      views: 7654,
-      comments: 53
-    },
-    {
-      id: '7',
-      title: 'Comparing Top Crypto Exchanges in 2025',
-      category: 'Exchanges',
-      date: '2025-05-22',
-      status: 'published',
-      views: 11234,
-      comments: 76
-    },
-    {
-      id: '8',
-      title: 'Hardware vs Software Wallets: Pros and Cons',
-      category: 'Wallets',
-      date: '2025-05-21',
-      status: 'published',
-      views: 8765,
-      comments: 47
-    },
-    {
-      id: '9',
-      title: 'The Future of NFTs in Gaming',
-      category: 'NFTs',
-      date: '2025-05-20',
-      status: 'draft',
-      views: 0,
-      comments: 0
-    },
-    {
-      id: '10',
-      title: 'Upcoming Crypto Events in June 2025',
-      category: 'Trending Topics',
-      date: '2025-05-19',
-      status: 'scheduled',
-      scheduledDate: '2025-06-01',
-      views: 0,
-      comments: 0
+  // Fetch categories from API
+  const fetchCategories = async () => {
+    setCategoriesLoading(true);
+    
+    try {
+      const response = await fetch('https://api.1ewis.com/news/categories');
+      
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      
+      // Check if categories exist and is an array
+      if (data.categories && Array.isArray(data.categories)) {
+        // Add 'All Categories' as the first option
+        const categoryNames = data.categories.map(cat => cat.categoryName || cat);
+        setCategories(['All Categories', ...categoryNames]);
+      }
+    } catch (err) {
+      console.error('Error fetching categories:', err);
+    } finally {
+      setCategoriesLoading(false);
     }
-  ];
+  };
+  
+  // Fetch articles from API
+  const fetchArticles = async (resetList = true) => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      // Get API key using the utility function
+      const { apiKey } = getStoredApiKey();
+      if (!apiKey) {
+        throw new Error('API key not found. Please log in again.');
+      }
+      
+      // Determine the API URL with parameters
+      let apiUrl = `https://api.1ewis.com/admin/list/articles?order=${sortDirection}&limit=${limit}`;
+      
+      // Add the pagination token if we have one and are loading more
+      if (nextToken && !resetList) {
+        apiUrl += `&nextToken=${encodeURIComponent(nextToken)}`;
+      }
+      
+      const response = await fetch(apiUrl, {
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      
+      // Process the articles data
+      const formattedArticles = data.articles.map(article => ({
+        id: article.SK.replace('ARTICLE#', ''),
+        title: article.title,
+        category: article.category,
+        date: new Date(article.date).toISOString().split('T')[0],  // Format date as YYYY-MM-DD
+        status: article.status,
+        views: article.views || 0,
+        comments: article.comments || 0,
+        PK: article.PK,  // Keep the original PK for API operations
+        SK: article.SK   // Keep the original SK for API operations
+      }));
+      
+      // Update the articles state
+      if (resetList) {
+        setArticles(formattedArticles);
+      } else {
+        setArticles(prev => [...prev, ...formattedArticles]);
+      }
+      
+      // Store the next token for pagination
+      setNextToken(data.nextToken || null);
+    } catch (err) {
+      console.error('Error fetching articles:', err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    // Load mock articles
-    setArticles(mockArticles);
+    // Load real articles and categories when component mounts
+    fetchArticles();
+    fetchCategories();
   }, []);
+  
+  // Refetch articles when sort direction changes
+  useEffect(() => {
+    fetchArticles();
+  }, [sortDirection, limit]);
+  
+  // Load more articles
+  const loadMoreArticles = () => {
+    if (nextToken && !loading) {
+      fetchArticles(false);
+    }
+  };
 
   // Handle sort change
   const handleSort = (field) => {
@@ -175,15 +183,48 @@ function EditArticles() {
   // Handle article deletion
   const handleDelete = (id) => {
     if (confirm('Are you sure you want to delete this article?')) {
+      // In a real implementation, you would call an API endpoint to delete the article
+      // For now, we'll just filter it from the local state
       setArticles(articles.filter(article => article.id !== id));
+      
+      // TODO: Implement actual API call when delete endpoint is available
+      // const deleteArticle = async (id) => {
+      //   const apiKey = localStorage.getItem('apiKey');
+      //   const article = articles.find(a => a.id === id);
+      //   
+      //   await fetch('https://api.1ewis.com/admin/delete/article', {
+      //     method: 'DELETE',
+      //     headers: {
+      //       'Authorization': `Bearer ${apiKey}`,
+      //       'Content-Type': 'application/json'
+      //     },
+      //     body: JSON.stringify({ PK: article.PK, SK: article.SK })
+      //   });
+      // }
     }
   };
 
   // Handle edit article
-  const handleEdit = (id) => {
-    // In a real app, this would navigate to an edit page with the article ID
-    alert(`Edit article with ID: ${id}`);
-    // router.push(`/admin/edit-article/${id}`);
+  const handleEdit = (article) => {
+    // Extract the date from PK and the ID from SK
+    // PK format: NEWS#YYYY-MM-DD#XXXX
+    // SK format: ARTICLE#XXXX
+    console.log('Article PK:', article.PK, 'SK:', article.SK); // Debug log
+    
+    // Extract date from PK
+    const pkParts = article.PK.split('#');
+    const dateStr = pkParts.length > 1 ? pkParts[1] : '';
+    
+    // Extract ID from SK
+    const skParts = article.SK.split('#');
+    const idStr = skParts.length > 1 ? skParts[1] : '';
+    
+    // Format as YYYY-MM-DD-XXXX for the API
+    const apiId = `${dateStr}-${idStr}`;
+    console.log('Formatted API ID:', apiId);
+    
+    // Navigate to the edit page with the formatted ID
+    router.push(`/admin/edit-article/${apiId}`);
   };
 
   // Handle view article
@@ -246,24 +287,27 @@ function EditArticles() {
             </div>
 
             {/* Category Filter */}
-            <div className="w-full md:w-64">
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Filter className="h-5 w-5 text-gray-500" />
-                </div>
-                <select
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-700 rounded-lg bg-black/60 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent appearance-none"
-                  value={categoryFilter}
-                  onChange={(e) => setCategoryFilter(e.target.value)}
-                >
-                  <option value="">All Categories</option>
-                  {categories.slice(1).map((category) => (
-                    <option key={category} value={category}>{category}</option>
-                  ))}
-                </select>
-                <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                  <ChevronDown className="h-5 w-5 text-gray-500" />
-                </div>
+            <div className="relative">
+              <select
+                className="appearance-none w-full md:w-48 px-4 py-2 bg-black/60 border border-gray-700 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white pr-8"
+                value={categoryFilter}
+                onChange={(e) => setCategoryFilter(e.target.value)}
+                disabled={categoriesLoading}
+              >
+                {categoriesLoading ? (
+                  <option>Loading categories...</option>
+                ) : (
+                  categories.map((cat) => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))
+                )}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+                {categoriesLoading ? (
+                  <div className="animate-spin h-4 w-4 border-2 border-gray-400 border-t-transparent rounded-full"></div>
+                ) : (
+                  <Filter size={16} />
+                )}
               </div>
             </div>
 
@@ -365,7 +409,16 @@ function EditArticles() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-800">
-                  {filteredArticles.length > 0 ? (
+                  {loading && filteredArticles.length === 0 ? (
+                    <tr>
+                      <td colSpan="7" className="px-6 py-8 text-center text-gray-500">
+                        <div className="flex justify-center items-center space-x-2">
+                          <div className="animate-spin h-5 w-5 border-2 border-purple-500 border-t-transparent rounded-full"></div>
+                          <span>Loading articles...</span>
+                        </div>
+                      </td>
+                    </tr>
+                  ) : filteredArticles.length > 0 ? (
                     filteredArticles.map((article) => (
                       <tr key={article.id}>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">
@@ -407,7 +460,7 @@ function EditArticles() {
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <div className="flex justify-end space-x-2">
                             <button
-                              onClick={() => handleEdit(article.id)}
+                              onClick={() => handleEdit(article)}
                               className="p-1.5 rounded-md bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 transition-colors"
                               title="Edit"
                             >
@@ -441,6 +494,36 @@ function EditArticles() {
                 </tbody>
               </table>
             </div>
+            
+            {/* Error message */}
+            {error && (
+              <div className="mt-4 p-4 bg-red-900/30 border border-red-700 rounded-lg text-red-300">
+                <p className="flex items-center">
+                  <AlertCircle size={18} className="mr-2" />
+                  {error}
+                </p>
+              </div>
+            )}
+            
+            {/* Load more button */}
+            {nextToken && (
+              <div className="mt-6 flex justify-center pb-4">
+                <button 
+                  onClick={loadMoreArticles}
+                  disabled={loading}
+                  className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-lg hover:from-blue-700 hover:to-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+                >
+                  {loading ? (
+                    <>
+                      <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>
+                      <span>Loading more...</span>
+                    </>
+                  ) : (
+                    <span>Load More Articles</span>
+                  )}
+                </button>
+              </div>
+            )}
           </motion.div>
         </div>
       </main>

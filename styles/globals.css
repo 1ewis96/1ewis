@@ -34,3 +34,47 @@ body {
   @apply bg-background text-foreground;
   min-height: 100vh;
 }
+
+/* React Quill Editor Styles */
+.quill-container {
+  margin-bottom: 2rem;
+}
+
+.quill-container .ql-toolbar {
+  background-color: rgba(30, 30, 30, 0.8);
+  border-color: #4b5563;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+
+.quill-container .ql-container {
+  height: 300px;
+  border-color: #4b5563;
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.quill-container .ql-editor {
+  min-height: 250px;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: white;
+}
+
+.quill-container .ql-editor.ql-blank::before {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.quill-container .ql-snow .ql-stroke {
+  stroke: #d1d5db;
+}
+
+.quill-container .ql-snow .ql-fill {
+  fill: #d1d5db;
+}
+
+.quill-container .ql-snow .ql-picker {
+  color: #d1d5db;
+}
