@@ -8,7 +8,6 @@ import CryptoStats from '../components/CryptoStats';
 import BonusCalculator from '../components/BonusCalculator';
 import ComparisonTable from '../components/ComparisonTable';
 import FaqSection from '../components/FaqSection';
-import CryptoNewsFeed from '../components/CryptoNewsFeed';
 import ExchangeBenefitsCards from '../components/ExchangeBenefitsCards';
 import BeginnersGuide from '../components/BeginnersGuide';
 import CookieConsent from '../components/CookieConsent';
@@ -422,18 +421,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Crypto News Feed Section */}
-        <section className="py-16 px-4 bg-gradient-to-b from-black to-gray-950 relative overflow-hidden">
-          {/* Background glow effects */}
-          <div className="absolute top-1/4 right-1/4 w-1/3 h-1/3 bg-purple-500/10 rounded-full blur-[100px] -z-10"></div>
-          <div className="absolute bottom-1/4 left-1/4 w-1/4 h-1/4 bg-blue-500/10 rounded-full blur-[100px] -z-10"></div>
-          
-          <div className="max-w-7xl mx-auto">
 
-            
-            <CryptoNewsFeed />
-          </div>
-        </section>
         
         {/* FAQ Section */}
         <section id="faq" className="py-16 px-4 bg-gradient-to-b from-gray-950 to-black relative overflow-hidden">
