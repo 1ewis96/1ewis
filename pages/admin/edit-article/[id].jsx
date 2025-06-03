@@ -280,7 +280,12 @@ function EditArticle() {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
+      reader.onload = () => {
+        // The result contains the full Data URL (e.g., data:image/jpeg;base64,/9j/4AAQSkZJRg...)
+        // We need to extract just the base64 part for the API
+        const base64String = reader.result;
+        resolve(base64String);
+      };
       reader.onerror = error => reject(error);
     });
   };
@@ -342,10 +347,25 @@ function EditArticle() {
       
       // Add thumbnail if a new one was selected
       if (thumbnailFile) {
-        const base64Image = await getBase64FromFile(thumbnailFile);
-        // Extract the base64 data without the prefix
-        const base64Data = base64Image.split(',')[1];
-        articleData.thumbnailBase64 = base64Data;
+        try {
+          const base64Image = await getBase64FromFile(thumbnailFile);
+          // Extract the base64 data without the prefix (data:image/jpeg;base64,)
+          const base64Data = base64Image.split(',')[1];
+          
+          // Make sure we have valid base64 data
+          if (!base64Data) {
+            throw new Error('Failed to extract base64 data from image');
+          }
+          
+          // Log the first 20 characters of the base64 string for debugging
+          console.log('Base64 data preview:', base64Data.substring(0, 20) + '...');
+          
+          // Add to article data
+          articleData.thumbnailBase64 = base64Data;
+        } catch (err) {
+          console.error('Error processing image:', err);
+          throw new Error('Failed to process image: ' + err.message);
+        }
       }
       
       // Log the request payload for debugging

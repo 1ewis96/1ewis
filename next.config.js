@@ -28,6 +28,17 @@ const nextConfig = {
     ];
   },
   
+  // Rewrites for clean URLs
+  async rewrites() {
+    return [
+      // RSS feed rewrite
+      {
+        source: '/news/feed.xml',
+        destination: '/api/news/feed',
+      },
+    ];
+  },
+  
   // Headers for security and SEO
   async headers() {
     return [

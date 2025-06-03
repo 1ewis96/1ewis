@@ -181,26 +181,64 @@ function EditArticles() {
     });
 
   // Handle article deletion
-  const handleDelete = (id) => {
-    if (confirm('Are you sure you want to delete this article?')) {
-      // In a real implementation, you would call an API endpoint to delete the article
-      // For now, we'll just filter it from the local state
-      setArticles(articles.filter(article => article.id !== id));
-      
-      // TODO: Implement actual API call when delete endpoint is available
-      // const deleteArticle = async (id) => {
-      //   const apiKey = localStorage.getItem('apiKey');
-      //   const article = articles.find(a => a.id === id);
-      //   
-      //   await fetch('https://api.1ewis.com/admin/delete/article', {
-      //     method: 'DELETE',
-      //     headers: {
-      //       'Authorization': `Bearer ${apiKey}`,
-      //       'Content-Type': 'application/json'
-      //     },
-      //     body: JSON.stringify({ PK: article.PK, SK: article.SK })
-      //   });
-      // }
+  const handleDelete = async (article) => {
+    if (confirm(`Are you sure you want to delete the article "${article.title}"?`)) {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        // Get API key using the utility function
+        const { apiKey } = getStoredApiKey();
+        if (!apiKey) {
+          throw new Error('API key not found. Please log in again.');
+        }
+        
+        // Find the article's publishType based on status
+        let publishType = 'publish';
+        if (article.status === 'draft') {
+          publishType = 'draft';
+        } else if (article.status === 'scheduled') {
+          publishType = 'schedule';
+        }
+        
+        // Log the delete operation for debugging
+        console.log('Deleting article:', {
+          PK: article.PK,
+          SK: article.SK,
+          publishType: publishType
+        });
+        
+        // Make the API call to delete the article
+        const response = await fetch('https://api.1ewis.com/admin/delete/article', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            PK: article.PK,
+            SK: article.SK,
+            publishType: publishType
+          })
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || `Error: ${response.status} ${response.statusText}`);
+        }
+        
+        // Remove the article from the local state
+        setArticles(articles.filter(a => a.id !== article.id));
+        
+        // Show success message (optional)
+        alert('Article deleted successfully');
+        
+      } catch (err) {
+        console.error('Error deleting article:', err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -420,7 +458,7 @@ function EditArticles() {
                     </tr>
                   ) : filteredArticles.length > 0 ? (
                     filteredArticles.map((article) => (
-                      <tr key={article.id}>
+                      <tr key={`${article.PK}-${article.SK}`}>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">
                           {article.title}
                         </td>
@@ -466,15 +504,9 @@ function EditArticles() {
                             >
                               <Edit className="w-4 h-4" />
                             </button>
+                          
                             <button
-                              onClick={() => handleView(article.id)}
-                              className="p-1.5 rounded-md bg-green-500/20 text-green-400 hover:bg-green-500/30 transition-colors"
-                              title="View"
-                            >
-                              <Eye className="w-4 h-4" />
-                            </button>
-                            <button
-                              onClick={() => handleDelete(article.id)}
+                              onClick={() => handleDelete(article)}
                               className="p-1.5 rounded-md bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors"
                               title="Delete"
                             >

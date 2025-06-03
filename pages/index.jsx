@@ -4,7 +4,6 @@ import { ArrowRight, Github, Twitter, Sparkles, Zap, TrendingUp, Star, Award, He
 import Link from 'next/link';
 import Head from 'next/head';
 import { motion, AnimatePresence } from 'framer-motion';
-import PriceTicker from '../components/PriceTicker';
 import CryptoStats from '../components/CryptoStats';
 import BonusCalculator from '../components/BonusCalculator';
 import ComparisonTable from '../components/ComparisonTable';
@@ -98,9 +97,6 @@ export default function HomePage() {
         <meta name="twitter:title" content="1ewis.com | Best Crypto Exchanges & Tools" />
         <meta name="twitter:description" content="Compare the best cryptocurrency exchanges, wallets, and tools with exclusive sign-up bonuses." />
       </Head>
-      
-      {/* Price Ticker */}
-      <PriceTicker />
       
       <main className="flex-1 relative">
         {/* Hero Section with animated background */}

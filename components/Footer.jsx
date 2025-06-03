@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { Github, Twitter } from 'lucide-react';
+import { Github, Twitter, Rss } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -34,6 +34,15 @@ export default function Footer() {
             >
               <Twitter className="w-4 h-4 mr-1" />
               Twitter
+            </a>
+            <a 
+              href="/news/feed.xml" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center hover:text-gray-300 transition-colors duration-200"
+            >
+              <Rss className="w-4 h-4 mr-1" />
+              RSS Feed
             </a>
           </div>
         </div>

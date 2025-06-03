@@ -29,10 +29,6 @@ function MyApp({ Component, pageProps }) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" href="/favicon.ico" />
         
-        {/* Google AdSense Ownership Verification */}
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2205553060041282"
-          crossOrigin="anonymous"></script>
-        
         {/* Default canonical URL - will be overridden by page-specific ones */}
         <link rel="canonical" href={canonicalUrl} />
         
@@ -54,6 +50,14 @@ function MyApp({ Component, pageProps }) {
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="preconnect" href="https://www.google-analytics.com" />
       </Head>
+      
+      {/* Google AdSense */}
+      <Script
+        id="google-adsense"
+        strategy="afterInteractive"
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2205553060041282"
+        crossOrigin="anonymous"
+      />
       
       {/* Global site tag - Google Analytics */}
       <Script
