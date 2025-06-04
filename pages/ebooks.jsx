@@ -1,136 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Button, ButtonLink } from "../components/ui/button";
-import { Book, ArrowRight, Download, Star, Sparkles, CheckCircle, BookOpen } from "lucide-react";
+import { Book, ArrowRight, Download, Star, Sparkles, CheckCircle, BookOpen, ShoppingCart } from "lucide-react";
 import Footer from '../components/Footer';
 import Head from 'next/head';
 import Link from 'next/link';
+import ebooksData from '../data/ebooks.json';
 
 export default function EbooksPage() {
   const [activeCategory, setActiveCategory] = useState('beginner');
+  const [ebookCategories, setEbookCategories] = useState([]);
+  const [ebooks, setEbooks] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
   
-  const ebookCategories = [
-    {
-      id: 'beginner',
-      name: 'Beginner Series',
-      subtitle: 'Foundations',
-      color: 'blue',
-      description: 'Perfect for newcomers to cryptocurrency and blockchain technology. Start your journey here.'
-    },
-    {
-      id: 'intermediate',
-      name: 'Intermediate Series',
-      subtitle: 'Practical Use & Investing',
-      color: 'purple',
-      description: 'Take your knowledge to the next level with practical applications and investment strategies.'
-    },
-    {
-      id: 'advanced',
-      name: 'Advanced Series',
-      subtitle: 'Deep Dives & Trends',
-      color: 'pink',
-      description: 'Explore complex topics and emerging trends in the cryptocurrency ecosystem.'
-    }
-  ];
-  
-  const ebooks = {
-    beginner: [
-      {
-        title: "Crypto 101: The Beginner's Guide to Bitcoin and Blockchain",
-        description: "A comprehensive introduction to cryptocurrency fundamentals, blockchain technology, and how Bitcoin works.",
-        image: "/images/ebooks/crypto101.jpg",
-        color: "blue"
-      },
-      {
-        title: "How Cryptocurrency Works: Decoding the Digital Dollar",
-        description: "Understand the mechanics behind digital currencies and the technology that powers them.",
-        image: "/images/ebooks/crypto-works.jpg",
-        color: "blue"
-      },
-      {
-        title: "Crypto Wallets & Exchanges: Safely Buying, Storing, and Trading",
-        description: "Learn how to securely store your digital assets and navigate cryptocurrency exchanges.",
-        image: "/images/ebooks/wallets-exchanges.jpg",
-        color: "blue"
-      },
-      {
-        title: "Avoiding Scams: Staying Safe in the Crypto Jungle",
-        description: "Essential security practices and common scams to watch out for in the cryptocurrency space.",
-        image: "/images/ebooks/avoiding-scams.jpg",
-        color: "blue"
-      },
-      {
-        title: "From Fiat to Freedom: Why Crypto Matters",
-        description: "Explore the philosophical and economic implications of cryptocurrency adoption.",
-        image: "/images/ebooks/fiat-freedom.jpg",
-        color: "blue"
-      }
-    ],
-    intermediate: [
-      {
-        title: "Crypto Investing: Strategies for Building Long-Term Wealth",
-        description: "Proven investment approaches for cryptocurrency markets and portfolio management techniques.",
-        image: "/images/ebooks/crypto-investing.jpg",
-        color: "purple"
-      },
-      {
-        title: "Understanding Altcoins: Beyond Bitcoin",
-        description: "Explore the diverse ecosystem of alternative cryptocurrencies and their unique value propositions.",
-        image: "/images/ebooks/altcoins.jpg",
-        color: "purple"
-      },
-      {
-        title: "DeFi Demystified: Earning Interest Without Banks",
-        description: "Navigate the world of decentralized finance and discover new ways to generate passive income.",
-        image: "/images/ebooks/defi.jpg",
-        color: "purple"
-      },
-      {
-        title: "NFTs Explained: Art, Ownership, and the Digital Gold Rush",
-        description: "Understand non-fungible tokens and their impact on digital ownership and creative industries.",
-        image: "/images/ebooks/nfts.jpg",
-        color: "purple"
-      },
-      {
-        title: "Taxes, Laws & Crypto: What You Need to Know",
-        description: "Essential legal and tax considerations for cryptocurrency users and investors.",
-        image: "/images/ebooks/crypto-taxes.jpg",
-        color: "purple"
-      }
-    ],
-    advanced: [
-      {
-        title: "Technical Analysis for Crypto Traders",
-        description: "Advanced chart reading techniques and trading strategies specific to cryptocurrency markets.",
-        image: "/images/ebooks/technical-analysis.jpg",
-        color: "pink"
-      },
-      {
-        title: "Smart Contracts & Ethereum: The Future of Automation",
-        description: "Deep dive into Ethereum's smart contract capabilities and their revolutionary potential.",
-        image: "/images/ebooks/smart-contracts.jpg",
-        color: "pink"
-      },
-      {
-        title: "DAOs, Governance & The Future of Organizations",
-        description: "Explore decentralized autonomous organizations and new models of collective decision-making.",
-        image: "/images/ebooks/daos.jpg",
-        color: "pink"
-      },
-      {
-        title: "Crypto in the Real World: Adoption, Payments, and Case Studies",
-        description: "Examine real-world applications and adoption cases of cryptocurrency technology.",
-        image: "/images/ebooks/crypto-real-world.jpg",
-        color: "pink"
-      },
-      {
-        title: "The Next Crypto Wave: Trends to Watch in Web3 and Beyond",
-        description: "Anticipate emerging trends and future developments in the cryptocurrency and blockchain space.",
-        image: "/images/ebooks/next-wave.jpg",
-        color: "pink"
-      }
-    ]
-  };
+  useEffect(() => {
+    // Load data from the JSON file
+    setEbookCategories(ebooksData.categories);
+    setEbooks(ebooksData.ebooks);
+    setIsLoading(false);
+  }, []);
   
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -154,17 +42,17 @@ export default function EbooksPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-gray-900 to-black text-white">
       <Head>
-        <title>Free Crypto eBooks 2025 | Beginner to Advanced Trading Guides | 1ewis.com</title>
-        <meta name="description" content="Download free cryptocurrency eBooks (2025) covering beginner basics, investing strategies, DeFi, NFTs, and advanced trading techniques. Start your crypto journey today." />
-        <meta name="keywords" content="crypto for beginners, crypto educational resources, free crypto ebooks, crypto investing guide, defi explained, how to start investing in crypto" />
+        <title>Crypto eBooks 2025 | Beginner to Advanced Trading Guides | 1ewis.com</title>
+        <meta name="description" content="Cryptocurrency eBooks (2025) covering beginner basics, investing strategies, DeFi, NFTs, and advanced trading techniques. Start your crypto journey today." />
+        <meta name="keywords" content="crypto for beginners, crypto educational resources, crypto ebooks, crypto investing guide, defi explained, how to start investing in crypto" />
         <link rel="canonical" href="https://1ewis.com/ebooks" />
-        <meta property="og:title" content="Free Crypto eBooks 2025 | Beginner to Advanced Trading Guides" />
-        <meta property="og:description" content="Download free cryptocurrency eBooks covering beginner basics, investing strategies, DeFi, NFTs, and advanced trading techniques." />
+        <meta property="og:title" content="Crypto eBooks 2025 | Beginner to Advanced Trading Guides" />
+        <meta property="og:description" content="Cryptocurrency eBooks covering beginner basics, investing strategies, DeFi, NFTs, and advanced trading techniques." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://1ewis.com/ebooks" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Free Crypto eBooks 2025 | Learning Resources" />
-        <meta name="twitter:description" content="Download free cryptocurrency eBooks covering beginner basics to advanced trading strategies." />
+        <meta name="twitter:title" content="Crypto eBooks 2025 | Learning Resources" />
+        <meta name="twitter:description" content="Cryptocurrency eBooks covering beginner basics to advanced trading strategies." />
         
         {/* Schema.org structured data for educational content */}
         <script type="application/ld+json">
@@ -206,7 +94,7 @@ export default function EbooksPage() {
             >
               <div className="inline-flex items-center mb-6 bg-gradient-to-r from-blue-900/40 to-purple-900/40 px-5 py-2.5 rounded-full shadow-lg shadow-blue-900/20">
                 <Book className="text-blue-400 w-5 h-5 mr-2" />
-                <span className="text-blue-300 font-medium">Free Educational Resources</span>
+                <span className="text-blue-300 font-medium">Educational Resources</span>
               </div>
               
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 drop-shadow-lg">
@@ -248,7 +136,12 @@ export default function EbooksPage() {
           <div className="absolute inset-0 bg-grid-white/[0.02] bg-[length:20px_20px]"></div>
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-6xl max-h-6xl bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-pink-500/5 rounded-full blur-[80px] opacity-70"></div>
           <div className="max-w-6xl mx-auto">
-            {ebookCategories.map((category) => (
+            {isLoading ? (
+              <div className="flex justify-center items-center py-24">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+                <span className="ml-3 text-lg text-gray-300">Loading ebooks...</span>
+              </div>
+            ) : ebookCategories.map((category) => (
               <div key={category.id} className={activeCategory === category.id ? 'block' : 'hidden'}>
                 <div className="text-center mb-16 relative z-10">
                   <h2 className={`text-3xl md:text-4xl font-bold mb-4 text-${category.color}-400 drop-shadow-sm`}>{category.name}</h2>
@@ -277,9 +170,21 @@ export default function EbooksPage() {
                             className="w-full h-full object-cover object-top"
                             onError={(e) => {
                               e.target.onerror = null;
-                              e.target.src = `/images/ebooks/placeholder-${ebook.color}.jpg`;
-                              if (e.target.src.includes('placeholder') && e.target.naturalHeight === 0) {
-                                e.target.style.display = 'none';
+                              e.target.style.display = 'none';
+                              const parent = e.target.parentNode;
+                              if (parent && !parent.querySelector('.fallback-cover')) {
+                                const fallback = document.createElement('div');
+                                fallback.className = `w-full h-full flex items-center justify-center bg-${ebook.color}-900/50 fallback-cover`;
+                                fallback.innerHTML = `
+                                  <div class="text-center p-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-12 w-12 mx-auto mb-2 text-${ebook.color}-400">
+                                      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                                    </svg>
+                                    <div class="text-${ebook.color}-300 font-medium text-sm">Cover Coming Soon</div>
+                                  </div>
+                                `;
+                                parent.appendChild(fallback);
                               }
                             }}
                           />
@@ -298,14 +203,34 @@ export default function EbooksPage() {
                         <h3 className="text-xl font-bold mb-4 leading-tight">{ebook.title}</h3>
                         <p className="text-gray-400 mb-7 flex-1 text-sm md:text-base leading-relaxed">{ebook.description}</p>
                         
-                        <ButtonLink
-                          href="#"
-                          className={`bg-${ebook.color}-600 hover:bg-${ebook.color}-700 text-white w-full justify-center`}
-                          disabled
-                        >
-                          <Sparkles className="mr-2 h-5 w-5" />
-                          Coming Soon
-                        </ButtonLink>
+                        {ebook.amazonUrl ? (
+                          <ButtonLink
+                            href={ebook.amazonUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={`bg-${ebook.color}-600 hover:bg-${ebook.color}-700 text-white w-full justify-center`}
+                          >
+                            <ShoppingCart className="mr-2 h-5 w-5" />
+                            Buy on Amazon {ebook.price && `(${ebook.price})`}
+                          </ButtonLink>
+                        ) : ebook.downloadUrl ? (
+                          <ButtonLink
+                            href={ebook.downloadUrl}
+                            className={`bg-${ebook.color}-600 hover:bg-${ebook.color}-700 text-white w-full justify-center`}
+                          >
+                            <Download className="mr-2 h-5 w-5" />
+                            Download eBook
+                          </ButtonLink>
+                        ) : (
+                          <ButtonLink
+                            href="#"
+                            className={`bg-${ebook.color}-600/50 hover:bg-${ebook.color}-700/50 text-white w-full justify-center cursor-not-allowed`}
+                            disabled
+                          >
+                            <Sparkles className="mr-2 h-5 w-5" />
+                            Coming Soon
+                          </ButtonLink>
+                        )}
                       </div>
                     </motion.div>
                   ))}

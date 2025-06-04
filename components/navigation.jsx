@@ -72,7 +72,8 @@ export default function Navigation() {
 
   const mainNavItems = [
     { name: 'Home', path: '/' },
-    { name: 'Portfolio', path: '/portfolio' }
+    { name: 'Portfolio', path: '/portfolio' },
+    { name: 'Q&A', path: '/qa' }
   ];
   
   const exchangeItems = [

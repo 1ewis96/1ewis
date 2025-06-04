@@ -3,8 +3,8 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   
-  // Enable trailing slashes for all URLs
-  trailingSlash: true,
+  // Disable trailing slashes to prevent redirect issues with Google indexing
+  trailingSlash: false,
   
   // Image optimization for better performance
   images: {

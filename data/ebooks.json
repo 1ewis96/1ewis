@@ -1,0 +1,139 @@
+{
+  "categories": [
+    {
+      "id": "beginner",
+      "name": "Beginner Series",
+      "subtitle": "Foundations",
+      "color": "blue",
+      "description": "Perfect for newcomers to cryptocurrency and blockchain technology. Start your journey here."
+    },
+    {
+      "id": "intermediate",
+      "name": "Intermediate Series",
+      "subtitle": "Practical Use & Investing",
+      "color": "purple",
+      "description": "Take your knowledge to the next level with practical applications and investment strategies."
+    },
+    {
+      "id": "advanced",
+      "name": "Advanced Series",
+      "subtitle": "Deep Dives & Trends",
+      "color": "pink",
+      "description": "Explore complex topics and emerging trends in the cryptocurrency ecosystem."
+    }
+  ],
+  "ebooks": {
+    "beginner": [
+      {
+        "title": "Crypto 101: The Beginner's Guide to Bitcoin and Blockchain",
+        "description": "A comprehensive introduction to cryptocurrency fundamentals, blockchain technology, and how Bitcoin works.",
+        "image": "/images/ebooks/crypto101.jpg",
+        "color": "blue",
+        "amazonUrl": "https://www.amazon.com/dp/B0FBCFVM21",
+        "price": "$2.99"
+      },
+      {
+        "title": "How Cryptocurrency Works: Decoding the Digital Dollar",
+        "description": "Understand the mechanics behind digital currencies and the technology that powers them.",
+        "image": "/images/ebooks/crypto-works.jpg",
+        "color": "blue",
+        "downloadUrl": "/downloads/ebooks/crypto-works.pdf"
+      },
+      {
+        "title": "Crypto Wallets & Exchanges: Safely Buying, Storing, and Trading",
+        "description": "Learn how to securely store your digital assets and navigate cryptocurrency exchanges.",
+        "image": "/images/ebooks/wallets-exchanges.jpg",
+        "color": "blue",
+        "downloadUrl": "/downloads/ebooks/wallets-exchanges.pdf"
+      },
+      {
+        "title": "Avoiding Scams: Staying Safe in the Crypto Jungle",
+        "description": "Essential security practices and common scams to watch out for in the cryptocurrency space.",
+        "image": "/images/ebooks/avoiding-scams.jpg",
+        "color": "blue",
+        "downloadUrl": "/downloads/ebooks/avoiding-scams.pdf"
+      },
+      {
+        "title": "From Fiat to Freedom: Why Crypto Matters",
+        "description": "Explore the philosophical and economic implications of cryptocurrency adoption.",
+        "image": "/images/ebooks/fiat-freedom.jpg",
+        "color": "blue",
+        "downloadUrl": "/downloads/ebooks/fiat-freedom.pdf"
+      }
+    ],
+    "intermediate": [
+      {
+        "title": "Crypto Investing: Strategies for Building Long-Term Wealth",
+        "description": "Proven investment approaches for cryptocurrency markets and portfolio management techniques.",
+        "image": "/images/ebooks/crypto-investing.jpg",
+        "color": "purple",
+        "downloadUrl": "/downloads/ebooks/crypto-investing.pdf"
+      },
+      {
+        "title": "Understanding Altcoins: Beyond Bitcoin",
+        "description": "Explore the diverse ecosystem of alternative cryptocurrencies and their unique value propositions.",
+        "image": "/images/ebooks/altcoins.jpg",
+        "color": "purple",
+        "downloadUrl": "/downloads/ebooks/altcoins.pdf"
+      },
+      {
+        "title": "DeFi Demystified: Earning Interest Without Banks",
+        "description": "Navigate the world of decentralized finance and discover new ways to generate passive income.",
+        "image": "/images/ebooks/defi.jpg",
+        "color": "purple",
+        "downloadUrl": "/downloads/ebooks/defi.pdf"
+      },
+      {
+        "title": "NFTs Explained: Art, Ownership, and the Digital Gold Rush",
+        "description": "Understand non-fungible tokens and their impact on digital ownership and creative industries.",
+        "image": "/images/ebooks/nfts.jpg",
+        "color": "purple",
+        "downloadUrl": "/downloads/ebooks/nfts.pdf"
+      },
+      {
+        "title": "Taxes, Laws & Crypto: What You Need to Know",
+        "description": "Essential legal and tax considerations for cryptocurrency users and investors.",
+        "image": "/images/ebooks/crypto-taxes.jpg",
+        "color": "purple",
+        "downloadUrl": "/downloads/ebooks/crypto-taxes.pdf"
+      }
+    ],
+    "advanced": [
+      {
+        "title": "Technical Analysis Mastery for Crypto Trading",
+        "description": "Advanced chart reading techniques and trading strategies for cryptocurrency markets.",
+        "image": "/images/ebooks/technical-analysis.jpg",
+        "color": "pink",
+        "downloadUrl": "/downloads/ebooks/technical-analysis.pdf"
+      },
+      {
+        "title": "Smart Contracts & dApps: Building on Blockchain",
+        "description": "Understand the technology behind decentralized applications and how to interact with them.",
+        "image": "/images/ebooks/smart-contracts.jpg",
+        "color": "pink",
+        "downloadUrl": "/downloads/ebooks/smart-contracts.pdf"
+      },
+      {
+        "title": "Crypto Security: Advanced Protection Strategies",
+        "description": "Comprehensive security measures for serious cryptocurrency holders and investors.",
+        "image": "/images/ebooks/crypto-security.jpg",
+        "color": "pink",
+        "downloadUrl": "/downloads/ebooks/crypto-security.pdf"
+      },
+      {
+        "title": "The Future of Finance: CBDCs, Stablecoins & Beyond",
+        "description": "Explore how digital currencies are reshaping the global financial system.",
+        "image": "/images/ebooks/future-finance.jpg",
+        "color": "pink",
+        "downloadUrl": "/downloads/ebooks/future-finance.pdf"
+      },
+      {
+        "title": "Blockchain Governance & Tokenomics",
+        "description": "Deep dive into how blockchain projects are governed and the economics behind cryptocurrency tokens.",
+        "image": "/images/ebooks/blockchain-governance.jpg",
+        "color": "pink",
+        "downloadUrl": "/downloads/ebooks/blockchain-governance.pdf"
+      }
+    ]
+  }
+}
