@@ -11,6 +11,9 @@ export default function NewsPage() {
   const [error, setError] = useState(null);
   const [nextToken, setNextToken] = useState(null);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
+  const [categoriesError, setCategoriesError] = useState(null);
 
   // Fetch articles on component mount
   useEffect(() => {
@@ -29,6 +32,31 @@ export default function NewsPage() {
     }
 
     loadInitialArticles();
+  }, []);
+
+  // Fetch categories from API
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        setCategoriesLoading(true);
+        const response = await fetch('https://api.1ewis.com/news/categories');
+        
+        if (!response.ok) {
+          throw new Error(`Error fetching categories: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        setCategories(data.categories || []);
+        setCategoriesError(null);
+      } catch (err) {
+        console.error('Error loading categories:', err);
+        setCategoriesError('Failed to load categories');
+      } finally {
+        setCategoriesLoading(false);
+      }
+    }
+
+    fetchCategories();
   }, []);
 
   // Load more articles when requested
@@ -197,19 +225,41 @@ export default function NewsPage() {
         <section>
           <h2 className="text-2xl font-bold mb-8 border-b border-gray-800 pb-4">News Categories</h2>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {['Market Updates', 'Regulation', 'Adoption', 'Technology', 'DeFi', 'NFTs'].map((category, index) => (
-              <motion.div
-                key={category}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-gray-900/50 border border-gray-800 rounded-lg p-6 hover:border-green-500/30 hover:bg-gray-800/30 transition-all duration-300 cursor-pointer"
-              >
-                <h3 className="text-lg font-medium">{category}</h3>
-              </motion.div>
-            ))}
-          </div>
+          {categoriesLoading ? (
+            <div className="flex justify-center items-center py-10">
+              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-green-500"></div>
+            </div>
+          ) : categoriesError ? (
+            <div className="text-center py-8">
+              <p className="text-red-400 mb-2">{categoriesError}</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {categories.map((category, index) => (
+                <motion.div
+                  key={category.categoryName}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="bg-gray-900/50 border border-gray-800 rounded-lg p-6 hover:border-opacity-70 hover:bg-gray-800/30 transition-all duration-300 cursor-pointer"
+                  style={{
+                    borderColor: category.colorHex,
+                    borderLeftWidth: '4px'
+                  }}
+                >
+                  <Link href={`/news?category=${encodeURIComponent(category.categoryName)}`}>
+                    <h3 className="text-lg font-medium flex items-center">
+                      <span 
+                        className="inline-block w-3 h-3 rounded-full mr-2" 
+                        style={{ backgroundColor: category.colorHex }}
+                      ></span>
+                      {category.categoryName}
+                    </h3>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+          )}
         </section>
       </main>
       

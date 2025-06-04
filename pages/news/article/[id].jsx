@@ -16,6 +16,21 @@ export default function ArticlePage() {
   const [postingComment, setPostingComment] = useState(false);
   const [postCommentError, setPostCommentError] = useState(null);
   const MAX_COMMENT_LENGTH = 180;
+  
+  const router = useRouter();
+  const { id: articleIdFromUrl } = router.query; // Renamed to avoid conflict with article.id from fetched data
+  
+  const [article, setArticle] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [isRouterReady, setIsRouterReady] = useState(false);
+
+  // Set router ready state when router is ready
+  useEffect(() => {
+    if (router.isReady) {
+      setIsRouterReady(true);
+    }
+  }, [router.isReady]);
 
   const handleCommentChange = (e) => {
     const text = e.target.value;
@@ -74,12 +89,6 @@ export default function ArticlePage() {
       minute: '2-digit',
     });
   };
-  const router = useRouter();
-  const { id: articleIdFromUrl } = router.query; // Renamed to avoid conflict with article.id from fetched data
-  
-  const [article, setArticle] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   // Function to fetch comments
   const fetchComments = async (currentArticleId, token = null) => {
@@ -108,6 +117,31 @@ export default function ArticlePage() {
   };
 
   // Effect to fetch article details
+  // Track article view
+  const trackArticleView = async (articleData) => {
+    if (!articleData || !articleData.PK || !articleData.SK) return;
+    
+    try {
+      const response = await fetch('https://api.1ewis.com/analytics/views/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          PK: articleData.PK,
+          SK: articleData.SK
+        }),
+      });
+      
+      if (!response.ok) {
+        console.error('Failed to track article view:', response.status);
+      }
+    } catch (err) {
+      console.error('Error tracking article view:', err);
+      // Non-blocking error - we don't want to affect the user experience
+    }
+  };
+
   useEffect(() => {
     if (articleIdFromUrl) {
       setLoading(true);
@@ -116,7 +150,10 @@ export default function ArticlePage() {
           setArticle(data);
           setError(null);
           // After fetching article, fetch its comments
-          fetchComments(articleIdFromUrl, null); 
+          fetchComments(articleIdFromUrl, null);
+          
+          // Track the article view
+          trackArticleView(data);
         })
         .catch(err => {
           console.error('Failed to fetch article:', err);
@@ -129,8 +166,8 @@ export default function ArticlePage() {
     }
   }, [articleIdFromUrl]);
 
-  // If the page is not yet generated, display loading state
-  if (loading) {
+  // Show loading state if router is not ready yet or if we're actively loading the article
+  if (!isRouterReady || (isRouterReady && articleIdFromUrl && loading)) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-black text-white flex justify-center items-center">
         <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-green-500"></div>
@@ -138,8 +175,8 @@ export default function ArticlePage() {
     );
   }
   
-  // If there was an error loading the article
-  if (error || !article) {
+  // If there was an error loading the article or no article was found
+  if (isRouterReady && (error || (!loading && !article))) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-black text-white pt-28 px-4">
         <div className="max-w-4xl mx-auto text-center py-20">
