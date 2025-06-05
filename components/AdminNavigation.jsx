@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Menu, X, ChevronDown, Settings, FileText, Edit, Tag, Clock, Plus, LogOut } from 'lucide-react';
+import { Menu, X, ChevronDown, Settings, FileText, Edit, Tag, Clock, Plus, LogOut, MessageSquare, MessageCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { logoutAdmin } from '../utils/authUtils';
 
 export default function AdminNavigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isApprovalsOpen, setIsApprovalsOpen] = useState(false);
   const router = useRouter();
 
   const handleLogout = () => {
@@ -21,6 +22,15 @@ export default function AdminNavigation() {
     { name: 'Edit Articles', path: '/admin/edit-articles', icon: <Edit className="w-5 h-5 mr-2" /> },
     { name: 'Categories', path: '/admin/categories', icon: <Tag className="w-5 h-5 mr-2" /> },
     { name: 'Scheduled', path: '/admin/scheduled', icon: <Clock className="w-5 h-5 mr-2" /> },
+    { 
+      name: 'Approvals', 
+      icon: <ChevronDown className="w-5 h-5 mr-2" />,
+      dropdown: true,
+      items: [
+        { name: 'Questions', path: '/admin/approvals/questions', icon: <MessageSquare className="w-5 h-5 mr-2" /> },
+        { name: 'Answers', path: '/admin/approvals/answers', icon: <MessageCircle className="w-5 h-5 mr-2" /> }
+      ]
+    },
     { name: 'Settings', path: '/admin/settings', icon: <Settings className="w-5 h-5 mr-2" /> },
   ];
 
@@ -53,34 +63,88 @@ export default function AdminNavigation() {
         
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-1">
-          {adminNavItems.map((item) => (
-            <Link 
-              key={item.path} 
-              href={item.path}
-              className={`relative px-4 py-2 rounded-md transition-all duration-300 group flex items-center ${
-                isActive(item.path) 
-                  ? 'text-white font-medium bg-white/5' 
-                  : 'text-gray-300 hover:text-white hover:bg-white/10'
-              }`}
-            >
-              <motion.span
-                className="absolute inset-0 rounded-md bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100"
-                initial={{ scale: 0.8 }}
-                whileHover={{ scale: 1 }}
-                transition={{ duration: 0.2 }}
-              />
-              {isActive(item.path) && (
-                <motion.span 
-                  className="absolute inset-0 bg-white/10 rounded-md z-0" 
-                  layoutId="admin-navbar-active-item"
-                  transition={{ type: 'spring', duration: 0.6 }}
+          {adminNavItems.map((item, index) => (
+            item.dropdown ? (
+              <div key={`dropdown-${index}`} className="relative">
+                <button 
+                  onClick={() => setIsApprovalsOpen(!isApprovalsOpen)}
+                  className={`relative px-4 py-2 rounded-md transition-all duration-300 group flex items-center ${
+                    router.pathname.includes('/admin/approvals') 
+                      ? 'text-white font-medium bg-white/5' 
+                      : 'text-gray-300 hover:text-white hover:bg-white/10'
+                  }`}
+                >
+                  <motion.span
+                    className="absolute inset-0 rounded-md bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100"
+                    initial={{ scale: 0.8 }}
+                    whileHover={{ scale: 1 }}
+                    transition={{ duration: 0.2 }}
+                  />
+                  <span className="relative z-10 flex items-center">
+                    {item.icon}
+                    {item.name}
+                  </span>
+                </button>
+                
+                {/* Dropdown menu */}
+                <AnimatePresence>
+                  {isApprovalsOpen && (
+                    <motion.div 
+                      className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-gray-900 ring-1 ring-black ring-opacity-5 z-50"
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <div className="py-1">
+                        {item.items.map((subItem) => (
+                          <Link
+                            key={subItem.path}
+                            href={subItem.path}
+                            className={`block px-4 py-2 text-sm ${router.pathname === subItem.path 
+                              ? 'bg-white/10 text-white' 
+                              : 'text-gray-300 hover:bg-white/5 hover:text-white'}`}
+                          >
+                            <span className="flex items-center">
+                              {subItem.icon}
+                              {subItem.name}
+                            </span>
+                          </Link>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ) : (
+              <Link 
+                key={item.path} 
+                href={item.path}
+                className={`relative px-4 py-2 rounded-md transition-all duration-300 group flex items-center ${
+                  isActive(item.path) 
+                    ? 'text-white font-medium bg-white/5' 
+                    : 'text-gray-300 hover:text-white hover:bg-white/10'
+                }`}
+              >
+                <motion.span
+                  className="absolute inset-0 rounded-md bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100"
+                  initial={{ scale: 0.8 }}
+                  whileHover={{ scale: 1 }}
+                  transition={{ duration: 0.2 }}
                 />
-              )}
-              <span className="relative z-10 flex items-center">
-                {item.icon}
-                {item.name}
-              </span>
-            </Link>
+                {isActive(item.path) && (
+                  <motion.span 
+                    className="absolute inset-0 bg-white/10 rounded-md z-0" 
+                    layoutId="admin-navbar-active-item"
+                    transition={{ type: 'spring', duration: 0.6 }}
+                  />
+                )}
+                <span className="relative z-10 flex items-center">
+                  {item.icon}
+                  {item.name}
+                </span>
+              </Link>
+            )
           ))}
           
           <button 

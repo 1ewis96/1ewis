@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 import AdminNavigation from '../../components/AdminNavigation';
-import { BarChart2, FileText, Edit, Plus, Eye, Clock, TrendingUp, AlertTriangle, Tag, MessageSquare } from 'lucide-react';
+import { BarChart2, FileText, Edit, Plus, Eye, Clock, TrendingUp, AlertTriangle, Tag, MessageSquare, HelpCircle, MessageCircle, CheckCircle, XCircle } from 'lucide-react';
 import withAdminAuth from '../../components/withAdminAuth';
 import { getStoredApiKey } from '../../utils/authUtils';
 
@@ -14,7 +14,12 @@ function AdminHome() {
     comments: 0,
     articles: 0,
     categories: 0,
-    lastPublished: '-'
+    lastPublished: '-',
+    questions: 0,
+    answers: 0,
+    unapprovedQuestions: 0,
+    unapprovedAnswers: 0,
+    questionViews: 0
   });
   const [statsLoading, setStatsLoading] = useState(true);
   const [statsError, setStatsError] = useState(null);
@@ -238,6 +243,133 @@ function AdminHome() {
                 </div>
                 <div className="p-3 rounded-lg bg-orange-500/10 text-orange-400 group-hover:bg-orange-500/20 transition-all duration-300">
                   <Tag className="w-6 h-6" />
+                </div>
+              </div>
+            </div>
+          </motion.div>
+          
+          {/* Q&A Stats Section */}
+          <motion.h2 
+            className="text-2xl font-bold text-white mt-12 mb-6"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            Q&A Platform Statistics
+          </motion.h2>
+          
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+          >
+            {/* Question Views Card */}
+            <div className="bg-black/60 backdrop-blur-xl rounded-xl border border-white/10 p-6 hover:border-purple-500/50 transition-all duration-300 group">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h3 className="text-xl font-semibold text-white">Question Views</h3>
+                  {statsLoading ? (
+                    <div className="h-9 mt-2 w-24 bg-gray-800/50 animate-pulse rounded"></div>
+                  ) : statsError ? (
+                    <p className="text-3xl font-bold mt-2 text-red-400">Error</p>
+                  ) : (
+                    <p className="text-3xl font-bold mt-2 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500">
+                      {stats.questionViews?.toLocaleString() || '0'}
+                    </p>
+                  )}
+                  <p className="text-green-500 text-sm mt-1 flex items-center">
+                    <TrendingUp className="w-4 h-4 mr-1" />
+                    Updated in real-time
+                  </p>
+                </div>
+                <div className="p-3 rounded-lg bg-cyan-500/10 text-cyan-400 group-hover:bg-cyan-500/20 transition-all duration-300">
+                  <Eye className="w-6 h-6" />
+                </div>
+              </div>
+            </div>
+
+            {/* Questions Card */}
+            <div className="bg-black/60 backdrop-blur-xl rounded-xl border border-white/10 p-6 hover:border-purple-500/50 transition-all duration-300 group">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h3 className="text-xl font-semibold text-white">Questions</h3>
+                  {statsLoading ? (
+                    <div className="h-9 mt-2 w-16 bg-gray-800/50 animate-pulse rounded"></div>
+                  ) : statsError ? (
+                    <p className="text-3xl font-bold mt-2 text-red-400">Error</p>
+                  ) : (
+                    <p className="text-3xl font-bold mt-2 bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-violet-500">
+                      {stats.approvedQuestions?.toLocaleString() || '0'}
+                    </p>
+                  )}
+                  <p className="text-gray-400 text-sm mt-1">
+                    Total approved questions
+                  </p>
+                </div>
+                <div className="p-3 rounded-lg bg-indigo-500/10 text-indigo-400 group-hover:bg-indigo-500/20 transition-all duration-300">
+                  <HelpCircle className="w-6 h-6" />
+                </div>
+              </div>
+            </div>
+
+            {/* Answers Card */}
+            <div className="bg-black/60 backdrop-blur-xl rounded-xl border border-white/10 p-6 hover:border-purple-500/50 transition-all duration-300 group">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h3 className="text-xl font-semibold text-white">Answers</h3>
+                  {statsLoading ? (
+                    <div className="h-9 mt-2 w-16 bg-gray-800/50 animate-pulse rounded"></div>
+                  ) : statsError ? (
+                    <p className="text-3xl font-bold mt-2 text-red-400">Error</p>
+                  ) : (
+                    <p className="text-3xl font-bold mt-2 bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-green-500">
+                      {stats.approvedAnswers?.toLocaleString() || '0'}
+                    </p>
+                  )}
+                  <p className="text-gray-400 text-sm mt-1">
+                    Total approved answers
+                  </p>
+                </div>
+                <div className="p-3 rounded-lg bg-emerald-500/10 text-emerald-400 group-hover:bg-emerald-500/20 transition-all duration-300">
+                  <MessageCircle className="w-6 h-6" />
+                </div>
+              </div>
+            </div>
+
+            {/* Pending Approvals Card */}
+            <div onClick={() => router.push('/admin/approvals/questions')} className="bg-black/60 backdrop-blur-xl rounded-xl border border-white/10 p-6 hover:border-purple-500/50 transition-all duration-300 group cursor-pointer">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h3 className="text-xl font-semibold text-white">Pending Approvals</h3>
+                  {statsLoading ? (
+                    <div className="h-9 mt-2 w-10 bg-gray-800/50 animate-pulse rounded"></div>
+                  ) : statsError ? (
+                    <p className="text-3xl font-bold mt-2 text-red-400">Error</p>
+                  ) : (
+                    <div className="flex items-center mt-2 space-x-2">
+                      <div>
+                        <p className="text-sm text-amber-400 font-medium">Questions</p>
+                        <p className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-yellow-500">
+                          {stats.unapprovedQuestions?.toLocaleString() || '0'}
+                        </p>
+                      </div>
+                      <div className="h-10 w-px bg-gray-800"></div>
+                      <div>
+                        <p className="text-sm text-amber-400 font-medium">Answers</p>
+                        <p className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-yellow-500">
+                          {stats.unapprovedAnswers?.toLocaleString() || '0'}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                  <p className="text-amber-500/70 text-sm mt-1 flex items-center">
+                    <AlertTriangle className="w-4 h-4 mr-1" />
+                    Needs review
+                  </p>
+                </div>
+                <div className="p-3 rounded-lg bg-amber-500/10 text-amber-400 group-hover:bg-amber-500/20 transition-all duration-300">
+                  <CheckCircle className="w-6 h-6" />
                 </div>
               </div>
             </div>
