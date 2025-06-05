@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Link from 'next/link';
 import { Search, ThumbsUp, MessageCircle, TrendingUp, Clock, Award, Tag, Users, HelpCircle, BookOpen } from 'lucide-react';
 import Footer from '../components/Footer';
-import { useRouter } from 'next/router';
+import ClientOnly from '../components/ClientOnly';
+// Router is imported at the top
 
 // Sample data for questions and answers
 const sampleQuestions = [
@@ -94,10 +96,156 @@ const sampleAnswers = [
 
 export default function QAPage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [mainListFilter, setMainListFilter] = useState('');
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [searchResults, setSearchResults] = useState({ questions: [], answers: [] });
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchError, setSearchError] = useState(null);
+  const [searchPage, setSearchPage] = useState(1);
+  const [totalSearchResults, setTotalSearchResults] = useState(0);
+  const [latestQuestions, setLatestQuestions] = useState([]);
+  const [mostAnsweredQuestions, setMostAnsweredQuestions] = useState([]);
+  const [popularTags, setPopularTags] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingMostAnswered, setIsLoadingMostAnswered] = useState(true);
+  const [isLoadingTags, setIsLoadingTags] = useState(true);
+  const [error, setError] = useState(null);
+  const [mostAnsweredError, setMostAnsweredError] = useState(null);
+  const [tagsError, setTagsError] = useState(null);
+  
+  // State for popular questions with pagination
+  const [popularQuestions, setPopularQuestions] = useState([]);
+  const [popularQuestionsPage, setPopularQuestionsPage] = useState(1);
+  const [popularQuestionsTotal, setPopularQuestionsTotal] = useState(0);
+  const [popularQuestionsTotalPages, setPopularQuestionsTotalPages] = useState(0);
+  const [isLoadingPopular, setIsLoadingPopular] = useState(true);
+  const [popularError, setPopularError] = useState(null);
+  const questionsPerPage = 10;
+  const [isBetaModalOpen, setIsBetaModalOpen] = useState(false);
   const router = useRouter();
   const searchInputRef = React.useRef(null);
+  
+  // Get current date as numeric timestamp for seed
+  const getCurrentDateSeed = () => {
+    const now = new Date();
+    return `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
+  };
+  
+  // Fetch popular questions from API with pagination
+  useEffect(() => {
+    async function fetchPopularQuestions() {
+      try {
+        setIsLoadingPopular(true);
+        const dateSeed = getCurrentDateSeed();
+        const response = await fetch(`https://api.1ewis.com/questions/home?page=${popularQuestionsPage}&limit=${questionsPerPage}&seed=${dateSeed}`);
+        
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        setPopularQuestions(data.questions || []);
+        setPopularQuestionsTotal(data.total || 0);
+        setPopularQuestionsTotalPages(data.totalPages || 0);
+        setPopularError(null);
+      } catch (err) {
+        console.error('Failed to fetch popular questions:', err);
+        setPopularError('Failed to load popular questions. Please try again later.');
+      } finally {
+        setIsLoadingPopular(false);
+      }
+    }
+    
+    // Only run on the client side to prevent hydration mismatch
+    if (typeof window !== 'undefined') {
+      fetchPopularQuestions();
+    }
+  }, [popularQuestionsPage]);
+  
+  // Fetch latest questions from API - only run on client side to avoid hydration issues
+  useEffect(() => {
+    async function fetchLatestQuestions() {
+      try {
+        setIsLoading(true);
+        const response = await fetch('https://api.1ewis.com/questions/latest');
+        
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        setLatestQuestions(data.items || []);
+        setError(null);
+      } catch (err) {
+        console.error('Failed to fetch latest questions:', err);
+        setError('Failed to load latest questions. Please try again later.');
+        // Don't use sample data as fallback to avoid hydration issues
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    
+    // Only run on the client side to prevent hydration mismatch
+    if (typeof window !== 'undefined') {
+      fetchLatestQuestions();
+    }
+  }, []);
+  
+  // Fetch most answered questions from API
+  useEffect(() => {
+    async function fetchMostAnsweredQuestions() {
+      try {
+        setIsLoadingMostAnswered(true);
+        const response = await fetch('https://api.1ewis.com/questions/most-answered');
+        
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        setMostAnsweredQuestions(data.items || []);
+        setMostAnsweredError(null);
+      } catch (err) {
+        console.error('Failed to fetch most answered questions:', err);
+        setMostAnsweredError('Failed to load most answered questions. Please try again later.');
+      } finally {
+        setIsLoadingMostAnswered(false);
+      }
+    }
+    
+    // Only run on the client side to prevent hydration mismatch
+    if (typeof window !== 'undefined') {
+      fetchMostAnsweredQuestions();
+    }
+  }, []);
+  
+  // Fetch popular tags from API
+  useEffect(() => {
+    async function fetchPopularTags() {
+      try {
+        setIsLoadingTags(true);
+        const response = await fetch('https://api.1ewis.com/questions/popular-tags');
+        
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        setPopularTags(data.topTags || []);
+        setTagsError(null);
+      } catch (err) {
+        console.error('Failed to fetch popular tags:', err);
+        setTagsError('Failed to load popular tags. Please try again later.');
+      } finally {
+        setIsLoadingTags(false);
+      }
+    }
+    
+    // Only run on the client side to prevent hydration mismatch
+    if (typeof window !== 'undefined') {
+      fetchPopularTags();
+    }
+  }, []);
 
   // Handle click outside to close modal
   React.useEffect(() => {
@@ -113,47 +261,106 @@ export default function QAPage() {
     };
   }, []);
 
-  // Filter questions and answers based on search query
+  // Search API function
+  const searchQuestionsAPI = async (query, page = 1, limit = 10) => {
+    if (!query || query.trim() === '') return null;
+    
+    try {
+      setIsSearching(true);
+      setSearchError(null);
+      
+      const response = await fetch(`https://api.1ewis.com/questions/search?query=${encodeURIComponent(query)}&page=${page}&limit=${limit}`);
+      
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      return {
+        results: data.results || [],
+        total: data.total || 0,
+        totalPages: data.totalPages || 0
+      };
+    } catch (err) {
+      console.error('Search API error:', err);
+      setSearchError('Failed to search questions. Please try again.');
+      return null;
+    } finally {
+      setIsSearching(false);
+    }
+  };
+  
+  // Search questions using API only
   React.useEffect(() => {
     if (searchQuery.trim() === '') {
       setSearchResults({ questions: [], answers: [] });
+      setTotalSearchResults(0);
       return;
     }
     
-    const query = searchQuery.toLowerCase();
+    // Set initial empty state and loading
+    setIsSearching(true);
+    setSearchError(null);
     
-    // Filter questions
-    const matchedQuestions = sampleQuestions
-      .filter(question => 
-        question.title.toLowerCase().includes(query) ||
-        question.content.toLowerCase().includes(query) ||
-        question.tags.some(tag => tag.includes(query))
-      )
-      .slice(0, 3); // Limit to 3 results for the modal
+    // Debounce API search
+    const debounceTimeout = setTimeout(async () => {
+      const apiResults = await searchQuestionsAPI(searchQuery);
+      
+      if (apiResults && apiResults.results && apiResults.results.length > 0) {
+        // Transform API results to match our format
+        const apiQuestions = apiResults.results.map(item => ({
+          id: item.PK,
+          PK: item.PK,
+          title: item.question || 'Untitled Question',
+          content: item.content || '',
+          author: item.username || 'Anonymous',
+          date: item.timestamp || new Date().toISOString(),
+          votes: item.votes || 0,
+          answers: item.approvedAnswerCount || 0,
+          views: item.views || 0,
+          tags: item.tags || []
+        }));
+        
+        // Update results with API data only
+        setSearchResults({
+          questions: apiQuestions,
+          answers: [] // No answers from API for now
+        });
+        
+        setTotalSearchResults(apiResults.total || apiQuestions.length);
+      } else {
+        // No results
+        setSearchResults({ questions: [], answers: [] });
+        setTotalSearchResults(0);
+      }
+      
+      setIsSearching(false);
+    }, 300);
     
-    // Filter answers
-    const matchedAnswers = sampleAnswers
-      .filter(answer => 
-        answer.content.toLowerCase().includes(query)
-      )
-      .slice(0, 3); // Limit to 3 results for the modal
-    
-    setSearchResults({
-      questions: matchedQuestions,
-      answers: matchedAnswers
-    });
+    return () => clearTimeout(debounceTimeout);
   }, [searchQuery]);
   
-  // Filter all questions for the main list
-  const filteredQuestions = sampleQuestions.filter(question => 
-    question.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    question.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    question.tags.some(tag => tag.includes(searchQuery.toLowerCase()))
+  // Filter questions for the main list
+  const filteredQuestions = popularQuestions.filter(question => 
+    mainListFilter === '' || 
+    (question.question && question.question.toLowerCase().includes(mainListFilter.toLowerCase())) ||
+    (question.tags && question.tags.some(tag => tag.toLowerCase().includes(mainListFilter.toLowerCase())))
   );
 
   // Navigate to question detail page
-  const handleQuestionClick = (questionId) => {
-    router.push(`/qa/${questionId}`);
+  const handleQuestionClick = (questionPK) => {
+    router.push(`/qa/${questionPK}`);
+  };
+
+  // Handle ask question click
+  const handleAskQuestionClick = (e) => {
+    e.preventDefault();
+    setIsBetaModalOpen(true);
+  };
+  
+  // Close beta modal
+  const closeBetaModal = () => {
+    setIsBetaModalOpen(false);
   };
 
   return (
@@ -195,7 +402,27 @@ export default function QAPage() {
             {isSearchModalOpen && (
               <div className="absolute top-full left-0 right-0 mt-2 bg-gray-900/95 backdrop-blur-xl border border-gray-700/50 rounded-xl shadow-2xl overflow-hidden z-50 transition-all duration-300 ease-in-out transform">
                 <div className="max-h-[70vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
-                  {searchQuery.trim() === '' ? (
+                  {isSearching ? (
+                    <div className="p-6 text-center">
+                      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-purple-500 mx-auto mb-3"></div>
+                      <p className="text-gray-400">Searching...</p>
+                    </div>
+                  ) : searchError ? (
+                    <div className="p-6 text-center">
+                      <p className="text-red-400">{searchError}</p>
+                      <button 
+                        onClick={() => {
+                          // Retry the search
+                          const query = searchQuery;
+                          setSearchQuery('');
+                          setTimeout(() => setSearchQuery(query), 100);
+                        }}
+                        className="mt-3 px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-white transition-colors"
+                      >
+                        Retry
+                      </button>
+                    </div>
+                  ) : searchQuery.trim() === '' ? (
                     <div className="p-6 text-center">
                       <HelpCircle className="h-12 w-12 mx-auto text-purple-400 mb-3 opacity-70" />
                       <p className="text-gray-400">Type to search questions and answers</p>
@@ -211,7 +438,7 @@ export default function QAPage() {
                         ))}
                       </div>
                     </div>
-                  ) : searchResults.questions.length === 0 && searchResults.answers.length === 0 ? (
+                  ) : searchResults.questions.length === 0 ? (
                     <div className="p-6 text-center">
                       <p className="text-gray-400">No results found for "{searchQuery}"</p>
                     </div>
@@ -221,9 +448,14 @@ export default function QAPage() {
                       {searchResults.questions.length > 0 && (
                         <div className="border-b border-gray-800">
                           <div className="px-4 py-3 bg-gray-800/30">
-                            <div className="flex items-center">
-                              <HelpCircle className="h-4 w-4 text-purple-400 mr-2" />
-                              <h3 className="text-sm font-medium text-gray-300">Questions</h3>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center">
+                                <HelpCircle className="h-4 w-4 text-purple-400 mr-2" />
+                                <h3 className="text-sm font-medium text-gray-300">Questions</h3>
+                              </div>
+                              {totalSearchResults > 0 && (
+                                <span className="text-xs text-gray-400">{totalSearchResults} results</span>
+                              )}
                             </div>
                           </div>
                           <div>
@@ -233,78 +465,41 @@ export default function QAPage() {
                                 className="px-4 py-3 hover:bg-purple-900/20 cursor-pointer transition-colors border-b border-gray-800/50 last:border-0"
                                 onClick={() => {
                                   setIsSearchModalOpen(false);
-                                  router.push(`/qa/${question.id}`);
+                                  router.push(`/qa/${question.PK || question.id}`);
                                 }}
                               >
                                 <h4 className="font-medium text-white mb-1">{question.title}</h4>
                                 <div className="flex items-center text-xs text-gray-400 space-x-3">
                                   <span className="flex items-center">
                                     <MessageCircle className="h-3 w-3 mr-1" />
-                                    {question.answers} answers
+                                    <ClientOnly>{question.answers} answers</ClientOnly>
                                   </span>
                                   <span className="flex items-center">
                                     <ThumbsUp className="h-3 w-3 mr-1" />
-                                    {question.votes} votes
+                                    <ClientOnly>{question.votes} votes</ClientOnly>
                                   </span>
                                   <span className="flex items-center">
                                     <Clock className="h-3 w-3 mr-1" />
-                                    {new Date(question.date).toLocaleDateString()}
+                                    <ClientOnly>{new Date(question.date).toLocaleDateString()}</ClientOnly>
                                   </span>
                                 </div>
                                 <div className="mt-1 flex flex-wrap gap-1">
                                   {question.tags.map(tag => (
-                                    <span key={tag} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-900/30 text-purple-300">
+                                    <Link 
+                                      key={tag} 
+                                      href={`/qa/tag/${encodeURIComponent(tag)}`}
+                                      className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-900/30 text-purple-300 hover:bg-purple-800/50 transition-colors"
+                                      onClick={(e) => {
+                                        e.stopPropagation(); // Prevent triggering the parent question click
+                                        setIsSearchModalOpen(false); // Close the search modal
+                                      }}
+                                    >
                                       #{tag}
-                                    </span>
+                                    </Link>
                                   ))}
                                 </div>
                               </div>
                             ))}
-                          </div>
-                        </div>
-                      )}
-                      
-                      {/* Answers Section */}
-                      {searchResults.answers.length > 0 && (
-                        <div>
-                          <div className="px-4 py-3 bg-gray-800/30">
-                            <div className="flex items-center">
-                              <MessageCircle className="h-4 w-4 text-green-400 mr-2" />
-                              <h3 className="text-sm font-medium text-gray-300">Answers</h3>
-                            </div>
-                          </div>
-                          <div>
-                            {searchResults.answers.map(answer => {
-                              // Find the related question
-                              const relatedQuestion = sampleQuestions.find(q => q.id === answer.questionId);
-                              return (
-                                <div 
-                                  key={answer.id} 
-                                  className="px-4 py-3 hover:bg-green-900/20 cursor-pointer transition-colors border-b border-gray-800/50 last:border-0"
-                                  onClick={() => {
-                                    setIsSearchModalOpen(false);
-                                    router.push(`/qa/${answer.questionId}`);
-                                  }}
-                                >
-                                  <h4 className="font-medium text-gray-300 mb-1 text-sm">
-                                    <span className="text-green-400">Answer to:</span> {relatedQuestion?.title}
-                                  </h4>
-                                  <p className="text-white text-sm line-clamp-2">
-                                    {answer.content}
-                                  </p>
-                                  <div className="flex items-center text-xs text-gray-400 mt-1 space-x-3">
-                                    <span className="flex items-center">
-                                      <ThumbsUp className="h-3 w-3 mr-1" />
-                                      {answer.votes} votes
-                                    </span>
-                                    <span className="flex items-center">
-                                      <Clock className="h-3 w-3 mr-1" />
-                                      {new Date(answer.date).toLocaleDateString()}
-                                    </span>
-                                  </div>
-                                </div>
-                              );
-                            })}
                           </div>
                         </div>
                       )}
@@ -315,8 +510,10 @@ export default function QAPage() {
                           className="w-full py-2 px-4 bg-purple-600/70 hover:bg-purple-600 rounded-lg text-white font-medium transition-colors"
                           onClick={() => {
                             setIsSearchModalOpen(false);
-                            // This would typically go to a search results page
-                            // For now we'll just close the modal
+                            router.push({
+                              pathname: '/qa/search',
+                              query: { q: searchQuery, page: 1 }
+                            });
                           }}
                         >
                           View all results for "{searchQuery}"
@@ -334,76 +531,128 @@ export default function QAPage() {
         <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-6">
           {/* Main Question List */}
           <div className="lg:flex-1">
-          <div className="bg-gray-800/30 rounded-lg border border-gray-700 overflow-hidden shadow-xl">
-            <div className="px-6 py-4 border-b border-gray-700 flex justify-between items-center">
-              <h2 className="text-xl font-semibold text-white">Popular Questions</h2>
-              <Link href="#" className="text-purple-400 hover:text-purple-300 text-sm">
-                Ask a Question
-              </Link>
-            </div>
-
-            {filteredQuestions.length === 0 ? (
-              <div className="p-8 text-center">
-                <p className="text-gray-400">No questions found matching your search.</p>
+            <div className="bg-gray-800/30 rounded-lg border border-gray-700 overflow-hidden shadow-xl">
+              <div className="px-6 py-4 border-b border-gray-700 flex justify-between items-center">
+                <h2 className="text-xl font-semibold text-white">Popular Questions</h2>
+                <a href="#" onClick={handleAskQuestionClick} className="text-purple-400 hover:text-purple-300 text-sm">
+                  Ask a Question
+                </a>
               </div>
-            ) : (
-              <ul className="divide-y divide-gray-700">
-                {filteredQuestions.map((question) => (
-                  <li key={question.id} className="hover:bg-gray-800/50 transition-colors">
-                    <div className="w-full text-left px-6 py-5 cursor-pointer" onClick={() => handleQuestionClick(question.id)}>
-                      <div className="flex items-start">
-                        <div className="flex-shrink-0 flex flex-col items-center mr-4">
-                          <ThumbsUp className="h-5 w-5 text-gray-400" />
-                          <span className="text-gray-300 font-medium mt-1">{question.votes}</span>
-                        </div>
-                        <div className="flex-1">
-                          <h3 className="text-lg font-medium text-white mb-2">{question.title}</h3>
-                          <p className="text-gray-400 text-sm mb-3 line-clamp-2">{question.content}</p>
-                          <div className="flex flex-wrap gap-2 mb-3">
-                            {question.tags.map((tag) => (
-                              <span
-                                key={tag}
-                                className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-900/50 text-purple-300"
-                              >
-                                {tag}
-                              </span>
-                            ))}
+
+              {isLoadingPopular ? (
+                <div className="p-12 text-center">
+                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500 mx-auto mb-4"></div>
+                  <p className="text-gray-400">Loading popular questions...</p>
+                </div>
+              ) : popularError ? (
+                <div className="p-8 text-center">
+                  <p className="text-red-400 mb-4">{popularError}</p>
+                  <button 
+                    onClick={() => setPopularQuestionsPage(1)} 
+                    className="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-white transition-colors"
+                  >
+                    Retry
+                  </button>
+                </div>
+              ) : filteredQuestions.length === 0 ? (
+                <div className="p-8 text-center">
+                  <p className="text-gray-400">No questions found matching your search.</p>
+                </div>
+              ) : (
+                <div className="px-6 py-4">
+                  <ul className="divide-y divide-gray-700">
+                    {filteredQuestions.map((question) => (
+                      <li key={question.PK || question.SK} className="hover:bg-gray-800/50 transition-colors">
+                        <div className="w-full text-left px-0 py-5 cursor-pointer" onClick={() => handleQuestionClick(question.PK)}>
+                          <div className="flex items-start">
+                            <div className="flex-shrink-0 flex flex-col items-center mr-4">
+                              <ThumbsUp className="h-5 w-5 text-gray-400" />
+                              <ClientOnly>
+                                <span className="text-gray-300 font-medium mt-1">{question.votes || 0}</span>
+                              </ClientOnly>
+                            </div>
+                            <div className="flex-1">
+                              <h3 className="text-lg font-medium text-white mb-2">{question.question}</h3>
+                              <p className="text-gray-400 text-sm mb-3 line-clamp-2">{question.content || ''}</p>
+                              <div className="flex flex-wrap gap-2 mb-3">
+                                {question.tags && question.tags.map((tag) => (
+                                  <Link 
+                                    key={tag}
+                                    href={`/qa/tag/${encodeURIComponent(tag)}`}
+                                    className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-900/50 text-purple-300 hover:bg-purple-800/70 transition-colors"
+                                    onClick={(e) => e.stopPropagation()} // Prevent triggering the parent question click
+                                  >
+                                    {tag}
+                                  </Link>
+                                ))}
+                              </div>
+                              <div className="flex items-center text-xs text-gray-500">
+                                <span>Posted by {question.username || 'Anonymous'}</span>
+                                <span className="mx-2">•</span>
+                                <ClientOnly>
+                                  <span>{question.timestamp || question.date}</span>
+                                </ClientOnly>
+                                <span className="mx-2">•</span>
+                                <ClientOnly>
+                                  <span>{question.approvedAnswerCount || question.answers || 0} answers</span>
+                                </ClientOnly>
+                                <span className="mx-2">•</span>
+                                <ClientOnly>
+                                  <span>{question.views || 0} views</span>
+                                </ClientOnly>
+                              </div>
+                            </div>
                           </div>
-                          <div className="flex items-center text-xs text-gray-500">
-                            <span>Posted by {question.author}</span>
-                            <span className="mx-2">•</span>
-                            <span>{question.date}</span>
-                            <span className="mx-2">•</span>
-                            <span>{question.answers} answers</span>
-                            <span className="mx-2">•</span>
-                            <span>{question.views} views</span>
-                          </div>
                         </div>
-                        <div className="flex-shrink-0 ml-4 flex items-center">
-                          <div className="bg-gray-800 px-2 py-1 rounded-md flex items-center">
-                            <MessageCircle className="h-4 w-4 text-purple-400 mr-1" />
-                            <span className="text-sm text-gray-300">{question.answers}</span>
-                          </div>
-                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                  
+                  {/* Pagination Controls */}
+                  {popularQuestionsTotalPages > 1 && (
+                    <div className="flex justify-center items-center p-4 border-t border-gray-700">
+                      <button 
+                        onClick={() => handlePopularPageChange(popularQuestionsPage - 1)}
+                        disabled={popularQuestionsPage === 1}
+                        className="px-3 py-1 rounded-md bg-gray-700 text-white disabled:opacity-50 disabled:cursor-not-allowed mr-2"
+                      >
+                        Previous
+                      </button>
+                      
+                      <div className="flex space-x-1">
+                        {[...Array(popularQuestionsTotalPages).keys()].map((pageNum) => (
+                          <button
+                            key={pageNum + 1}
+                            onClick={() => handlePopularPageChange(pageNum + 1)}
+                            className={`w-8 h-8 flex items-center justify-center rounded-md ${popularQuestionsPage === pageNum + 1 ? 'bg-purple-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}`}
+                          >
+                            {pageNum + 1}
+                          </button>
+                        ))}
                       </div>
+                      
+                      <button 
+                        onClick={() => handlePopularPageChange(popularQuestionsPage + 1)}
+                        disabled={popularQuestionsPage === popularQuestionsTotalPages}
+                        className="px-3 py-1 rounded-md bg-gray-700 text-white disabled:opacity-50 disabled:cursor-not-allowed ml-2"
+                      >
+                        Next
+                      </button>
                     </div>
-
-
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
           
           {/* Sidebar */}
           <div className="lg:w-80 space-y-6">
             {/* Ask Question Button */}
             <div className="mb-6">
-              <Link href="#" className="block w-full py-3 px-4 bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white font-medium rounded-lg text-center transition-all transform hover:scale-[1.02] shadow-lg hover:shadow-purple-500/20">
+              <a href="#" onClick={handleAskQuestionClick} className="block w-full py-3 px-4 bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white font-medium rounded-lg text-center transition-all transform hover:scale-[1.02] shadow-lg hover:shadow-purple-500/20">
                 <HelpCircle className="inline-block h-5 w-5 mr-2 -mt-1" />
                 Ask a Question
-              </Link>
+              </a>
             </div>
             
             {/* Latest Questions Panel */}
@@ -413,21 +662,51 @@ export default function QAPage() {
                 <h3 className="text-sm font-semibold text-white">Latest Questions</h3>
               </div>
               <div className="p-4">
-                <ul className="space-y-3">
-                  {sampleQuestions.slice(0, 3).map((question) => (
-                    <li key={`latest-${question.id}`} className="border-b border-gray-700/50 pb-3 last:border-0 last:pb-0">
-                      <Link href={`/qa/${question.id}`} className="text-sm text-gray-300 hover:text-purple-400 line-clamp-2">
-                        {question.title}
-                      </Link>
-                      <div className="flex items-center mt-1 text-xs text-gray-500">
-                        <span>{question.date}</span>
+                <ClientOnly fallback={
+                  <div className="space-y-3">
+                    {[1, 2, 3].map(i => (
+                      <div key={i} className="border-b border-gray-700/50 pb-3 last:border-0 last:pb-0">
+                        <div className="h-4 bg-gray-700/50 rounded w-full mb-2 animate-pulse"></div>
+                        <div className="h-3 bg-gray-700/50 rounded w-2/3 animate-pulse"></div>
                       </div>
-                    </li>
-                  ))}
-                </ul>
-                <Link href="#" className="text-xs text-purple-400 hover:text-purple-300 mt-3 inline-block">
-                  View all latest questions →
-                </Link>
+                    ))}
+                  </div>
+                }>
+                  {isLoading ? (
+                    <div className="space-y-3">
+                      {[1, 2, 3].map(i => (
+                        <div key={i} className="border-b border-gray-700/50 pb-3 last:border-0 last:pb-0">
+                          <div className="h-4 bg-gray-700/50 rounded w-full mb-2 animate-pulse"></div>
+                          <div className="h-3 bg-gray-700/50 rounded w-2/3 animate-pulse"></div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : error ? (
+                    <p className="text-sm text-gray-400">Unable to load latest questions</p>
+                  ) : latestQuestions.length > 0 ? (
+                    <>
+                      <ul className="space-y-3">
+                        {latestQuestions.slice(0, 3).map((question) => (
+                          <li key={`latest-${question.PK}`} className="border-b border-gray-700/50 pb-3 last:border-0 last:pb-0">
+                            <Link href={`/qa/${question.PK}`} className="text-sm text-gray-300 hover:text-purple-400 line-clamp-2">
+                              {question.question}
+                            </Link>
+                            <div className="flex items-center mt-1 text-xs text-gray-500">
+                              <span>{question.answerCount || 0} answers</span>
+                              <span className="mx-1">•</span>
+                              <span>{new Date(question.timestamp).toLocaleDateString()}</span>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                      <Link href="/questions/latest" className="text-xs text-purple-400 hover:text-purple-300 mt-3 inline-block">
+                        View all latest questions →
+                      </Link>
+                    </>
+                  ) : (
+                    <p className="text-sm text-gray-400">No questions available</p>
+                  )
+                }</ClientOnly>  
               </div>
             </div>
             
@@ -438,22 +717,50 @@ export default function QAPage() {
                 <h3 className="text-sm font-semibold text-white">Most Answered</h3>
               </div>
               <div className="p-4">
-                <ul className="space-y-3">
-                  {[...sampleQuestions].sort((a, b) => b.answers - a.answers).slice(0, 3).map((question) => (
-                    <li key={`answered-${question.id}`} className="border-b border-gray-700/50 pb-3 last:border-0 last:pb-0">
-                      <Link href={`/qa/${question.id}`} className="text-sm text-gray-300 hover:text-purple-400 line-clamp-2">
-                        {question.title}
-                      </Link>
-                      <div className="flex items-center mt-1 text-xs text-gray-500">
-                        <MessageCircle className="h-3 w-3 text-purple-400 mr-1" />
-                        <span>{question.answers} answers</span>
+                <ClientOnly fallback={
+                  <div className="space-y-3">
+                    {[1, 2, 3].map(i => (
+                      <div key={i} className="border-b border-gray-700/50 pb-3 last:border-0 last:pb-0">
+                        <div className="h-4 bg-gray-700/50 rounded w-full mb-2 animate-pulse"></div>
+                        <div className="h-3 bg-gray-700/50 rounded w-2/3 animate-pulse"></div>
                       </div>
-                    </li>
-                  ))}
-                </ul>
-                <Link href="#" className="text-xs text-purple-400 hover:text-purple-300 mt-3 inline-block">
-                  View all most answered questions →
-                </Link>
+                    ))}
+                  </div>
+                }>
+                  {isLoadingMostAnswered ? (
+                    <div className="space-y-3">
+                      {[1, 2, 3].map(i => (
+                        <div key={i} className="border-b border-gray-700/50 pb-3 last:border-0 last:pb-0">
+                          <div className="h-4 bg-gray-700/50 rounded w-full mb-2 animate-pulse"></div>
+                          <div className="h-3 bg-gray-700/50 rounded w-2/3 animate-pulse"></div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : mostAnsweredError ? (
+                    <p className="text-sm text-gray-400">Unable to load most answered questions</p>
+                  ) : mostAnsweredQuestions.length > 0 ? (
+                    <>
+                      <ul className="space-y-3">
+                        {mostAnsweredQuestions.slice(0, 3).map((question) => (
+                          <li key={`answered-${question.PK}`} className="border-b border-gray-700/50 pb-3 last:border-0 last:pb-0">
+                            <Link href={`/qa/${question.PK}`} className="text-sm text-gray-300 hover:text-purple-400 line-clamp-2">
+                              {question.question}
+                            </Link>
+                            <div className="flex items-center mt-1 text-xs text-gray-500">
+                              <MessageCircle className="h-3 w-3 text-purple-400 mr-1" />
+                              <span>{question.answerCount || 0} answers</span>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                      <Link href="/questions/most-answered" className="text-xs text-purple-400 hover:text-purple-300 mt-3 inline-block">
+                        View all most answered questions →
+                      </Link>
+                    </>
+                  ) : (
+                    <p className="text-sm text-gray-400">No questions available</p>
+                  )
+                }</ClientOnly>
               </div>
             </div>
             
@@ -464,45 +771,42 @@ export default function QAPage() {
                 <h3 className="text-sm font-semibold text-white">Hot Topics</h3>
               </div>
               <div className="p-4">
-                <div className="flex flex-wrap gap-2">
-                  {Array.from(new Set(sampleQuestions.flatMap(q => q.tags))).slice(0, 8).map((tag) => (
-                    <Link 
-                      href={`/qa/tag/${tag}`} 
-                      key={`hot-${tag}`}
-                      className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-purple-900/50 text-purple-300 hover:bg-purple-800/50 transition-colors"
-                    >
-                      <Tag className="h-3 w-3 mr-1" />
-                      {tag}
-                    </Link>
-                  ))}
-                </div>
+                <ClientOnly fallback={
+                  <div className="flex flex-wrap gap-2">
+                    {[1, 2, 3, 4, 5, 6].map(i => (
+                      <div key={i} className="h-7 w-20 bg-gray-700/50 rounded-full animate-pulse"></div>
+                    ))}
+                  </div>
+                }>
+                  {isLoadingTags ? (
+                    <div className="flex flex-wrap gap-2">
+                      {[1, 2, 3, 4, 5, 6].map(i => (
+                        <div key={i} className="h-7 w-20 bg-gray-700/50 rounded-full animate-pulse"></div>
+                      ))}
+                    </div>
+                  ) : tagsError ? (
+                    <p className="text-sm text-gray-400">Unable to load popular tags</p>
+                  ) : popularTags.length > 0 ? (
+                    <div className="flex flex-wrap gap-2">
+                      {popularTags.slice(0, 12).map((tagItem) => (
+                        <Link 
+                          href={`/qa/tag/${encodeURIComponent(tagItem.tag)}`} 
+                          key={`hot-${tagItem.tag}`}
+                          className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-purple-900/50 text-purple-300 hover:bg-purple-800/50 transition-colors"
+                        >
+                          <Tag className="h-3 w-3 mr-1" />
+                          {tagItem.tag}
+                        </Link>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-gray-400">No popular tags available</p>
+                  )
+                }</ClientOnly>
               </div>
             </div>
             
-            {/* Top Contributors Panel */}
-            <div className="bg-gray-800/30 rounded-lg border border-gray-700 overflow-hidden shadow-lg">
-              <div className="px-4 py-3 border-b border-gray-700 flex items-center">
-                <Award className="h-4 w-4 text-yellow-400 mr-2" />
-                <h3 className="text-sm font-semibold text-white">Top Contributors</h3>
-              </div>
-              <div className="p-4">
-                <ul className="space-y-3">
-                  {Array.from(new Set([...sampleQuestions.map(q => q.author), ...sampleAnswers.map(a => a.author)])).slice(0, 5).map((author) => (
-                    <li key={`contributor-${author}`} className="flex items-center justify-between">
-                      <div className="flex items-center">
-                        <div className="h-6 w-6 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 mr-2 flex items-center justify-center text-xs font-bold">
-                          {author.charAt(0).toUpperCase()}
-                        </div>
-                        <span className="text-sm text-gray-300">{author}</span>
-                      </div>
-                      <div className="bg-purple-900/30 px-1.5 py-0.5 rounded text-xs text-purple-300">
-                        {Math.floor(Math.random() * 500) + 100} pts
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+            {/* Additional panels can be added here */}
             
             {/* Resources Panel */}
             <div className="bg-gray-800/30 rounded-lg border border-gray-700 overflow-hidden shadow-lg">
@@ -550,6 +854,58 @@ export default function QAPage() {
       </main>
 
       <Footer />
+      
+      {/* Beta Tester Modal */}
+      {isBetaModalOpen && (
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+          <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            {/* Background overlay */}
+            <div 
+              className="fixed inset-0 transition-opacity bg-black bg-opacity-75 backdrop-blur-sm"
+              onClick={closeBetaModal}
+              aria-hidden="true"
+            ></div>
+            
+            {/* Modal panel */}
+            <div className="inline-block overflow-hidden text-left align-bottom transition-all transform bg-gray-900 border border-gray-700 rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+              <div className="px-4 pt-5 pb-4 bg-gray-900 sm:p-6 sm:pb-4">
+                <div className="sm:flex sm:items-start">
+                  <div className="flex items-center justify-center flex-shrink-0 w-12 h-12 mx-auto bg-purple-900/50 rounded-full sm:mx-0 sm:h-10 sm:w-10">
+                    <Users className="w-6 h-6 text-purple-400" aria-hidden="true" />
+                  </div>
+                  <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                    <h3 className="text-lg font-medium leading-6 text-white">Exclusive Beta Access</h3>
+                    <div className="mt-2">
+                      <p className="text-sm text-gray-300">
+                        The ability to ask questions is currently available only to invited beta testers. Join our waitlist to get early access to this feature.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="px-4 py-3 bg-gray-800/50 sm:px-6 sm:flex sm:flex-row-reverse">
+                <button
+                  type="button"
+                  className="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-purple-600 border border-transparent rounded-md shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:ml-3 sm:w-auto sm:text-sm"
+                  onClick={() => {
+                    closeBetaModal();
+                    // Here you could add logic to join waitlist
+                  }}
+                >
+                  Join Waitlist
+                </button>
+                <button
+                  type="button"
+                  className="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium text-gray-300 bg-gray-800 border border-gray-600 rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                  onClick={closeBetaModal}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
