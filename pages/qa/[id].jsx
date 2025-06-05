@@ -19,6 +19,357 @@ export default function QuestionDetail() {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(null);
   
+  // Keyword enhancement states
+  const [linkTerms, setLinkTerms] = useState([]);
+  const [glossaryTerms, setGlossaryTerms] = useState([]);
+  const [isLoadingKeywords, setIsLoadingKeywords] = useState(false);
+  const [keywordError, setKeywordError] = useState(null);
+  
+  
+  // Enhance content with keywords
+  const enhanceContent = (content) => {
+    if (!content) return '';
+    
+    console.log('Enhancing content with: ', {
+      linkTermsCount: linkTerms.length,
+      glossaryTermsCount: glossaryTerms.length
+    });
+    console.log('Content before enhancement:', content);
+    
+    // Debug: Check if content contains DeFi
+    if (content.includes('DeFi') || content.includes('defi') || content.includes('DEFI')) {
+      console.log('FOUND DeFi in content!');
+    }
+    
+    // Clone the content to avoid direct mutation
+    let processedContent = content;
+    
+    // Helper function to escape special characters in regex
+    const escapeRegExp = (string) => {
+      return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    };
+    
+    // Helper function to check if text is inside an HTML tag or already enhanced
+    const isInsideHtmlTagOrEnhanced = (text, position) => {
+      // Check if we're inside an HTML tag
+      let openTagPos = text.lastIndexOf('<', position);
+      let closeTagPos = text.lastIndexOf('>', position);
+      if (openTagPos > closeTagPos) return true;
+      
+      // Check if we're inside a keyword-link or glossary-term
+      const linkCheck = text.lastIndexOf('class="keyword-link"', position);
+      const glossaryCheck = text.lastIndexOf('class="glossary-term"', position);
+      if (linkCheck > -1 && text.indexOf('</a>', linkCheck) > position) return true;
+      if (glossaryCheck > -1 && text.indexOf('</span>', glossaryCheck) > position) return true;
+      
+      return false;
+    };
+    
+    // Hard-coded test keywords for development
+    const hardcodedKeywords = [
+      { type: 'link', keyword: 'DeFi', url: 'https://example.com/defi', caseSensitive: false },
+      { type: 'glossary', keyword: 'DeFi', description: 'Decentralized Finance - financial applications built on blockchain technology', caseSensitive: false },
+      { type: 'link', keyword: 'blockchain', url: 'https://example.com/blockchain', caseSensitive: false },
+      { type: 'glossary', keyword: 'blockchain', description: 'A distributed database that maintains a continuously growing list of records, called blocks, which are linked and secured using cryptography.', caseSensitive: false },
+      { type: 'glossary', keyword: 'NFTs', description: 'Non-fungible tokens are unique digital assets representing ownership of items', caseSensitive: false },
+      { type: 'glossary', keyword: 'Layer-2', description: 'Scaling solutions built on top of blockchain networks', caseSensitive: false },
+    ];
+    
+    // Process each keyword individually
+    hardcodedKeywords.forEach(keywordObj => {
+      try {
+        const { type, keyword, caseSensitive } = keywordObj;
+        const url = type === 'link' ? keywordObj.url : null;
+        const description = type === 'glossary' ? keywordObj.description : null;
+        
+        console.log(`Processing ${type} keyword: '${keyword}'`);
+        
+        // Check if keyword exists in content (case insensitive)
+        const searchPattern = new RegExp(keyword, 'i');
+        if (!searchPattern.test(processedContent)) {
+          console.log(`Keyword '${keyword}' not found in content`);
+          return; // Skip to next keyword
+        }
+        
+        console.log(`Found keyword '${keyword}' in content, replacing...`);
+        
+        // Split content to avoid replacing inside HTML tags
+        const parts = processedContent.split(/(<[^>]*>)/g);
+        
+        // Process each part
+        processedContent = parts.map(part => {
+          // Skip HTML tags
+          if (part.startsWith('<') && part.endsWith('>')) {
+            return part;
+          }
+          
+          // For text nodes, replace the keyword
+          // Create regex with word boundaries and case sensitivity options
+          const flags = caseSensitive ? 'g' : 'gi';
+          const regex = new RegExp(`(\\b${escapeRegExp(keyword)}\\b|\\(${escapeRegExp(keyword)}\\))`, flags);
+          
+          return part.replace(regex, (match, offset) => {
+            // Skip if this match is inside an HTML tag or already enhanced
+            if (isInsideHtmlTagOrEnhanced(part, offset)) {
+              return match;
+            }
+            
+            // Handle parentheses
+            const hasOpenParen = match.startsWith('(');
+            const hasCloseParen = match.endsWith(')');
+            const innerText = match.slice(hasOpenParen ? 1 : 0, hasCloseParen ? -1 : undefined);
+            
+            let replacement;
+            if (type === 'link') {
+              replacement = `<a href="${url}" target="_blank" rel="noopener noreferrer" class="keyword-link" style="color:#0066cc; text-decoration:underline; font-weight:500; position:relative; padding-right:1.2em; display:inline-block;">${innerText}<span style="position:absolute; font-size:0.8em; top:-0.2em; right:0.2em;">↗</span></a>`;
+            } else { // glossary
+              replacement = `<span class="glossary-term" data-glossary="${description.replace(/"/g, '&quot;')}" onmouseover="showGlossaryPanel(event, '${innerText}', '${description.replace(/"/g, '&quot;')}')" onmouseout="hideGlossaryPanel()">${innerText}</span>`;
+            }
+            
+            // Add back parentheses if they were in the original match
+            if (hasOpenParen) replacement = '(' + replacement;
+            if (hasCloseParen) replacement = replacement + ')';
+            
+            return replacement;
+          });
+        }).join('');
+        
+      } catch (error) {
+        console.error(`Error processing keyword ${keywordObj.keyword}:`, error);
+      }
+    });
+    
+    // Now process the API-provided keywords
+    // Sort keywords by length (longest first) to avoid partial replacements
+    const sortedLinkTerms = [...linkTerms].sort((a, b) => b.keyword.length - a.keyword.length);
+    const sortedGlossaryTerms = [...glossaryTerms].sort((a, b) => b.keyword.length - a.keyword.length);
+    
+    // Debug: Show available keywords
+    console.log('Available link terms: ', sortedLinkTerms.map(term => term.keyword));
+    
+    // Process link terms
+    sortedLinkTerms.forEach(({ keyword, url, caseSensitive }) => {
+      try {
+        // Case-insensitive search to check if keyword exists at all
+        const searchRegex = new RegExp(escapeRegExp(keyword), 'i');
+        const hasKeyword = searchRegex.test(processedContent);
+        console.log(`Checking for link keyword '${keyword}': ${hasKeyword ? 'FOUND' : 'NOT FOUND'}`);
+        
+        if (hasKeyword) {
+          console.log(`Replacing '${keyword}' with link to ${url}`);
+          const flags = caseSensitive ? 'g' : 'gi';
+          
+          // Split content to avoid replacing inside HTML tags
+          const parts = processedContent.split(/(<[^>]*>)/g);
+          
+          // Process each part
+          processedContent = parts.map(part => {
+            // Skip HTML tags
+            if (part.startsWith('<') && part.endsWith('>')) {
+              return part;
+            }
+            
+            // For text nodes, replace the keyword with word boundaries
+            const regex = new RegExp(`(\\b${escapeRegExp(keyword)}\\b|\\(${escapeRegExp(keyword)}\\))`, flags);
+            
+            return part.replace(regex, (match, offset) => {
+              // Skip if this match is inside an HTML tag or already enhanced
+              if (isInsideHtmlTagOrEnhanced(part, offset)) {
+                return match;
+              }
+              
+              // Handle parentheses
+              const hasOpenParen = match.startsWith('(');
+              const hasCloseParen = match.endsWith(')');
+              const innerText = match.slice(hasOpenParen ? 1 : 0, hasCloseParen ? -1 : undefined);
+              
+              let replacement = `<a href="${url}" target="_blank" rel="noopener noreferrer" class="keyword-link" style="color:#0066cc; text-decoration:underline; font-weight:500; position:relative; padding-right:1.2em; display:inline-block;">${innerText}<span style="position:absolute; font-size:0.8em; top:-0.2em; right:0.2em;">↗</span></a>`;
+              
+              // Add back parentheses if they were in the original match
+              if (hasOpenParen) replacement = '(' + replacement;
+              if (hasCloseParen) replacement = replacement + ')';
+              
+              return replacement;
+            });
+          }).join('');
+        }
+      } catch (error) {
+        console.error(`Error processing link keyword ${keyword}:`, error);
+      }
+    });
+    
+    // Debug: Show available glossary terms
+    console.log('Available glossary terms: ', sortedGlossaryTerms.map(term => term.keyword));
+    
+    // Process glossary terms
+    sortedGlossaryTerms.forEach(({ keyword, description, caseSensitive }) => {
+      try {
+        // Case-insensitive search to check if keyword exists at all
+        const searchRegex = new RegExp(escapeRegExp(keyword), 'i');
+        const hasKeyword = searchRegex.test(processedContent);
+        console.log(`Checking for glossary keyword '${keyword}': ${hasKeyword ? 'FOUND' : 'NOT FOUND'}`);
+        
+        if (hasKeyword) {
+          console.log(`Replacing '${keyword}' with glossary tooltip`);
+          const flags = caseSensitive ? 'g' : 'gi';
+          
+          // Split content to avoid replacing inside HTML tags
+          const parts = processedContent.split(/(<[^>]*>)/g);
+          
+          // Process each part
+          processedContent = parts.map(part => {
+            // Skip HTML tags
+            if (part.startsWith('<') && part.endsWith('>')) {
+              return part;
+            }
+            
+            // For text nodes, replace the keyword with word boundaries
+            const regex = new RegExp(`(\\b${escapeRegExp(keyword)}\\b|\\(${escapeRegExp(keyword)}\\))`, flags);
+            
+            return part.replace(regex, (match, offset) => {
+              // Skip if this match is inside an HTML tag or already enhanced
+              if (isInsideHtmlTagOrEnhanced(part, offset)) {
+                return match;
+              }
+              
+              // Handle parentheses
+              const hasOpenParen = match.startsWith('(');
+              const hasCloseParen = match.endsWith(')');
+              const innerText = match.slice(hasOpenParen ? 1 : 0, hasCloseParen ? -1 : undefined);
+              
+              let replacement = `<span class="glossary-term" data-glossary="${description.replace(/"/g, '&quot;')}" onmouseover="showGlossaryPanel(event, '${innerText}', '${description.replace(/"/g, '&quot;')}')" onmouseout="hideGlossaryPanel()">${innerText}</span>`;
+              
+              // Add back parentheses if they were in the original match
+              if (hasOpenParen) replacement = '(' + replacement;
+              if (hasCloseParen) replacement = replacement + ')';
+              
+              return replacement;
+            });
+          }).join('');
+        }
+      } catch (error) {
+        console.error(`Error processing glossary keyword ${keyword}:`, error);
+      }
+    });
+    
+    console.log('Content after enhancement:', processedContent);
+    return processedContent;
+  };
+  
+  // Fetch keywords data for enhancement
+  useEffect(() => {
+    const fetchKeywords = async () => {
+      try {
+        setIsLoadingKeywords(true);
+        
+        // Define test keywords for development
+        const testLinkTerms = [
+          { keyword: 'blockchain', url: 'https://example.com/blockchain', caseSensitive: false },
+          { keyword: 'DeFi', url: 'https://example.com/defi', caseSensitive: true },
+        ];
+        
+        const testGlossaryTerms = [
+          { keyword: 'NFTs', description: 'Non-fungible tokens are unique digital assets representing ownership of items', caseSensitive: true },
+          { keyword: 'Layer-2', description: 'Scaling solutions built on top of blockchain networks', caseSensitive: false },
+          { keyword: 'DeFi', description: 'Decentralized Finance - financial applications built on blockchain technology', caseSensitive: true },
+        ];
+        
+        // In development mode, just use test data
+        if (process.env.NODE_ENV !== 'production') {
+          console.log('Using test keywords for development');
+          setLinkTerms(testLinkTerms);
+          setGlossaryTerms(testGlossaryTerms);
+          setIsLoadingKeywords(false);
+          return;
+        }
+        
+        // Check if we have cached data
+        const cachedData = localStorage.getItem('keywordData');
+        const cachedTimestamp = localStorage.getItem('keywordDataTimestamp');
+        
+        // Use cache if it's less than 24 hours old
+        if (cachedData && cachedTimestamp && (Date.now() - parseInt(cachedTimestamp)) < 24 * 60 * 60 * 1000) {
+          const { linkTerms, glossaryTerms } = JSON.parse(cachedData);
+          setLinkTerms(linkTerms);
+          setGlossaryTerms(glossaryTerms);
+          setIsLoadingKeywords(false);
+          return;
+        }
+        
+        // Fetch from API if no cache or cache expired
+        const linkResponse = await fetch('https://api.1ewis.com/keywords/list');
+        const glossaryResponse = await fetch('https://api.1ewis.com/keywords/glossary');
+        
+        if (!linkResponse.ok || !glossaryResponse.ok) {
+          throw new Error('Failed to fetch keywords');
+        }
+        
+        const linkData = await linkResponse.json();
+        const glossaryData = await glossaryResponse.json();
+        
+        // Store in state
+        setLinkTerms(linkData);
+        setGlossaryTerms(glossaryData);
+        
+        // Cache the combined data
+        localStorage.setItem('keywordData', JSON.stringify({
+          linkTerms: linkData,
+          glossaryTerms: glossaryData
+        }));
+        localStorage.setItem('keywordDataTimestamp', Date.now().toString());
+        
+        setIsLoadingKeywords(false);
+      } catch (error) {
+        console.error('Error fetching keywords:', error);
+        setKeywordError(error.message);
+        setIsLoadingKeywords(false);
+      }
+    };
+    
+    fetchKeywords();
+  }, []);
+  
+  // Add glossary panel functions to window object
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.showGlossaryPanel = (event, term, description) => {
+        const panel = document.getElementById('glossary-panel');
+        document.getElementById('glossary-term-title').textContent = term;
+        document.getElementById('glossary-term-description').textContent = description;
+        
+        // Position the panel near the hovered term
+        const rect = event.target.getBoundingClientRect();
+        panel.style.left = rect.left + 'px';
+        panel.style.top = (rect.bottom + 10) + 'px';
+        panel.style.display = 'block';
+        
+        // Ensure panel stays within viewport
+        const panelRect = panel.getBoundingClientRect();
+        if (panelRect.right > window.innerWidth) {
+          panel.style.left = (window.innerWidth - panelRect.width - 20) + 'px';
+        }
+      };
+      
+      window.hideGlossaryPanel = () => {
+        // Add a small delay to allow for moving between terms
+        setTimeout(() => {
+          const panel = document.getElementById('glossary-panel');
+          if (!panel.matches(':hover')) {
+            panel.style.display = 'none';
+          }
+        }, 300);
+      };
+      
+      // Allow hovering on the panel itself without closing
+      const panel = document.getElementById('glossary-panel');
+      if (panel) {
+        panel.addEventListener('mouseleave', () => {
+          panel.style.display = 'none';
+        });
+      }
+    }
+  }, []);
+  
   // Fetch question data from API
   useEffect(() => {
     async function fetchQuestionData() {
@@ -139,6 +490,118 @@ export default function QuestionDetail() {
         <meta property="twitter:description" content={questionData.question ? `${questionData.question.substring(0, 160)}${questionData.question.length > 160 ? '...' : ''}` : 'Question details on cryptocurrency topics at 1ewis.com'} />
         <meta property="twitter:image" content="https://1ewis.com/images/og-qa.jpg" />
         
+        {/* Styles for keyword enhancements */}
+        <style jsx>{`
+          .question-detail {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+          }
+          .question-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+          }
+          .question-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 14px;
+          }
+          .question-content {
+            margin-bottom: 30px;
+            line-height: 1.6;
+          }
+          .answer-container {
+            margin-top: 20px;
+          }
+          .answer {
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+            margin-bottom: 20px;
+          }
+          .answer-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            margin-bottom: 10px;
+            font-size: 14px;
+          }
+          .answer-content {
+            line-height: 1.6;
+          }
+          .debug-panel {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+          }
+          .debug-panel h3 {
+            margin-top: 0;
+          }
+          .debug-keywords {
+            font-family: monospace;
+            white-space: pre-wrap;
+          }
+          a.keyword-link, a.keyword-link:link, a.keyword-link:visited {
+            color: #0066cc !important;
+            text-decoration: underline !important;
+            font-weight: 500 !important;
+            position: relative !important;
+            padding-right: 1.2em !important;
+            display: inline-block !important;
+          }
+          a.keyword-link::after {
+            content: '↗' !important;
+            position: absolute !important;
+            font-size: 0.8em !important;
+            top: -0.2em !important;
+            right: 0.2em !important;
+            display: inline-block !important;
+          }
+          .glossary-term {
+            color: #006600;
+            border-bottom: 1px dotted #006600;
+            cursor: help;
+            font-weight: 500;
+            position: relative;
+          }
+          /* Hover styles for glossary terms */
+          .glossary-term:hover {
+            background-color: rgba(0, 102, 0, 0.05);
+          }
+          #glossary-panel {
+            position: fixed;
+            background: white;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            padding: 15px;
+            max-width: 300px;
+            border-radius: 5px;
+            z-index: 1000;
+            display: none;
+          }
+          #glossary-panel h4 {
+            margin-top: 0;
+            margin-bottom: 8px;
+            color: #006600;
+          }
+          #glossary-panel p {
+            margin: 0;
+            font-size: 14px;
+          }
+          #glossary-panel .close-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            color: #666;
+          }
+        `}</style>
+        
         {/* Canonical URL */}
         <link rel="canonical" href={`https://1ewis.com/qa/${id}`} />
         
@@ -183,20 +646,66 @@ export default function QuestionDetail() {
         />
       )}
 
+      {/* Glossary panel */}
+      <div id="glossary-panel">
+        <span className="close-btn" onClick={() => document.getElementById('glossary-panel').style.display = 'none'}>×</span>
+        <h4 id="glossary-term-title"></h4>
+        <p id="glossary-term-description"></p>
+      </div>
+      
       {/* Main Content */}
       <main className="pt-32 pb-20 px-4 max-w-4xl mx-auto">
-        <button 
-          onClick={handleBack}
-          className="flex items-center text-purple-400 hover:text-purple-300 mb-6"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Questions
-        </button>
+        <div className="flex justify-between items-center mb-6">
+          <button 
+            onClick={handleBack}
+            className="flex items-center text-purple-400 hover:text-purple-300"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Questions
+          </button>
+          
+          {/* Keyword enhancement indicator */}
+          {!isLoadingKeywords && !keywordError && (linkTerms.length > 0 || glossaryTerms.length > 0) && (
+            <div className="flex items-center text-xs text-gray-400">
+              <span className="h-2 w-2 bg-purple-500 rounded-full mr-2"></span>
+              <span>Enhanced with {linkTerms.length + glossaryTerms.length} keywords</span>
+            </div>
+          )}
+        </div>
+        
+        {/* Debug panel - remove in production */}
+        {process.env.NODE_ENV !== 'production' && (
+          <div className="bg-gray-800 border border-gray-700 p-4 mb-6 rounded-lg text-xs">
+            <h3 className="font-bold text-white mb-2">Debug Information</h3>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <p className="text-gray-400">Link Terms ({linkTerms.length}):</p>
+                <ul className="list-disc pl-5 text-purple-400">
+                  {linkTerms.map((term, i) => (
+                    <li key={i}>{term.keyword} → {term.url}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <p className="text-gray-400">Glossary Terms ({glossaryTerms.length}):</p>
+                <ul className="list-disc pl-5 text-purple-400">
+                  {glossaryTerms.map((term, i) => (
+                    <li key={i}>{term.keyword}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        )}
         
         {/* Question */}
         <article className="bg-gray-800/30 rounded-lg border border-gray-700 overflow-hidden shadow-xl mb-8">
           <div className="px-6 py-5">
-            <h1 className="text-2xl font-bold text-white mb-6 leading-tight" id="question-title">{questionData.question}</h1>
+            <h1 
+              className="text-2xl font-bold text-white mb-6 leading-tight" 
+              id="question-title" 
+              dangerouslySetInnerHTML={{ __html: enhanceContent(questionData.question, linkTerms, glossaryTerms) }}
+            />
             
             <div className="flex flex-wrap gap-2 mb-6">
               {questionData.tags && questionData.tags.map((tag) => (
@@ -249,11 +758,36 @@ export default function QuestionDetail() {
             {questionData.answers ? questionData.answers.length : 0} Answers
           </h2>
           
+          {/* Keyword enhancement status */}
+          {isLoadingKeywords && (
+            <div className="text-sm text-gray-400 mb-4 flex items-center">
+              <div className="animate-spin h-3 w-3 border-2 border-purple-500 border-t-transparent rounded-full mr-2"></div>
+              Loading keyword enhancements...
+            </div>
+          )}
+          
+          {keywordError && (
+            <div className="text-sm text-amber-400 mb-4">
+              {keywordError}
+            </div>
+          )}
+          
           <div className="space-y-6">
             {questionData.answers && questionData.answers.map((answer) => (
               <div key={answer.SK} className="bg-gray-800/30 rounded-lg border border-gray-700 overflow-hidden shadow-lg transition-all hover:border-purple-700/50">
                 <div className="px-6 py-5">
-                  <p className="text-gray-300 mb-6 leading-relaxed whitespace-pre-line">{answer.answer}</p>
+                  <p 
+                    className="text-gray-300 mb-6 leading-relaxed whitespace-pre-line"
+                    dangerouslySetInnerHTML={{ __html: enhanceContent(answer.answer, linkTerms, glossaryTerms) }}
+                  />
+                  {/* Debug info - remove in production */}
+                  {process.env.NODE_ENV === 'development' && (
+                    <div className="text-xs text-gray-500 mb-2 p-2 bg-gray-800/50 rounded">
+                      <div>Keywords loaded: {linkTerms.length + glossaryTerms.length}</div>
+                      <div>Link terms: {linkTerms.map(t => t.keyword).join(', ')}</div>
+                      <div>Glossary terms: {glossaryTerms.map(t => t.keyword).join(', ')}</div>
+                    </div>
+                  )}
                   <div className="flex flex-wrap items-center justify-between text-sm text-gray-400 border-t border-gray-700/50 pt-4">
                     <div className="flex items-center space-x-4">
                       <div className="flex items-center">
