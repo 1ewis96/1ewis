@@ -487,12 +487,56 @@ function AdminHome() {
             </div>
           </motion.div>
 
-          {/* Quick Actions Section */}
+          {/* Keyword Planner Section */}
           <motion.div 
             className="mt-10"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            <h2 className="text-2xl font-bold text-white mb-6">Keyword Planner</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <button 
+                onClick={() => router.push('/admin/manage-keywords')}
+                className="bg-black/60 backdrop-blur-xl rounded-xl border border-white/10 p-6 hover:border-green-500/50 transition-all duration-300 text-left"
+              >
+                <div className="p-3 rounded-lg bg-green-500/10 text-green-400 w-fit mb-4">
+                  <TrendingUp className="w-6 h-6" />
+                </div>
+                <h3 className="text-lg font-semibold text-white">Manage Keywords</h3>
+                <p className="text-gray-400 text-sm mt-1">Track and optimize keywords for SEO</p>
+              </button>
+              
+              <button 
+                onClick={() => router.push('/admin/glossary-terms')}
+                className="bg-black/60 backdrop-blur-xl rounded-xl border border-white/10 p-6 hover:border-blue-500/50 transition-all duration-300 text-left"
+              >
+                <div className="p-3 rounded-lg bg-blue-500/10 text-blue-400 w-fit mb-4">
+                  <HelpCircle className="w-6 h-6" />
+                </div>
+                <h3 className="text-lg font-semibold text-white">Glossary Terms</h3>
+                <p className="text-gray-400 text-sm mt-1">Manage crypto glossary definitions</p>
+              </button>
+              
+              <button 
+                onClick={() => router.push('/admin/keyword-links')}
+                className="bg-black/60 backdrop-blur-xl rounded-xl border border-white/10 p-6 hover:border-purple-500/50 transition-all duration-300 text-left"
+              >
+                <div className="p-3 rounded-lg bg-purple-500/10 text-purple-400 w-fit mb-4">
+                  <Tag className="w-6 h-6" />
+                </div>
+                <h3 className="text-lg font-semibold text-white">Keyword Links</h3>
+                <p className="text-gray-400 text-sm mt-1">Manage keyword to content mappings</p>
+              </button>
+            </div>
+          </motion.div>
+          
+          {/* Quick Actions Section */}
+          <motion.div 
+            className="mt-10"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
           >
             <h2 className="text-2xl font-bold text-white mb-6">Article Management</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
