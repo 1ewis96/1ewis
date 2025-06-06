@@ -99,7 +99,7 @@ export default function HomePage() {
       
       <main className="flex-1 relative">
         {/* Hero Section with animated background */}
-        <section className="py-24 px-4 bg-gradient-to-b from-black to-gray-950 relative overflow-hidden">
+        <section className="pt-36 pb-24 px-4 bg-gradient-to-b from-black to-gray-950 relative overflow-hidden">
           {/* Enhanced particle background */}
           <ParticleBackground 
             count={80} 

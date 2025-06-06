@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 import AdminNavigation from '../../components/AdminNavigation';
-import { BarChart2, FileText, Edit, Plus, Eye, Clock, TrendingUp, AlertTriangle, Tag, MessageSquare, HelpCircle, MessageCircle, CheckCircle, XCircle } from 'lucide-react';
+import { BarChart2, FileText, Edit, Plus, Eye, Clock, TrendingUp, AlertTriangle, Tag, MessageSquare, HelpCircle, MessageCircle, CheckCircle, XCircle, Sparkles, BrainCircuit } from 'lucide-react';
 import withAdminAuth from '../../components/withAdminAuth';
 import { getStoredApiKey } from '../../utils/authUtils';
 
@@ -487,12 +487,45 @@ function AdminHome() {
             </div>
           </motion.div>
 
-          {/* Keyword Planner Section */}
+          {/* AI Agents Section */}
           <motion.div 
             className="mt-10"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            <h2 className="text-2xl font-bold text-white mb-6">AI Agents</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <button 
+                onClick={() => router.push('/admin/ai-generate-questions')}
+                className="bg-black/60 backdrop-blur-xl rounded-xl border border-white/10 p-6 hover:border-blue-500/50 transition-all duration-300 text-left"
+              >
+                <div className="p-3 rounded-lg bg-blue-500/10 text-blue-400 w-fit mb-4">
+                  <BrainCircuit className="w-6 h-6" />
+                </div>
+                <h3 className="text-lg font-semibold text-white">Generate Questions</h3>
+                <p className="text-gray-400 text-sm mt-1">Use AI to generate relevant Q&A questions</p>
+              </button>
+              
+              <button 
+                onClick={() => router.push('/admin/ai-generate-answers')}
+                className="bg-black/60 backdrop-blur-xl rounded-xl border border-white/10 p-6 hover:border-purple-500/50 transition-all duration-300 text-left"
+              >
+                <div className="p-3 rounded-lg bg-purple-500/10 text-purple-400 w-fit mb-4">
+                  <Sparkles className="w-6 h-6" />
+                </div>
+                <h3 className="text-lg font-semibold text-white">Generate Answers</h3>
+                <p className="text-gray-400 text-sm mt-1">Use AI to generate answers for existing questions</p>
+              </button>
+            </div>
+          </motion.div>
+          
+          {/* Keyword Planner Section */}
+          <motion.div 
+            className="mt-10"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
           >
             <h2 className="text-2xl font-bold text-white mb-6">Keyword Planner</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

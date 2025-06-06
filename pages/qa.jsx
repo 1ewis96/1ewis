@@ -363,6 +363,16 @@ export default function QAPage() {
     setIsBetaModalOpen(false);
   };
 
+  // Handle pagination for popular questions
+  const handlePopularPageChange = (pageNumber) => {
+    // Make sure page number is within valid range
+    if (pageNumber >= 1 && pageNumber <= popularQuestionsTotalPages) {
+      setPopularQuestionsPage(pageNumber);
+      // Scroll to top of questions list for better UX
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-gray-900 to-black text-white">
       <Head>

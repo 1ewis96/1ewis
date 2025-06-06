@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/router';
 import AdminNavigation from '../../components/AdminNavigation';
-import { Search, Plus, Download, Upload, Trash2, Edit, TrendingUp } from 'lucide-react';
+import { Search, Plus, Trash2, Edit, TrendingUp, Check, CheckCircle, ToggleLeft, ToggleRight, X } from 'lucide-react';
 import withAdminAuth from '../../components/withAdminAuth';
 import { getStoredApiKey } from '../../utils/authUtils';
 
@@ -15,10 +15,188 @@ function ManageKeywords() {
   const [error, setError] = useState(null);
   const [nextPageKey, setNextPageKey] = useState(null);
   const [filteredKeywords, setFilteredKeywords] = useState([]);
+  const [selectedKeywords, setSelectedKeywords] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+  const [resultsLimit, setResultsLimit] = useState(10); // Default to 10 results
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newKeyword, setNewKeyword] = useState('');
+  const [newVolume, setNewVolume] = useState('');
+  const [newDifficulty, setNewDifficulty] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   useEffect(() => {
     fetchKeywords();
   }, []);
+  
+  // Handle checkbox selection
+  const handleSelectKeyword = (keywordId) => {
+    setSelectedKeywords(prev => {
+      if (prev.includes(keywordId)) {
+        return prev.filter(id => id !== keywordId);
+      } else {
+        return [...prev, keywordId];
+      }
+    });
+  };
+  
+  // Handle select all checkbox
+  const handleSelectAll = () => {
+    if (selectAll) {
+      setSelectedKeywords([]);
+    } else {
+      const allIds = filteredKeywords.map(keyword => keyword.PK || keyword.keyword);
+      setSelectedKeywords(allIds);
+    }
+    setSelectAll(!selectAll);
+  };
+  
+  // Handle limit change
+  const handleLimitChange = (newLimit) => {
+    setResultsLimit(newLimit);
+    // Refetch keywords with new limit setting
+    setKeywords([]);
+    fetchKeywords(null, false, newLimit);
+  };
+  
+  // Handle approve selected keywords
+  const handleApproveSelected = async () => {
+    if (selectedKeywords.length === 0) return;
+    
+    try {
+      setIsLoading(true);
+      const { apiKey } = getStoredApiKey();
+      
+      if (!apiKey) {
+        throw new Error('No API key available');
+      }
+      
+      // Prepare the request body with the selected keyword PKs
+      const requestBody = {
+        keys: selectedKeywords
+      };
+      
+      const response = await fetch('https://api.1ewis.com/admin/seo/approve', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+      
+      // Reset selection and refresh the list
+      setSelectedKeywords([]);
+      setSelectAll(false);
+      setError(null);
+      
+      // Refresh the keyword list
+      fetchKeywords();
+    } catch (err) {
+      console.error('Error approving keywords:', err);
+      setError(`Failed to approve keywords: ${err.message}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Handle delete selected keywords
+  const handleDeleteSelected = async () => {
+    if (selectedKeywords.length === 0) return;
+    
+    try {
+      setIsLoading(true);
+      const { apiKey } = getStoredApiKey();
+      
+      if (!apiKey) {
+        throw new Error('No API key available');
+      }
+      
+      // Prepare the request body with the selected keyword PKs
+      const requestBody = {
+        keys: selectedKeywords
+      };
+      
+      const response = await fetch('https://api.1ewis.com/admin/seo/delete', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+      
+      // Reset selection and refresh the list
+      setSelectedKeywords([]);
+      setSelectAll(false);
+      setError(null);
+      
+      // Refresh the keyword list
+      fetchKeywords();
+    } catch (err) {
+      console.error('Error deleting keywords:', err);
+      setError(`Failed to delete keywords: ${err.message}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  // Handle adding a new keyword
+  const handleAddKeyword = async (e) => {
+    e.preventDefault();
+    if (!newKeyword.trim()) return;
+    
+    setIsSubmitting(true);
+    try {
+      const { apiKey } = getStoredApiKey();
+      
+      if (!apiKey) {
+        throw new Error('No API key available');
+      }
+      
+      // Prepare the request body for the new API endpoint
+      const requestBody = {
+        keyword: newKeyword.trim(),
+        searchVolume: newVolume ? parseInt(newVolume) : 0,
+        competition: newDifficulty || 'Medium',
+        approved: 0 // Default to not approved
+      };
+      
+      const response = await fetch('https://api.1ewis.com/admin/seo/create', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+      
+      // Reset form and close modal
+      setNewKeyword('');
+      setNewVolume('');
+      setNewDifficulty('');
+      setIsModalOpen(false);
+      
+      // Refresh the keyword list
+      fetchKeywords();
+    } catch (err) {
+      console.error('Error adding keyword:', err);
+      setError(err.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   useEffect(() => {
     if (keywords.length > 0) {
@@ -32,7 +210,7 @@ function ManageKeywords() {
     }
   }, [searchTerm, keywords]);
 
-  const fetchKeywords = async (pageKey = null) => {
+  const fetchKeywords = async (pageKey = null, loadAll = false, limit = null) => {
     try {
       setIsLoading(true);
       const { apiKey } = getStoredApiKey();
@@ -42,8 +220,18 @@ function ManageKeywords() {
       }
 
       let url = 'https://api.1ewis.com/admin/seo';
+      let params = [];
+      
       if (pageKey) {
-        url += `?lastKey=${encodeURIComponent(pageKey)}`;
+        params.push(`lastKey=${encodeURIComponent(pageKey)}`);
+      }
+      
+      // Use the provided limit, or the state limit, or default to 10
+      const requestLimit = limit || resultsLimit || 10;
+      params.push(`limit=${requestLimit}`);
+      
+      if (params.length > 0) {
+        url += '?' + params.join('&');
       }
 
       const response = await fetch(url, {
@@ -63,6 +251,12 @@ function ManageKeywords() {
         setKeywords(prevKeywords => [...prevKeywords, ...data.keywords]);
       } else {
         setKeywords(data.keywords);
+      }
+      
+      // If we're loading a large number of results and there are more pages, fetch them automatically
+      if (requestLimit >= 500 && data.nextPageKey) {
+        fetchKeywords(data.nextPageKey, true, requestLimit);
+        return; // Don't update loading state yet
       }
       
       setNextPageKey(data.nextPageKey || null);
@@ -98,6 +292,104 @@ function ManageKeywords() {
       </Head>
 
       <AdminNavigation />
+      
+      {/* Add Keyword Modal */}
+      <AnimatePresence>
+        {isModalOpen && (
+          <motion.div 
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <motion.div 
+              className="bg-gray-900 border border-gray-800 rounded-lg shadow-xl w-full max-w-md overflow-hidden"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="flex justify-between items-center border-b border-gray-800 p-4">
+                <h3 className="text-xl font-semibold text-white">Add New Keyword</h3>
+                <button 
+                  onClick={() => setIsModalOpen(false)}
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              
+              <form onSubmit={handleAddKeyword} className="p-4 space-y-4">
+                <div>
+                  <label htmlFor="keyword" className="block text-sm font-medium text-gray-400 mb-1">Keyword</label>
+                  <input
+                    type="text"
+                    id="keyword"
+                    value={newKeyword}
+                    onChange={(e) => setNewKeyword(e.target.value)}
+                    className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    placeholder="Enter keyword..."
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="volume" className="block text-sm font-medium text-gray-400 mb-1">Search Volume (optional)</label>
+                  <input
+                    type="number"
+                    id="volume"
+                    value={newVolume}
+                    onChange={(e) => setNewVolume(e.target.value)}
+                    className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    placeholder="Monthly search volume"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="difficulty" className="block text-sm font-medium text-gray-400 mb-1">Difficulty (optional)</label>
+                  <select
+                    id="difficulty"
+                    value={newDifficulty}
+                    onChange={(e) => setNewDifficulty(e.target.value)}
+                    className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  >
+                    <option value="">Select difficulty...</option>
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                    <option value="Very High">Very High</option>
+                  </select>
+                </div>
+                
+                <div className="flex justify-end space-x-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsModalOpen(false)}
+                    className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-md transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting || !newKeyword.trim()}
+                    className="px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-purple-800/50 text-white rounded-md flex items-center justify-center transition-colors"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
+                        Saving...
+                      </>
+                    ) : (
+                      'Add Keyword'
+                    )}
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <main className="min-h-screen pt-24 pb-16 px-6 md:px-16 bg-gradient-to-br from-gray-900 to-black">
         <div className="max-w-7xl mx-auto">
@@ -127,18 +419,53 @@ function ManageKeywords() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <button className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md flex items-center justify-center transition-colors">
+              <button 
+                onClick={() => setIsModalOpen(true)}
+                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md flex items-center justify-center transition-colors"
+              >
                 <Plus className="w-5 h-5 mr-2" />
                 Add Keyword
               </button>
-              <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md flex items-center justify-center transition-colors">
-                <Upload className="w-5 h-5 mr-2" />
-                Import
-              </button>
-              <button className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md flex items-center justify-center transition-colors">
-                <Download className="w-5 h-5 mr-2" />
-                Export
-              </button>
+              {selectedKeywords.length > 0 && (
+                <>
+                  <button 
+                    onClick={handleApproveSelected}
+                    className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md flex items-center justify-center transition-colors"
+                  >
+                    <CheckCircle className="w-5 h-5 mr-2" />
+                    Approve Selected ({selectedKeywords.length})
+                  </button>
+                  <button 
+                    onClick={handleDeleteSelected}
+                    className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md flex items-center justify-center transition-colors"
+                  >
+                    <Trash2 className="w-5 h-5 mr-2" />
+                    Delete Selected ({selectedKeywords.length})
+                  </button>
+                </>
+              )}
+              <div className="relative">
+                <label htmlFor="resultsLimit" className="sr-only">Results per page</label>
+                <select
+                  id="resultsLimit"
+                  value={resultsLimit}
+                  onChange={(e) => handleLimitChange(Number(e.target.value))}
+                  className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md appearance-none pr-8 focus:outline-none focus:ring-2 focus:ring-purple-400 transition-colors cursor-pointer"
+                >
+                  <option value="10">10 Results</option>
+                  <option value="25">25 Results</option>
+                  <option value="50">50 Results</option>
+                  <option value="100">100 Results</option>
+                  <option value="250">250 Results</option>
+                  <option value="500">500 Results</option>
+                  <option value="1000">1000 Results</option>
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white">
+                  <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                    <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" fillRule="evenodd"></path>
+                  </svg>
+                </div>
+              </div>
             </motion.div>
           </div>
           
@@ -173,7 +500,15 @@ function ManageKeywords() {
                 <thead className="bg-gray-900/50">
                   <tr>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                      Keyword
+                      <div className="flex items-center">
+                        <div 
+                          onClick={handleSelectAll}
+                          className={`w-5 h-5 rounded border ${selectAll ? 'bg-purple-600 border-purple-600' : 'border-gray-600'} flex items-center justify-center cursor-pointer mr-3`}
+                        >
+                          {selectAll && <Check className="w-3 h-3 text-white" />}
+                        </div>
+                        Keyword
+                      </div>
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                       Volume
@@ -182,20 +517,14 @@ function ManageKeywords() {
                       Difficulty
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                      Current Position
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                      Trend
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                      Actions
+                      Status
                     </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-800">
                   {isLoading && keywords.length === 0 ? (
                     <tr>
-                      <td colSpan="6" className="px-6 py-8 text-center">
+                      <td colSpan="4" className="px-6 py-8 text-center">
                         <div className="flex justify-center items-center space-x-2">
                           <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-purple-500"></div>
                           <span className="text-gray-400">Loading keywords...</span>
@@ -204,13 +533,13 @@ function ManageKeywords() {
                     </tr>
                   ) : error ? (
                     <tr>
-                      <td colSpan="6" className="px-6 py-8 text-center text-red-400">
+                      <td colSpan="4" className="px-6 py-8 text-center text-red-400">
                         Error loading keywords: {error}
                       </td>
                     </tr>
                   ) : filteredKeywords.length === 0 ? (
                     <tr>
-                      <td colSpan="6" className="px-6 py-8 text-center text-gray-400">
+                      <td colSpan="4" className="px-6 py-8 text-center text-gray-400">
                         {searchTerm ? 'No keywords match your search.' : 'No keywords found. Add your first keyword to start tracking.'}
                       </td>
                     </tr>
@@ -218,7 +547,15 @@ function ManageKeywords() {
                     filteredKeywords.map((keyword, index) => (
                       <tr key={keyword.PK || index} className="hover:bg-black/30">
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-medium text-white">{keyword.keyword || 'Unknown Keyword'}</div>
+                          <div className="flex items-center">
+                            <div 
+                              onClick={() => handleSelectKeyword(keyword.PK || keyword.keyword)}
+                              className={`w-5 h-5 rounded border ${selectedKeywords.includes(keyword.PK || keyword.keyword) ? 'bg-purple-600 border-purple-600' : 'border-gray-600'} flex items-center justify-center cursor-pointer mr-3`}
+                            >
+                              {selectedKeywords.includes(keyword.PK || keyword.keyword) && <Check className="w-3 h-3 text-white" />}
+                            </div>
+                            <div className="text-sm font-medium text-white">{keyword.keyword || 'Unknown Keyword'}</div>
+                          </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-300">{keyword.searchVolume && keyword.searchVolume > 0 ? keyword.searchVolume.toLocaleString() : 'N/A'}</div>
@@ -227,24 +564,13 @@ function ManageKeywords() {
                           <div className="text-sm text-gray-300">{keyword.competition || 'N/A'}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-300">Not ranked</div>
+                          {keyword.approved === 1 ? (
+                            <span className="px-2 py-1 text-xs font-medium rounded-full bg-green-900/30 text-green-400">Approved</span>
+                          ) : (
+                            <span className="px-2 py-1 text-xs font-medium rounded-full bg-yellow-900/30 text-yellow-400">Pending</span>
+                          )}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center">
-                            <TrendingUp className="w-4 h-4 text-gray-400" />
-                            <span className="ml-1 text-sm text-gray-400">-</span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex space-x-2">
-                            <button className="p-1.5 rounded-md bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 transition-colors">
-                              <Edit className="w-4 h-4" />
-                            </button>
-                            <button className="p-1.5 rounded-md bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors">
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          </div>
-                        </td>
+
                       </tr>
                     ))
                   )}
