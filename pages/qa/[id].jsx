@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import Footer from '../../components/Footer';
 import ClientOnly from '../../components/ClientOnly';
@@ -29,12 +29,61 @@ export default function QuestionDetailPage() {
   
   // Track if the analytics call has been made for this page view
   const [analyticsLogged, setAnalyticsLogged] = useState(false);
+  const [linkTerms, setLinkTerms] = useState([]);
   
-  // Simple content function that returns the original content without enhancements
-  // Keyword enhancement functionality removed - will be reimplemented later
-  const enhanceContent = (content) => {
-    return content || '';
-  };
+  // Fetch keywords from API
+  useEffect(() => {
+    async function fetchKeywords() {
+      try {
+        const response = await fetch('https://api.1ewis.com/keywords/list');
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+        const data = await response.json();
+        setLinkTerms(data.linkTerms || []);
+      } catch (error) {
+        console.error('Error fetching keywords:', error);
+      }
+    }
+    
+    // Only run on the client side
+    if (typeof window !== 'undefined') {
+      fetchKeywords();
+    }
+  }, []);
+  
+  // Enhanced content function that adds hyperlinks to keywords
+  const enhanceContent = useMemo(() => {
+    return (content) => {
+      // Return empty string for null/undefined content
+      if (!content) return '';
+      
+      // If we're server-side rendering or have no link terms, just return the content
+      if (typeof window === 'undefined' || !linkTerms.length) return content;
+      
+      let enhancedContent = content;
+      
+      // Sort keywords by length (longest first) to handle overlapping keywords
+      const sortedTerms = [...linkTerms].sort((a, b) => b.keyword.length - a.keyword.length);
+      
+      // Process each keyword
+      sortedTerms.forEach(term => {
+        const { keyword, url, caseSensitive } = term;
+        
+        // Create a regex to find the keyword
+        const flags = caseSensitive ? 'g' : 'gi';
+        const regex = new RegExp(`\\b(${keyword})\\b`, flags);
+        
+        // Replace all occurrences with hyperlinks
+        enhancedContent = enhancedContent.replace(
+          regex, 
+          `<a href="${url}" class="text-purple-400 hover:text-purple-300 hover:underline" target="_blank" rel="noopener noreferrer">$1</a>`
+        );
+      });
+      
+      return enhancedContent;
+    };
+  }, [linkTerms]);
   
   // Reset analytics logged state when id changes
   useEffect(() => {
@@ -157,12 +206,7 @@ export default function QuestionDetailPage() {
       <QuestionDetailHead questionData={questionData} id={id} />
       <QuestionStructuredData questionData={questionData} />
       
-      {/* Glossary panel */}
-      <div id="glossary-panel">
-        <span className="close-btn" onClick={() => document.getElementById('glossary-panel').style.display = 'none'}>×</span>
-        <h4 id="glossary-term-title"></h4>
-        <p id="glossary-term-description"></p>
-      </div>
+      {/* Main content starts here */}
       
       {/* Main Content */}
       <main className="pt-32 pb-20 px-4 max-w-4xl mx-auto">
