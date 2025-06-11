@@ -10,7 +10,7 @@ export default function AnswerCard({ answer, enhanceContent }) {
           dangerouslySetInnerHTML={{ __html: enhanceContent(answer.answer) }}
         />
         
-        <div className="flex flex-wrap items-center justify-between text-sm text-gray-400 border-t border-gray-700/50 pt-4">
+        <div className="flex flex-wrap items-center text-sm text-gray-400 border-t border-gray-700/50 pt-4">
           <div className="flex items-center space-x-4">
             <div className="flex items-center">
               <User className="h-4 w-4 mr-1.5 text-purple-400" />
@@ -30,10 +30,6 @@ export default function AnswerCard({ answer, enhanceContent }) {
                 <span>Date unavailable</span>
               )}
             </div>
-          </div>
-          <div className="flex items-center mt-2 sm:mt-0 cursor-pointer hover:text-purple-400 transition-colors">
-            <ThumbsUp className="h-4 w-4 mr-1 text-gray-500" />
-            <span>Helpful</span>
           </div>
         </div>
       </div>

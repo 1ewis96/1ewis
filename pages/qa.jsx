@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Search, ThumbsUp, MessageCircle, TrendingUp, Clock, Award, Tag, Users, HelpCircle, BookOpen } from 'lucide-react';
 import Footer from '../components/Footer';
 import ClientOnly from '../components/ClientOnly';
+import BetaSignupModal from '../components/qa/BetaSignupModal';
 // Router is imported at the top
 
 // Sample data for questions and answers
@@ -926,56 +927,7 @@ export default function QAPage() {
       <Footer />
       
       {/* Beta Tester Modal */}
-      {isBetaModalOpen && (
-        <div className="fixed inset-0 z-50 overflow-y-auto">
-          <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-            {/* Background overlay */}
-            <div 
-              className="fixed inset-0 transition-opacity bg-black bg-opacity-75 backdrop-blur-sm"
-              onClick={closeBetaModal}
-              aria-hidden="true"
-            ></div>
-            
-            {/* Modal panel */}
-            <div className="inline-block overflow-hidden text-left align-bottom transition-all transform bg-gray-900 border border-gray-700 rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-              <div className="px-4 pt-5 pb-4 bg-gray-900 sm:p-6 sm:pb-4">
-                <div className="sm:flex sm:items-start">
-                  <div className="flex items-center justify-center flex-shrink-0 w-12 h-12 mx-auto bg-purple-900/50 rounded-full sm:mx-0 sm:h-10 sm:w-10">
-                    <Users className="w-6 h-6 text-purple-400" aria-hidden="true" />
-                  </div>
-                  <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                    <h3 className="text-lg font-medium leading-6 text-white">Exclusive Beta Access</h3>
-                    <div className="mt-2">
-                      <p className="text-sm text-gray-300">
-                        The ability to ask questions is currently available only to invited beta testers. Join our waitlist to get early access to this feature.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="px-4 py-3 bg-gray-800/50 sm:px-6 sm:flex sm:flex-row-reverse">
-                <button
-                  type="button"
-                  className="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-purple-600 border border-transparent rounded-md shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:ml-3 sm:w-auto sm:text-sm"
-                  onClick={() => {
-                    closeBetaModal();
-                    // Here you could add logic to join waitlist
-                  }}
-                >
-                  Join Waitlist
-                </button>
-                <button
-                  type="button"
-                  className="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium text-gray-300 bg-gray-800 border border-gray-600 rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                  onClick={closeBetaModal}
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {isBetaModalOpen && <BetaSignupModal onClose={closeBetaModal} />}
     </div>
   );
 }
