@@ -71,7 +71,7 @@ export default function Coinflare() {
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-gradient-to-b from-black to-gray-900 text-white">
       <Head>
         <title>Coinflare Exchange | Trade Crypto with Low Fees & Advanced Security</title>
         <meta name="description" content="Coinflare crypto exchange offers low trading fees, advanced security features, and a powerful trading platform for both beginners and experienced traders." />
@@ -116,7 +116,7 @@ export default function Coinflare() {
                   href={referralData.referralLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block bg-orange-500 hover:bg-orange-400 text-black font-bold py-4 px-8 rounded-lg transition-all duration-300 text-lg"
+                  className="inline-block bg-gradient-to-r from-orange-500 to-orange-400 hover:from-orange-400 hover:to-orange-300 text-black font-bold py-4 px-8 rounded-lg transition-all duration-300 text-lg shadow-md"
                 >
                   Start Trading Now
                   <ArrowRight className="inline ml-2" size={20} />
@@ -130,13 +130,13 @@ export default function Coinflare() {
                 transition={{ duration: 0.6 }}
                 className="relative w-full max-w-md"
               >
-                <div className="bg-gradient-to-r from-orange-500 to-orange-300 rounded-full w-64 h-64 absolute -top-10 -right-10 blur-3xl opacity-20 z-0"></div>
+                <div className="bg-gradient-to-r from-orange-500 to-orange-300 rounded-full w-64 h-64 absolute -top-10 -right-10 blur-3xl opacity-30 z-0"></div>
               </motion.div>
             </div>
           </div>
 
           <motion.div 
-            className="bg-gradient-to-r from-orange-900/20 to-orange-600/20 rounded-2xl p-6 md:p-8 mb-12 border border-orange-800/50"
+            className="bg-gradient-to-br from-orange-900/40 to-orange-600/30 rounded-2xl p-6 md:p-8 mb-12 border border-orange-500/50 shadow-lg shadow-orange-900/20"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -144,13 +144,13 @@ export default function Coinflare() {
             <div className="flex flex-col md:flex-row items-center justify-between">
               <div className="mb-6 md:mb-0 md:mr-8">
                 <h2 className="text-2xl font-bold mb-4">Exclusive Benefits for New Users</h2>
-                <p className="text-gray-300 mb-6">
+                <p className="text-gray-300 mb-6 bg-orange-900/20 p-3 rounded-lg border border-orange-800/30">
                   Sign up using our referral link and receive:
                 </p>
                 <ul className="space-y-3">
                   {benefits.map((benefit, index) => (
                     <li key={index} className="flex items-start">
-                      <Check className="text-orange-400 mr-2 mt-1 flex-shrink-0" size={18} />
+                      <Check className="text-orange-300 mr-2 mt-1 flex-shrink-0" size={18} />
                       <span>{benefit}</span>
                     </li>
                   ))}
@@ -162,7 +162,7 @@ export default function Coinflare() {
                   href={referralData.referralLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block w-full md:w-auto bg-orange-500 hover:bg-orange-400 text-black font-bold py-3 px-6 rounded-lg transition-all duration-300 text-center"
+                  className="block w-full md:w-auto bg-gradient-to-r from-orange-500 to-orange-400 hover:from-orange-400 hover:to-orange-300 text-black font-bold py-3 px-6 rounded-lg transition-all duration-300 text-center shadow-md"
                 >
                   Sign Up with Coinflare
                   <ArrowRight className="inline ml-2" size={18} />
@@ -180,7 +180,10 @@ export default function Coinflare() {
             </p>
           </div>
           
-          <AnimatedFeatures features={features} />
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-orange-900/20 to-transparent rounded-3xl blur-3xl -z-10 opacity-30"></div>
+            <AnimatedFeatures features={features} color="orange-400" />
+          </div>
         </section>
 
         <section className="mb-16">
@@ -191,11 +194,12 @@ export default function Coinflare() {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-orange-900/10 to-transparent rounded-3xl blur-3xl -z-10 opacity-30"></div>
             {securityFeatures.map((feature, index) => (
               <motion.div
                 key={index}
-                className="bg-gray-900/50 border border-gray-800 rounded-xl p-6"
+                className="bg-gradient-to-br from-gray-900/70 to-orange-900/20 border border-orange-800/30 rounded-xl p-6 shadow-lg shadow-orange-900/10"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -211,7 +215,9 @@ export default function Coinflare() {
         </section>
 
         <section className="mb-16">
-          <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-2xl p-8 border border-gray-700">
+          <div className="bg-gradient-to-r from-gray-900/80 to-orange-900/20 rounded-2xl p-8 border border-orange-800/30 shadow-lg shadow-orange-900/10 relative overflow-hidden">
+            <div className="absolute -top-24 -right-24 w-48 h-48 bg-orange-500/20 rounded-full blur-3xl"></div>
+            <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-orange-500/10 rounded-full blur-3xl"></div>
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold mb-4">Ready to Start Trading?</h2>
               <p className="text-gray-300 max-w-2xl mx-auto">
@@ -224,7 +230,7 @@ export default function Coinflare() {
                 href={referralData.referralLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-orange-500 hover:bg-orange-400 text-black font-bold py-4 px-8 rounded-lg transition-all duration-300 text-lg"
+                className="bg-gradient-to-r from-orange-500 to-orange-400 hover:from-orange-400 hover:to-orange-300 text-black font-bold py-4 px-8 rounded-lg transition-all duration-300 text-lg shadow-md"
               >
                 Create Your Account Today
                 <ArrowRight className="inline ml-2" size={20} />

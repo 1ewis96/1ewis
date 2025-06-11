@@ -44,16 +44,6 @@ export default function PortfolioPage() {
       bonusDetails: referralData.wallets.ledger.bonusDetails
     },
     {
-      name: "Trezor",
-      color: "gray-400",
-      description: "Pioneer in hardware wallet technology with open-source security and intuitive interface.",
-      pros: ["Open-source firmware", "Air-gapped security", "Password manager", "Simple recovery process", "Excellent customer support"],
-      bestFor: "Privacy-focused users who prefer open-source solutions",
-      link: "/wallets/trezor",
-      refLink: "https://shop.trezor.io",
-      bonusDetails: "Special discount for new customers"
-    },
-    {
       name: referralData.wallets.metamask.name,
       color: "orange-400",
       description: "Popular browser extension wallet for Ethereum and ERC-20 tokens with DApp integration.",
