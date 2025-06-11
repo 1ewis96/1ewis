@@ -1,16 +1,25 @@
 import React from 'react';
-import PriceTicker from '../components/PriceTicker';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Footer from '../components/Footer';
+import ParticleBackground from '../components/ParticleBackground';
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-black text-white">
-      {/* Price Ticker */}
-      <PriceTicker />
-      
-      <div className="px-6 py-20 md:px-16">
+    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-black text-white">
+      <div className="px-6 pt-36 pb-24 md:px-16 relative">
+        {/* Enhanced particle background */}
+        <ParticleBackground 
+          count={80} 
+          colors={['#3B82F6', '#8B5CF6', '#EC4899', '#10B981', '#F59E0B']} 
+          minSize={2} 
+          maxSize={8} 
+          minSpeed={20} 
+          maxSpeed={60} 
+          minOpacity={0.1} 
+          maxOpacity={0.4} 
+          blur={3} 
+        />
         <motion.div 
           className="max-w-4xl mx-auto"
           initial={{ opacity: 0, y: 20 }}
