@@ -52,8 +52,13 @@ export default function QuestionDetailPage() {
     }
   }, []);
   
-  // Enhanced content function that adds hyperlinks to keywords
-  const enhanceContent = useMemo(() => {
+  // Simple content function for question title (no keyword enhancement)
+  const enhanceQuestionContent = (content) => {
+    return content || '';
+  };
+  
+  // Enhanced content function that adds hyperlinks to keywords (only for answers)
+  const enhanceAnswerContent = useMemo(() => {
     return (content) => {
       // Return empty string for null/undefined content
       if (!content) return '';
@@ -84,6 +89,12 @@ export default function QuestionDetailPage() {
       return enhancedContent;
     };
   }, [linkTerms]);
+  
+  // For backward compatibility, maintain the original enhanceContent function name
+  // but make it smart enough to know whether it's being called for a question or answer
+  const enhanceContent = (content, isAnswer = false) => {
+    return isAnswer ? enhanceAnswerContent(content) : enhanceQuestionContent(content);
+  };
   
   // Reset analytics logged state when id changes
   useEffect(() => {
@@ -213,8 +224,8 @@ export default function QuestionDetailPage() {
         <div className="mb-6">
           <BackButton onClick={handleBack} />
         </div>
-        <QuestionCard questionData={questionData} enhanceContent={enhanceContent} />
-        <AnswersList answers={questionData.answers} enhanceContent={enhanceContent} />
+        <QuestionCard questionData={questionData} enhanceContent={enhanceQuestionContent} />
+        <AnswersList answers={questionData.answers} enhanceContent={enhanceAnswerContent} />
         <BetaCallToAction onJoinClick={() => setShowBetaModal(true)} />
       </main>
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Link from 'next/link';
-import { Search, ThumbsUp, MessageCircle, Clock, HelpCircle, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, MessageCircle, Clock, HelpCircle, ArrowLeft, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 import ClientOnly from '../../components/ClientOnly';
 
 export default function SearchPage() {
@@ -80,10 +80,11 @@ export default function SearchPage() {
           content: item.content || '',
           author: item.username || 'Anonymous',
           date: item.timestamp || new Date().toISOString(),
-          votes: item.votes || 0,
           answers: item.approvedAnswerCount || 0,
-          views: item.views || 0,
-          tags: item.tags || []
+          viewCount: item.viewCount || item.views || 0,
+          tags: item.tags || [],
+          status: item.status || '',
+          answered: item.answered || 0
         }));
         
         setSearchResults(formattedResults);
@@ -274,12 +275,6 @@ export default function SearchPage() {
                   <li key={question.id} className="hover:bg-gray-800/50 transition-colors">
                     <Link href={`/qa/${question.PK || question.id}`} className="block w-full text-left px-6 py-5">
                       <div className="flex items-start">
-                        <div className="flex-shrink-0 flex flex-col items-center mr-4">
-                          <ThumbsUp className="h-5 w-5 text-gray-400" />
-                          <ClientOnly>
-                            <span className="text-gray-300 font-medium mt-1">{question.votes}</span>
-                          </ClientOnly>
-                        </div>
                         <div className="flex-1">
                           <h3 className="text-lg font-medium text-white mb-2">{question.title}</h3>
                           <p className="text-gray-400 text-sm mb-3 line-clamp-2">{question.content}</p>
@@ -307,7 +302,24 @@ export default function SearchPage() {
                             </ClientOnly>
                             <span className="mx-2">•</span>
                             <ClientOnly>
-                              <span>{question.views} views</span>
+                              <span className="flex items-center">
+                                <Eye className="h-3 w-3 mr-1" />
+                                {question.viewCount} views
+                              </span>
+                            </ClientOnly>
+                            <span className="mx-2">•</span>
+                            <ClientOnly>
+                              <span className="flex items-center">
+                                {question.status === "answered" || question.answered === 1 ? (
+                                  <span className="px-2 py-0.5 bg-green-900/30 text-green-400 rounded text-xs">
+                                    Answered
+                                  </span>
+                                ) : (
+                                  <span className="px-2 py-0.5 bg-blue-900/30 text-blue-400 rounded text-xs">
+                                    Open
+                                  </span>
+                                )}
+                              </span>
                             </ClientOnly>
                           </div>
                         </div>

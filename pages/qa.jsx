@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Link from 'next/link';
-import { Search, ThumbsUp, MessageCircle, TrendingUp, Clock, Award, Tag, Users, HelpCircle, BookOpen } from 'lucide-react';
+import { Search, MessageCircle, TrendingUp, Clock, Award, Tag, Users, HelpCircle, BookOpen, Eye } from 'lucide-react';
 import Footer from '../components/Footer';
 import ClientOnly from '../components/ClientOnly';
 import BetaSignupModal from '../components/qa/BetaSignupModal';
@@ -175,7 +175,8 @@ export default function QAPage() {
         }
         
         const data = await response.json();
-        setLatestQuestions(data.items || []);
+        // Handle the new API response format
+        setLatestQuestions(data.questions || []);
         setError(null);
       } catch (err) {
         console.error('Failed to fetch latest questions:', err);
@@ -204,7 +205,8 @@ export default function QAPage() {
         }
         
         const data = await response.json();
-        setMostAnsweredQuestions(data.items || []);
+        // Handle the new API response format
+        setMostAnsweredQuestions(data.questions || []);
         setMostAnsweredError(null);
       } catch (err) {
         console.error('Failed to fetch most answered questions:', err);
@@ -316,9 +318,8 @@ export default function QAPage() {
           content: item.content || '',
           author: item.username || 'Anonymous',
           date: item.timestamp || new Date().toISOString(),
-          votes: item.votes || 0,
           answers: item.approvedAnswerCount || 0,
-          views: item.views || 0,
+          viewCount: item.viewCount || item.views || 0,
           tags: item.tags || []
         }));
         
@@ -486,8 +487,8 @@ export default function QAPage() {
                                     <ClientOnly>{question.answers} answers</ClientOnly>
                                   </span>
                                   <span className="flex items-center">
-                                    <ThumbsUp className="h-3 w-3 mr-1" />
-                                    <ClientOnly>{question.votes} votes</ClientOnly>
+                                    <Eye className="h-3 w-3 mr-1" />
+                                    <ClientOnly>{question.viewCount} views</ClientOnly>
                                   </span>
                                   <span className="flex items-center">
                                     <Clock className="h-3 w-3 mr-1" />

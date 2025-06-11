@@ -9,9 +9,8 @@ export default function MostAnsweredQuestionsPage() {
   const [questions, setQuestions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [nextPageToken, setNextPageToken] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageHistory, setPageHistory] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
   const router = useRouter();
   const questionsPerPage = 10;
 
@@ -21,14 +20,11 @@ export default function MostAnsweredQuestionsPage() {
       try {
         setIsLoading(true);
         
-        // Get token from query params if available
-        const token = router.query.token || null;
+        // Get page from query params if available
+        const page = parseInt(router.query.page) || 1;
         const limit = questionsPerPage;
         
-        let url = `https://api.1ewis.com/questions/most-answered?limit=${limit}`;
-        if (token) {
-          url += `&token=${token}`;
-        }
+        let url = `https://api.1ewis.com/questions/most-answered?limit=${limit}&page=${page}`;
         
         const response = await fetch(url);
         
@@ -37,8 +33,11 @@ export default function MostAnsweredQuestionsPage() {
         }
         
         const data = await response.json();
-        setQuestions(data.items || []);
-        setNextPageToken(data.nextPageKey);
+        // Handle the new API response format
+        setQuestions(data.questions || []);
+        // Update pagination data
+        setCurrentPage(data.page || 1);
+        setTotalPages(data.totalPages || 1);
         setError(null);
       } catch (err) {
         console.error('Failed to fetch questions:', err);
@@ -52,36 +51,27 @@ export default function MostAnsweredQuestionsPage() {
     if (typeof window !== 'undefined') {
       fetchQuestions();
     }
-  }, [router.query.token]);
+  }, [router.query.page]);
 
   // Navigate to next page
   const handleNextPage = () => {
-    if (nextPageToken) {
-      // Save current token for back navigation
-      setPageHistory([...pageHistory, router.query.token || null]);
-      setCurrentPage(currentPage + 1);
+    if (currentPage < totalPages) {
+      const nextPage = currentPage + 1;
       router.push({
         pathname: '/questions/most-answered',
-        query: { token: nextPageToken }
+        query: { page: nextPage }
       });
     }
   };
 
   // Navigate to previous page
   const handlePrevPage = () => {
-    if (pageHistory.length > 0) {
-      const prevToken = pageHistory[pageHistory.length - 1];
-      setPageHistory(pageHistory.slice(0, -1));
-      setCurrentPage(currentPage - 1);
-      
-      if (prevToken) {
-        router.push({
-          pathname: '/questions/most-answered',
-          query: { token: prevToken }
-        });
-      } else {
-        router.push('/questions/most-answered');
-      }
+    if (currentPage > 1) {
+      const prevPage = currentPage - 1;
+      router.push({
+        pathname: '/questions/most-answered',
+        query: prevPage > 1 ? { page: prevPage } : {}
+      });
     }
   };
 
@@ -170,7 +160,7 @@ export default function MostAnsweredQuestionsPage() {
                                   : ''}
                               </span>
                               <span className="flex items-center">
-                                {question.status === "answered" ? (
+                                {question.status === "answered" || question.answered === 1 ? (
                                   <span className="px-2 py-0.5 bg-green-900/30 text-green-400 rounded text-xs">
                                     Answered
                                   </span>
@@ -203,12 +193,16 @@ export default function MostAnsweredQuestionsPage() {
                   <ChevronLeft className="h-4 w-4 mr-1" />
                   Previous
                 </button>
-                <span className="text-sm text-gray-400">Page {currentPage}</span>
+                
+                <span className="text-sm text-gray-400">
+                  Page {currentPage} of {totalPages}
+                </span>
+                
                 <button
                   onClick={handleNextPage}
-                  disabled={!nextPageToken}
+                  disabled={currentPage >= totalPages}
                   className={`flex items-center px-3 py-1 rounded-md ${
-                    !nextPageToken
+                    currentPage >= totalPages
                       ? 'text-gray-500 cursor-not-allowed'
                       : 'text-purple-400 hover:bg-purple-900/30'
                   }`}
