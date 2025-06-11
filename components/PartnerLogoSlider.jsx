@@ -8,6 +8,7 @@ export default function PartnerLogoSlider() {
   // Define partner logos with their names and paths
   const partnerLogos = [
     { name: 'Bitrue', path: '/logos/bittrue.webp', color: 'blue', link: '/bitrue' },
+    { name: 'Coinflare', path: '/logos/coinflare.webp', color: 'orange', link: '/coinflare' },
     { name: 'Ledger', path: '/logos/ledger.webp', color: 'black', link: '/wallets/ledger' },
     { name: 'YouHodler', path: '/logos/youhodler.webp', color: 'teal', link: '/wallets/youhodler' },
     { name: 'Revolut', path: '/logos/revolut.webp', color: 'blue', link: '/cards/revolut' },

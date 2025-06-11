@@ -18,6 +18,16 @@ export default function PortfolioPage() {
       link: "/bitrue",
       refLink: referralData.exchanges.bittrue.referralLink,
       bonusDetails: referralData.exchanges.bittrue.bonusDetails
+    },
+    {
+      name: "Coinflare",
+      color: "orange-400",
+      description: "Advanced trading platform with competitive fees and robust security features for all types of traders.",
+      pros: ["Low trading fees", "Advanced security measures", "Intuitive trading interface", "Fast transaction processing", "24/7 customer support"],
+      bestFor: "Active traders looking for a powerful platform with competitive fees",
+      link: "/coinflare",
+      refLink: referralData.exchanges.coinflare?.referralLink || "#",
+      bonusDetails: referralData.exchanges.coinflare?.bonusDetails || "Exclusive trading fee discounts"
     }
   ];
 

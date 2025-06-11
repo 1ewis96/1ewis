@@ -20,12 +20,17 @@ import { getWalletReferral } from '../utils/referralLinks';
 export default function HomePage() {
   const ledgerReferral = getWalletReferral('ledger');
   const exchanges = [
-    // Only Bitrue
     {
       name: "Bitrue",
       tagline: "Exchange focused on XRP and crypto yield products",
       link: "/bitrue",
       color: "blue"
+    },
+    {
+      name: "Coinflare",
+      tagline: "Advanced trading platform with competitive fees",
+      link: "/coinflare",
+      color: "orange"
     },
   ];
   

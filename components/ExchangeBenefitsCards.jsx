@@ -19,6 +19,21 @@ const ExchangeBenefitsCards = () => {
         'Excellent mobile app experience',
         'Strong security features'
       ]
+    },
+    {
+      name: 'Coinflare',
+      link: '/coinflare',
+      color: 'orange',
+      benefits: [
+        'Advanced trading platform',
+        'Low trading fees (0.07% spot)',
+        'Fast transaction processing',
+        'Robust security measures',
+        '24/7 customer support',
+        'Intuitive trading interface',
+        'Regular promotions and events',
+        'Comprehensive staking program'
+      ]
     }
   ];
 

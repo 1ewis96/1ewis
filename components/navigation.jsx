@@ -76,8 +76,8 @@ export default function Navigation() {
   ];
   
   const exchangeItems = [
-    // Only Bitrue
     { name: 'Bitrue', path: '/bitrue', color: 'blue' },
+    { name: 'Coinflare', path: '/coinflare', color: 'orange' },
   ];
   
   const walletItems = [

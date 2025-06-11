@@ -19,6 +19,18 @@ const ComparisonTable = () => {
       bonus: '30% commission on trading fees',
       link: '/bitrue',
       color: 'blue'
+    },
+    {
+      name: 'Coinflare',
+      logo: '/images/coinflare-logo.png', // You'll need to add this logo image
+      spotFees: '0.07%',
+      futuresFees: '0.02%',
+      cryptoCount: '350+',
+      countries: '160+',
+      features: ['Advanced trading tools', 'Low fees', '24/7 customer support'],
+      bonus: 'Exclusive trading fee discounts',
+      link: '/coinflare',
+      color: 'orange'
     }
   ];
 

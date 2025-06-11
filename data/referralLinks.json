@@ -7,6 +7,14 @@
       "referralCode": "TWLQHQZ",
       "bonusDetails": "30% commission on trading fees",
       "color": "blue"
+    },
+    "coinflare": {
+      "name": "Coinflare",
+      "description": "Advanced trading platform with competitive fees",
+      "referralLink": "https://www.coinflare.com/r/NDSX6JANA",
+      "referralCode": "NDSX6JANA",
+      "bonusDetails": "Exclusive trading fee discounts",
+      "color": "orange"
     }
   },
   "wallets": {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import Footer from '../../components/Footer';
 import ClientOnly from '../../components/ClientOnly';
@@ -27,14 +27,62 @@ export default function QuestionDetailPage() {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(null);
   
+  // Track if the analytics call has been made for this page view
+  const [analyticsLogged, setAnalyticsLogged] = useState(false);
+  
   // Simple content function that returns the original content without enhancements
   // Keyword enhancement functionality removed - will be reimplemented later
   const enhanceContent = (content) => {
     return content || '';
   };
   
-  // Fetch question data from API
+  // Reset analytics logged state when id changes
   useEffect(() => {
+    setAnalyticsLogged(false);
+  }, [id]);
+  
+  // Fetch question data from API and log view
+  useEffect(() => {
+    // Create a separate function for logging view to ensure it's only called once
+    async function logQuestionView(questionId, questionSK) {
+      // Check if this view has already been logged in this session or component state
+      const viewLogKey = `qa_view_logged_${questionId}`;
+      
+      // Use both component state and session storage to prevent duplicate calls
+      if (typeof window !== 'undefined' && !sessionStorage.getItem(viewLogKey) && !analyticsLogged) {
+        try {
+          // Set both flags immediately to prevent any possibility of duplicate calls
+          sessionStorage.setItem(viewLogKey, 'true');
+          setAnalyticsLogged(true);
+          
+          // Add a small delay to ensure React has time to update state
+          // This helps prevent race conditions in development mode
+          await new Promise(resolve => setTimeout(resolve, 10));
+          
+          const response = await fetch('https://api.1ewis.com/analytics/question/views', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              PK: questionId,
+              SK: questionSK || ''
+            })
+          });
+          
+          if (response.ok) {
+            console.log('View logged successfully');
+          } else {
+            console.error('Failed to log view: API returned error status');
+          }
+        } catch (analyticsErr) {
+          console.error('Failed to log view:', analyticsErr);
+        }
+      } else {
+        console.log('View already logged, skipping analytics call');
+      }
+    }
+    
     async function fetchQuestionData() {
       if (!id) return;
       
@@ -49,6 +97,10 @@ export default function QuestionDetailPage() {
         const data = await response.json();
         setQuestionData(data);
         setError(null);
+        
+        // Log the view after we've successfully fetched the question data
+        // This is in a separate function call to ensure it only happens once
+        logQuestionView(id, data.SK);
       } catch (err) {
         setError('Failed to load question data. Please try again later.');
       } finally {

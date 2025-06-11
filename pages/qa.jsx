@@ -575,12 +575,6 @@ export default function QAPage() {
                       <li key={question.PK || question.SK} className="hover:bg-gray-800/50 transition-colors">
                         <div className="w-full text-left px-0 py-5 cursor-pointer" onClick={() => handleQuestionClick(question.PK)}>
                           <div className="flex items-start">
-                            <div className="flex-shrink-0 flex flex-col items-center mr-4">
-                              <ThumbsUp className="h-5 w-5 text-gray-400" />
-                              <ClientOnly>
-                                <span className="text-gray-300 font-medium mt-1">{question.votes || 0}</span>
-                              </ClientOnly>
-                            </div>
                             <div className="flex-1">
                               <h3 className="text-lg font-medium text-white mb-2">{question.question}</h3>
                               <p className="text-gray-400 text-sm mb-3 line-clamp-2">{question.content || ''}</p>
@@ -604,11 +598,11 @@ export default function QAPage() {
                                 </ClientOnly>
                                 <span className="mx-2">•</span>
                                 <ClientOnly>
-                                  <span>{question.approvedAnswerCount || question.answers || 0} answers</span>
+                                  <span>{question.answerCount || question.approvedAnswerCount || question.answers || 0} answers</span>
                                 </ClientOnly>
                                 <span className="mx-2">•</span>
                                 <ClientOnly>
-                                  <span>{question.views || 0} views</span>
+                                  <span>{question.viewCount || question.views || 0} views</span>
                                 </ClientOnly>
                               </div>
                             </div>
@@ -630,15 +624,81 @@ export default function QAPage() {
                       </button>
                       
                       <div className="flex space-x-1">
-                        {[...Array(popularQuestionsTotalPages).keys()].map((pageNum) => (
-                          <button
-                            key={pageNum + 1}
-                            onClick={() => handlePopularPageChange(pageNum + 1)}
-                            className={`w-8 h-8 flex items-center justify-center rounded-md ${popularQuestionsPage === pageNum + 1 ? 'bg-purple-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}`}
-                          >
-                            {pageNum + 1}
-                          </button>
-                        ))}
+                        {(() => {
+                          // Show limited page numbers with ellipsis for better UX
+                          const totalPages = popularQuestionsTotalPages;
+                          const currentPage = popularQuestionsPage;
+                          const pageNumbers = [];
+                          
+                          // Always show first page
+                          pageNumbers.push(1);
+                          
+                          // Calculate range of pages to show around current page
+                          const delta = 1; // Number of pages to show before and after current page
+                          let rangeStart = Math.max(2, currentPage - delta);
+                          let rangeEnd = Math.min(totalPages - 1, currentPage + delta);
+                          
+                          // Adjust range to show at least 3 pages if possible
+                          if (rangeEnd - rangeStart < 2) {
+                            if (currentPage < totalPages / 2) {
+                              // Near the start, expand end
+                              rangeEnd = Math.min(totalPages - 1, rangeStart + 2);
+                            } else {
+                              // Near the end, expand start
+                              rangeStart = Math.max(2, rangeEnd - 2);
+                            }
+                          }
+                          
+                          // Add ellipsis and range start
+                          if (rangeStart > 2) {
+                            pageNumbers.push('...');
+                          } else if (rangeStart === 2) {
+                            pageNumbers.push(2);
+                          }
+                          
+                          // Add pages in the middle range
+                          for (let i = rangeStart + 1; i < rangeEnd; i++) {
+                            pageNumbers.push(i);
+                          }
+                          
+                          // Add range end and ellipsis
+                          if (rangeEnd < totalPages - 1) {
+                            pageNumbers.push(rangeEnd);
+                            pageNumbers.push('...');
+                          } else if (rangeEnd === totalPages - 1) {
+                            pageNumbers.push(rangeEnd);
+                          }
+                          
+                          // Always show last page if more than 1 page
+                          if (totalPages > 1) {
+                            pageNumbers.push(totalPages);
+                          }
+                          
+                          // Remove duplicates
+                          const uniquePageNumbers = [...new Set(pageNumbers)];
+                          
+                          return uniquePageNumbers.map((pageNum, index) => {
+                            if (pageNum === '...') {
+                              return (
+                                <span 
+                                  key={`ellipsis-${index}`} 
+                                  className="w-8 h-8 flex items-center justify-center text-gray-400"
+                                >
+                                  ...
+                                </span>
+                              );
+                            }
+                            return (
+                              <button
+                                key={`page-${pageNum}`}
+                                onClick={() => handlePopularPageChange(pageNum)}
+                                className={`w-8 h-8 flex items-center justify-center rounded-md ${currentPage === pageNum ? 'bg-purple-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}`}
+                              >
+                                {pageNum}
+                              </button>
+                            );
+                          });
+                        })()} 
                       </div>
                       
                       <button 
