@@ -606,6 +606,20 @@ export default function QAPage() {
                                 <ClientOnly>
                                   <span>{question.viewCount || question.views || 0} views</span>
                                 </ClientOnly>
+                                <span className="mx-2">•</span>
+                                <ClientOnly>
+                                  <span className="flex items-center">
+                                    {question.status === "answered" || question.answered === 1 ? (
+                                      <span className="px-2 py-0.5 bg-green-900/30 text-green-400 rounded text-xs">
+                                        Answered
+                                      </span>
+                                    ) : (
+                                      <span className="px-2 py-0.5 bg-blue-900/30 text-blue-400 rounded text-xs">
+                                        Open
+                                      </span>
+                                    )}
+                                  </span>
+                                </ClientOnly>
                               </div>
                             </div>
                           </div>
@@ -767,6 +781,18 @@ export default function QAPage() {
                               <span>{question.answerCount || 0} answers</span>
                               <span className="mx-1">•</span>
                               <span>{new Date(question.timestamp).toLocaleDateString()}</span>
+                              <span className="mx-1">•</span>
+                              <span className="flex items-center">
+                                {question.status === "answered" || question.answered === 1 ? (
+                                  <span className="px-1.5 py-0.5 bg-green-900/30 text-green-400 rounded text-xs">
+                                    Answered
+                                  </span>
+                                ) : (
+                                  <span className="px-1.5 py-0.5 bg-blue-900/30 text-blue-400 rounded text-xs">
+                                    Open
+                                  </span>
+                                )}
+                              </span>
                             </div>
                           </li>
                         ))}
@@ -821,6 +847,18 @@ export default function QAPage() {
                             <div className="flex items-center mt-1 text-xs text-gray-500">
                               <MessageCircle className="h-3 w-3 text-purple-400 mr-1" />
                               <span>{question.answerCount || 0} answers</span>
+                              <span className="mx-1">•</span>
+                              <span className="flex items-center">
+                                {question.status === "answered" || question.answered === 1 ? (
+                                  <span className="px-1.5 py-0.5 bg-green-900/30 text-green-400 rounded text-xs">
+                                    Answered
+                                  </span>
+                                ) : (
+                                  <span className="px-1.5 py-0.5 bg-blue-900/30 text-blue-400 rounded text-xs">
+                                    Open
+                                  </span>
+                                )}
+                              </span>
                             </div>
                           </li>
                         ))}
