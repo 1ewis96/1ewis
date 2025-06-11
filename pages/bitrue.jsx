@@ -104,14 +104,26 @@ export default function Bitrue() {
               "ratingValue": "4.5",
               "bestRating": "5"
             },
+            "reviewBody": "Bitrue is an excellent crypto exchange with a focus on XRP trading pairs and innovative yield products. The platform offers competitive fees, strong security measures, and a user-friendly interface for both beginners and advanced traders.",
+            "datePublished": "2025-01-15",
             "author": {
-              "@type": "Person",
+              "@type": "Organization",
               "name": "1ewis.com"
             },
             "itemReviewed": {
               "@type": "Product",
               "name": "Bitrue Exchange",
-              "description": "XRP-focused exchange with innovative crypto yield products"
+              "description": "XRP-focused exchange with innovative crypto yield products",
+              "brand": {
+                "@type": "Brand",
+                "name": "Bitrue"
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "USD",
+                "availability": "https://schema.org/InStock"
+              }
             }
           })}
         </script>
