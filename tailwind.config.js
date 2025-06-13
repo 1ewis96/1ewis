@@ -7,6 +7,14 @@ module.exports = {
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
+    screens: {
+      'sm': '640px',
+      'md': '768px',
+      'lg': '1024px',
+      'xl': '1280px',
+      '2xl': '1536px',
+      'nav': '1350px', // Custom breakpoint for navigation
+    },
     extend: {
       colors: {
         background: "hsl(var(--background))",

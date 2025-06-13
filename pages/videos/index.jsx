@@ -6,6 +6,7 @@ import VideoCard from '../../components/videos/VideoCard';
 import PlaylistCard from '../../components/videos/PlaylistCard';
 import CategorySelector from '../../components/videos/CategorySelector';
 import FeaturedVideo from '../../components/videos/FeaturedVideo';
+import FloatingCTA from '../../components/FloatingCTA';
 import { featuredVideos, featuredPlaylists, videoCategories } from '../../data/videoData';
 import { Youtube, PlaySquare, ListVideo } from 'lucide-react';
 
@@ -13,6 +14,7 @@ export default function VideosPage() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [filteredVideos, setFilteredVideos] = useState(featuredVideos);
   const [filteredPlaylists, setFilteredPlaylists] = useState(featuredPlaylists);
+  const [showCTA, setShowCTA] = useState(true);
 
   // Filter videos and playlists when category changes
   useEffect(() => {
@@ -116,6 +118,9 @@ export default function VideosPage() {
       </main>
       
       <Footer />
+      
+      {/* Floating CTA */}
+      {showCTA && <FloatingCTA onClose={() => setShowCTA(false)} />}
     </div>
   );
 }

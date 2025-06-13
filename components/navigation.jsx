@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Menu, X, ChevronDown, Sparkles, Zap, ArrowRight, Book, Newspaper, Video } from 'lucide-react';
+import { Menu, X, ChevronDown, Sparkles, Zap, ArrowRight, Book, Newspaper, Video, HelpCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Navigation() {
@@ -117,7 +117,7 @@ export default function Navigation() {
 
   return (
     <motion.nav 
-      className={`fixed w-full py-3 px-6 md:px-16 ${scrolled ? 'top-0' : 'top-0'} left-0 z-50 transition-all duration-300 ${scrolled ? 'bg-black/90 backdrop-blur-md shadow-xl border-b border-white/10' : 'bg-transparent'}`}
+      className={`fixed w-full py-3 px-6 nav:px-16 ${scrolled ? 'top-0' : 'top-0'} left-0 z-50 transition-all duration-300 ${scrolled ? 'bg-black/90 backdrop-blur-md shadow-xl border-b border-white/10' : 'bg-transparent'}`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
@@ -156,7 +156,7 @@ export default function Navigation() {
         </Link>
         
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center space-x-1">
+        <div className="hidden nav:flex items-center space-x-1">
           {mainNavItems.map((item) => (
             <Link 
               key={item.path} 
@@ -522,7 +522,7 @@ export default function Navigation() {
         </div>
         
         {/* Mobile Menu Button */}
-        <div className="md:hidden">
+        <div className="nav:hidden">
           <motion.button 
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="p-2 text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white rounded-md"
@@ -548,25 +548,32 @@ export default function Navigation() {
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div 
-            className="md:hidden fixed inset-0 z-40 bg-black/95 backdrop-blur-md pt-20 overflow-y-auto max-h-screen"
+            className="nav:hidden fixed top-0 left-0 right-0 bottom-0 z-40 bg-black/95 backdrop-blur-md overflow-y-auto"
             initial={{ opacity: 0, x: '100%' }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: '100%' }}
             transition={{ duration: 0.3, ease: 'easeInOut' }}
+            style={{ height: '100vh' }}
           >
             {/* Close button in top-right corner */}
-            <motion.button
-              className="absolute top-6 right-6 p-2 rounded-full bg-gray-800/70 text-white z-50"
-              onClick={() => setIsMenuOpen(false)}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              <X className="w-5 h-5" />
-            </motion.button>
-            <div className="flex flex-col space-y-1 p-6 pb-24">
+            <div className="sticky top-0 z-50 bg-black/95 backdrop-blur-md py-4 px-6 flex justify-between items-center border-b border-gray-800/50">
+              <div className="flex items-center">
+                <Sparkles className="text-yellow-400 w-5 h-5 mr-2" />
+                <span className="font-bold text-xl">1ewis.com</span>
+              </div>
+              <motion.button
+                className="p-2 rounded-full bg-gray-800/70 text-white"
+                onClick={() => setIsMenuOpen(false)}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2 }}
+              >
+                <X className="w-5 h-5" />
+              </motion.button>
+            </div>
+            <div className="flex flex-col space-y-1 p-6 pb-24 mt-4">
               {mainNavItems.map((item) => (
                 <motion.div
                   key={item.path}
@@ -606,6 +613,28 @@ export default function Navigation() {
                 </Link>
               </motion.div>
               
+              {/* Mobile Q&A Button */}
+              <motion.div
+                initial={{ x: 50, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.175 }}
+              >
+                <Link 
+                  href="/qa"
+                  className={`block py-3 px-4 text-lg rounded-md transition-colors mb-2 ${
+                    isActive('/qa') 
+                      ? 'bg-white/10 text-white font-medium' 
+                      : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <span className="flex items-center">
+                    <HelpCircle className="w-5 h-5 mr-2" />
+                    Q&A
+                  </span>
+                </Link>
+              </motion.div>
+              
               {/* Mobile eBooks Button */}
               <motion.div
                 initial={{ x: 50, opacity: 0 }}
@@ -623,7 +652,7 @@ export default function Navigation() {
                 >
                   <span className="flex items-center">
                     <Book className="w-5 h-5 mr-2" />
-                    Free eBooks
+                    eBooks
                   </span>
                 </Link>
               </motion.div>
