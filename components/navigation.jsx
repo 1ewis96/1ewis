@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Menu, X, ChevronDown, Sparkles, Zap, ArrowRight, Mail, Book, Newspaper } from 'lucide-react';
+import { Menu, X, ChevronDown, Sparkles, Zap, ArrowRight, Book, Newspaper, Video } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Navigation() {
@@ -13,6 +13,7 @@ export default function Navigation() {
   const [cardsOpen, setCardsOpen] = useState(false);
   const [toolsOpen, setToolsOpen] = useState(false);
   const [newsOpen, setNewsOpen] = useState(false);
+  const [qaOpen, setQaOpen] = useState(false);
   const router = useRouter();
   
   // Function to toggle a dropdown and close others
@@ -23,6 +24,7 @@ export default function Navigation() {
     if (dropdown !== 'cards') setCardsOpen(false);
     if (dropdown !== 'tools') setToolsOpen(false);
     if (dropdown !== 'news') setNewsOpen(false);
+    if (dropdown !== 'qa') setQaOpen(false);
     
     // Toggle the selected dropdown
     switch(dropdown) {
@@ -40,6 +42,9 @@ export default function Navigation() {
         break;
       case 'news':
         setNewsOpen(prev => !prev);
+        break;
+      case 'qa':
+        setQaOpen(prev => !prev);
         break;
       default:
         break;
@@ -100,6 +105,12 @@ export default function Navigation() {
     { name: 'Latest News', path: '/news', color: 'green' },
     { name: 'Market Updates', path: '/news/market', color: 'emerald' },
     { name: 'Trending Topics', path: '/news/trending', color: 'teal' },
+  ];
+  
+  const qaItems = [
+    { name: 'Q&A Home', path: '/qa', color: 'blue' },
+    { name: 'Most Answered', path: '/questions/most-answered', color: 'indigo' },
+    { name: 'Latest Questions', path: '/qa/latest', color: 'violet' },
   ];
 
   const isActive = (path) => router.pathname === path;
@@ -424,41 +435,76 @@ export default function Navigation() {
           
 
           
-          {/* Q&A Button */}
+          {/* Q&A Dropdown */}
+          <div className="relative">
+            <motion.button 
+              onClick={() => toggleDropdown('qa')}
+              className="flex items-center px-4 py-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-md transition-all duration-300 relative group"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <motion.span
+                className="absolute inset-0 rounded-md bg-gradient-to-r from-blue-500/20 to-violet-500/20 opacity-0 group-hover:opacity-100"
+                initial={{ scale: 0.8 }}
+                whileHover={{ scale: 1 }}
+                transition={{ duration: 0.2 }}
+              />
+              <span>Q&A</span>
+              <motion.div
+                animate={{ rotate: qaOpen ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <ChevronDown className="ml-1 w-4 h-4" />
+              </motion.div>
+            </motion.button>
+            
+            <AnimatePresence>
+              {qaOpen && (
+                <motion.div 
+                  className="absolute left-0 mt-2 w-48 rounded-md shadow-xl bg-gray-900/95 backdrop-blur-sm ring-1 ring-white/10 overflow-hidden z-50 border border-blue-500/20"
+                  initial={{ opacity: 0, y: -10, height: 0 }}
+                  animate={{ opacity: 1, y: 0, height: 'auto' }}
+                  exit={{ opacity: 0, y: -10, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {qaItems.map((item) => (
+                    <Link 
+                      key={item.path} 
+                      href={item.path}
+                      className={`block px-4 py-3 transition-colors border-l-2 ${isActive(item.path) ? `border-${item.color}-500 bg-white/5 text-white font-medium` : `border-transparent text-gray-300 hover:border-${item.color}-500 hover:bg-white/5 hover:text-white`}`}
+                      onClick={() => setQaOpen(false)}
+                    >
+                      {item.name}
+                    </Link>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+          
+          {/* Videos Link */}
           <Link 
-            href="/qa" 
+            href="/videos" 
             className={`relative px-4 py-2 rounded-md transition-all duration-300 group ${
-              isActive('/qa') 
+              isActive('/videos') 
                 ? 'text-white font-medium bg-white/5' 
                 : 'text-gray-300 hover:text-white hover:bg-white/10'
             }`}
           >
             <motion.span
-              className="absolute inset-0 rounded-md bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100"
+              className="absolute inset-0 rounded-md bg-gradient-to-r from-red-500/20 to-orange-500/20 opacity-0 group-hover:opacity-100"
               initial={{ scale: 0.8 }}
               whileHover={{ scale: 1 }}
               transition={{ duration: 0.2 }}
             />
-            {isActive('/qa') && (
+            {isActive('/videos') && (
               <motion.span 
                 className="absolute inset-0 bg-white/10 rounded-md z-0" 
                 layoutId="navbar-active-item"
                 transition={{ type: 'spring', duration: 0.6 }}
               />
             )}
-            <span className="relative z-10">Q&A</span>
-          </Link>
-          
-          {/* Mailing List Button (at the end of navbar) */}
-          <Link href="/mailing-list" passHref legacyBehavior>
-            <motion.a 
-              className="flex items-center px-4 py-2 text-white bg-gradient-to-r from-pink-600/80 to-purple-600/80 hover:from-pink-600 hover:to-purple-600 rounded-md transition-all duration-300 relative group ml-2"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Mail className="mr-2 h-4 w-4" />
-              <span>Newsletter</span>
-            </motion.a>
+            <span className="relative z-10">Videos</span>
           </Link>
 
                     
@@ -538,24 +584,24 @@ export default function Navigation() {
                 </motion.div>
               ))}
               
-              {/* Mobile Mailing List Button */}
+              {/* Mobile Videos Button */}
               <motion.div
                 initial={{ x: 50, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ delay: 0.15 }}
               >
                 <Link 
-                  href="/mailing-list"
+                  href="/videos"
                   className={`block py-3 px-4 text-lg rounded-md transition-colors mb-2 ${
-                    isActive('/mailing-list') 
-                      ? 'bg-gradient-to-r from-pink-600/80 to-purple-600/80 text-white font-medium' 
-                      : 'bg-gradient-to-r from-pink-600/60 to-purple-600/60 text-white hover:from-pink-600/80 hover:to-purple-600/80'
+                    isActive('/videos') 
+                      ? 'bg-white/10 text-white font-medium' 
+                      : 'text-gray-300 hover:bg-white/5 hover:text-white'
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <span className="flex items-center">
-                    <Mail className="w-5 h-5 mr-2" />
-                    Newsletter
+                    <Video className="w-5 h-5 mr-2" />
+                    Videos
                   </span>
                 </Link>
               </motion.div>

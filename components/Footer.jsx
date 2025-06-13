@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { Github, Twitter, Rss } from 'lucide-react';
+import { Github, Twitter, Rss, Mail } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -16,6 +16,10 @@ export default function Footer() {
             </Link>
             <Link href="/privacy" className="hover:text-gray-300 transition-colors duration-200">
               Privacy
+            </Link>
+            <Link href="/mailing-list" className="flex items-center hover:text-gray-300 transition-colors duration-200">
+              <Mail className="w-4 h-4 mr-1" />
+              Newsletter
             </Link>
             <a 
               href="https://github.com/1ewis96/1ewis" 
