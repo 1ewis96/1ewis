@@ -3,9 +3,13 @@ import Head from 'next/head';
 import { motion } from 'framer-motion';
 import Footer from '../../components/Footer';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { fetchArticles, formatPublishedDate, extractArticleId } from '../../utils/newsApi';
 
 export default function NewsPage() {
+  const router = useRouter();
+  const { tag } = router.query;
+  
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -15,12 +19,12 @@ export default function NewsPage() {
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [categoriesError, setCategoriesError] = useState(null);
 
-  // Fetch articles on component mount
+  // Fetch articles on component mount or when tag changes
   useEffect(() => {
     async function loadInitialArticles() {
       try {
         setLoading(true);
-        const data = await fetchArticles({ limit: 6 });
+        const data = await fetchArticles({ tag, limit: 6 });
         setArticles(data.articles || []);
         setNextToken(data.nextToken);
       } catch (err) {
@@ -31,8 +35,11 @@ export default function NewsPage() {
       }
     }
 
-    loadInitialArticles();
-  }, []);
+    // Only load articles after router is ready
+    if (router.isReady) {
+      loadInitialArticles();
+    }
+  }, [router.isReady, tag]);
 
   // Fetch categories from API
   useEffect(() => {
@@ -79,10 +86,25 @@ export default function NewsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-black text-white">
       <Head>
-        <title>Crypto News & Market Updates | 1ewis.com</title>
-        <meta name="description" content="Stay updated with the latest cryptocurrency news, market trends, and industry developments. Get timely insights on Bitcoin, Ethereum, and the broader crypto ecosystem." />
-        <meta name="keywords" content="crypto news, bitcoin news, ethereum news, cryptocurrency market updates, blockchain news" />
+        <title>{tag ? `${tag} News & Updates | 1ewis.com` : `Crypto News & Market Updates | 1ewis.com`}</title>
+        <meta 
+          name="description" 
+          content={tag 
+            ? `Latest ${tag} cryptocurrency news, updates, and market insights. Stay informed with 1ewis.com's coverage of ${tag} developments.`
+            : "Stay updated with the latest cryptocurrency news, market trends, and industry developments. Get timely insights on Bitcoin, Ethereum, and the broader crypto ecosystem."} 
+        />
+        <meta name="keywords" content={tag ? `${tag} news, ${tag} crypto, ${tag} cryptocurrency, ${tag.toLowerCase()} updates` : "crypto news, bitcoin news, ethereum news, cryptocurrency market updates, blockchain news"} />
+        
+        {/* Always use the base URL as canonical for tag pages to avoid duplicate content */}
         <link rel="canonical" href="https://1ewis.com/news" />
+        
+        {/* Add tag-specific meta tags */}
+        {tag && (
+          <>
+            <meta property="og:title" content={`${tag} News & Updates | 1ewis.com`} />
+            <meta property="og:description" content={`Latest ${tag} cryptocurrency news, updates, and market insights. Stay informed with 1ewis.com's coverage of ${tag} developments.`} />
+          </>
+        )}
       </Head>
       
       <main className="pt-28 pb-20 px-4 md:px-8 max-w-7xl mx-auto">
