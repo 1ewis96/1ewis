@@ -8,7 +8,7 @@ const nextConfig = {
   
   // Image optimization for better performance
   images: {
-    domains: ['1ewis.com'],
+    domains: ['1ewis.com', 'www.1ewis.com'],
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 60,
   },
@@ -19,12 +19,24 @@ const nextConfig = {
   // Redirects for SEO
   async redirects() {
     return [
-      // Redirect old URLs if you have any
-      // {
-      //   source: '/old-page',
-      //   destination: '/new-page',
-      //   permanent: true,
-      // },
+      // Redirect www to non-www
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'www.1ewis.com',
+          },
+        ],
+        destination: 'https://1ewis.com/:path*',
+        permanent: true,
+      },
+      // Redirect trailing slash URLs to non-trailing slash
+      {
+        source: '/:path+/',
+        destination: '/:path+',
+        permanent: true,
+      },
     ];
   },
   

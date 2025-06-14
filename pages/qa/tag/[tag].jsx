@@ -21,6 +21,7 @@ export default function TagRedirect() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-gray-900 to-black text-white flex items-center justify-center">
       <Head>
+        <link rel="canonical" href={`https://1ewis.com/qa/search?q=${encodeURIComponent(tag || '')}`} />
         <title>Redirecting to search results for {tag} | 1ewis.com</title>
         <meta name="robots" content="noindex" />
       </Head>

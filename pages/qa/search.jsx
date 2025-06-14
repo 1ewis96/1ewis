@@ -192,6 +192,7 @@ export default function SearchPage() {
         <title>{searchQuery ? `Search results for "${searchQuery}" | 1ewis.com` : 'Search Q&A | 1ewis.com'}</title>
         <meta name="description" content={`Search results for cryptocurrency questions and answers on 1ewis.com`} />
         <meta name="robots" content="noindex" />
+        <link rel="canonical" href={`https://1ewis.com/qa/search${searchQuery ? `?q=${searchQuery}&page=${currentPage}` : ''}`} />
       </Head>
 
       {/* Main Content */}

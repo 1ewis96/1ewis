@@ -29,7 +29,7 @@ export default function QuestionDetailHead({ questionData, id }) {
       <meta property="twitter:description" content={description} />
       <meta property="twitter:image" content="https://1ewis.com/images/og-qa.jpg" />
       
-      {/* Canonical URL */}
+      {/* Canonical URL - ensure proper formatting */}
       <link rel="canonical" href={`https://1ewis.com/qa/${id}`} />
       
       {/* Keywords based on question tags */}
