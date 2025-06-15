@@ -7,7 +7,7 @@ import PlaylistCard from '../../components/videos/PlaylistCard';
 import CategorySelector from '../../components/videos/CategorySelector';
 import FeaturedVideo from '../../components/videos/FeaturedVideo';
 // FloatingCTA removed as requested
-import { videoCategories } from '../../data/videoData';
+import { videoCategories } from '../../data/videoCategories';
 import { Youtube, PlaySquare, ListVideo, Loader2 } from 'lucide-react';
 
 export default function VideosPage() {

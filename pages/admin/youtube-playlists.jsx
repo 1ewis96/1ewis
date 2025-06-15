@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { motion } from 'framer-motion';
 import { Plus, AlertCircle, ListVideo, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
-import { featuredPlaylists, videoCategories } from '../../data/videoData';
+import { videoCategories } from '../../data/videoCategories';
 import PlaylistDisplay from '../../components/videos/PlaylistDisplay';
 import withAdminAuth from '../../components/withAdminAuth';
 import { getStoredApiKey } from '../../utils/authUtils';
@@ -17,8 +17,7 @@ function YouTubePlaylists() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [playlists, setPlaylists] = useState(featuredPlaylists);
-  const [jsonExport, setJsonExport] = useState('');
+  // No longer storing playlists in state or using JSON export
 
   // Helper function to extract playlist ID from URL
   const extractPlaylistId = (url) => {
@@ -95,24 +94,10 @@ function YouTubePlaylists() {
         throw new Error(apiError.message || 'Failed to save playlist');
       }
       
-      // Add to local state for display
-      const newPlaylist = {
-        id: playlistId,
-        title: playlistTitle,
-        description: playlistDescription,
-        thumbnail: `https://img.youtube.com/vi/${playlistId}/maxresdefault.jpg`, // Default thumbnail
-        category: category,
-        videos: [] // Videos would be fetched separately in a real implementation
-      };
-      
-      setPlaylists([...playlists, newPlaylist]);
       setSuccess(`Successfully added playlist: ${playlistTitle}`);
       setPlaylistUrl('');
       setPlaylistTitle('');
       setPlaylistDescription('');
-      
-      // Generate JSON export
-      setJsonExport(JSON.stringify([...playlists, newPlaylist], null, 2));
     } catch (error) {
       setError(error.message);
     } finally {
@@ -157,19 +142,12 @@ function YouTubePlaylists() {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
-              <h2 className="text-2xl font-semibold mb-6 text-white">Current Playlists</h2>
+              <h2 className="text-2xl font-semibold mb-6 text-white">Add Playlists to API</h2>
               
-              {playlists.length === 0 ? (
-                <div className="bg-gray-800 rounded-lg p-8 text-center">
-                  <p className="text-gray-400">No playlists added yet. Add your first playlist using the form.</p>
-                </div>
-              ) : (
-                <div className="space-y-8">
-                  {playlists.map(playlist => (
-                    <PlaylistDisplay key={playlist.id} playlist={playlist} />
-                  ))}
-                </div>
-              )}
+              <div className="bg-gray-800 rounded-lg p-8">
+                <p className="text-gray-300">Playlists are now stored directly in the API database. Use the form to add new playlists to your collection.</p>
+                <p className="text-gray-400 mt-4">Playlists added here will be available on the public videos page.</p>
+              </div>
             </div>
             
             <div className="lg:col-span-1">
@@ -271,32 +249,7 @@ function YouTubePlaylists() {
                   </button>
                 </form>
                 
-                {jsonExport && (
-                  <div className="mt-8">
-                    <h3 className="text-lg font-medium mb-2 text-white">JSON Export</h3>
-                    <p className="text-sm text-gray-400 mb-2">
-                      Copy this JSON to save your playlists data:
-                    </p>
-                    <div className="relative">
-                      <textarea
-                        readOnly
-                        value={jsonExport}
-                        className="w-full h-32 bg-gray-900 border border-gray-700 rounded-lg p-3 text-xs text-gray-300 font-mono"
-                        onClick={(e) => e.target.select()}
-                      />
-                      <button
-                        onClick={() => {
-                          navigator.clipboard.writeText(jsonExport);
-                          setSuccess('JSON copied to clipboard!');
-                          setTimeout(() => setSuccess(''), 2000);
-                        }}
-                        className="absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-xs text-white px-2 py-1 rounded"
-                      >
-                        Copy
-                      </button>
-                    </div>
-                  </div>
-                )}
+                {/* JSON export functionality removed */}
               </div>
             </div>
           </div>

@@ -5,7 +5,7 @@ import { Plus, AlertCircle, Video, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import AdminNavigation from '../../components/AdminNavigation';
 import withAdminAuth from '../../components/withAdminAuth';
-import { featuredVideos } from '../../data/videoData';
+// No longer importing static video data
 import FeaturedVideo from '../../components/videos/FeaturedVideo';
 import { getStoredApiKey } from '../../utils/authUtils';
 
@@ -17,8 +17,7 @@ function AddVideo() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [videos, setVideos] = useState(featuredVideos);
-  const [jsonExport, setJsonExport] = useState('');
+  // No longer storing videos in state or using JSON export
 
   // Function to extract video ID from YouTube URL
   const extractVideoId = (url) => {
@@ -77,11 +76,7 @@ function AddVideo() {
         throw new Error('Invalid YouTube video URL');
       }
       
-      // Check if video already exists
-      const existingVideo = videos.find(v => v.videoId === videoId);
-      if (existingVideo) {
-        throw new Error('This video is already in your collection');
-      }
+      // No longer checking if video already exists
       
       // Send video data to our API
       const apiResponse = await fetch('https://api.1ewis.com/admin/create/video', {
@@ -104,27 +99,10 @@ function AddVideo() {
         throw new Error(apiError.message || 'Failed to save video');
       }
       
-      // Add to local state for display
-      const newVideo = {
-        id: `v${Date.now()}`,
-        title: videoTitle,
-        description: videoDescription,
-        thumbnail: `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
-        videoId: videoId,
-        channelName: '1ewis',
-        publishedAt: new Date().toISOString(),
-        duration: '00:00',
-        category: category
-      };
-      
-      setVideos([...videos, newVideo]);
       setSuccess(`Successfully added video: ${videoTitle}`);
       setVideoUrl('');
       setVideoTitle('');
       setVideoDescription('');
-      
-      // Generate JSON export
-      setJsonExport(JSON.stringify([...videos, newVideo], null, 2));
     } catch (error) {
       setError(error.message);
     } finally {
@@ -169,19 +147,12 @@ function AddVideo() {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
-              <h2 className="text-2xl font-semibold mb-6 text-white">Your Videos</h2>
+              <h2 className="text-2xl font-semibold mb-6 text-white">Add Videos to API</h2>
               
-              {videos.length === 0 ? (
-                <div className="bg-gray-800 rounded-lg p-8 text-center">
-                  <p className="text-gray-400">No videos added yet. Add your first video using the form.</p>
-                </div>
-              ) : (
-                <div className="space-y-8">
-                  {videos.map(video => (
-                    <FeaturedVideo key={video.id} video={video} />
-                  ))}
-                </div>
-              )}
+              <div className="bg-gray-800 rounded-lg p-8">
+                <p className="text-gray-300">Videos are now stored directly in the API database. Use the form to add new videos to your collection.</p>
+                <p className="text-gray-400 mt-4">Videos added here will be available on the public videos page.</p>
+              </div>
             </div>
             
             <div className="lg:col-span-1">
@@ -284,32 +255,7 @@ function AddVideo() {
                   </button>
                 </form>
                 
-                {jsonExport && (
-                  <div className="mt-8">
-                    <h3 className="text-lg font-medium mb-2 text-white">JSON Export</h3>
-                    <p className="text-sm text-gray-400 mb-2">
-                      Copy this JSON to save your videos data:
-                    </p>
-                    <div className="relative">
-                      <textarea
-                        readOnly
-                        value={jsonExport}
-                        className="w-full h-32 bg-gray-900 border border-gray-700 rounded-lg p-3 text-xs text-gray-300 font-mono"
-                        onClick={(e) => e.target.select()}
-                      />
-                      <button
-                        onClick={() => {
-                          navigator.clipboard.writeText(jsonExport);
-                          setSuccess('JSON copied to clipboard!');
-                          setTimeout(() => setSuccess(''), 2000);
-                        }}
-                        className="absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-xs text-white px-2 py-1 rounded"
-                      >
-                        Copy
-                      </button>
-                    </div>
-                  </div>
-                )}
+                {/* JSON export functionality removed */}
               </div>
             </div>
           </div>
