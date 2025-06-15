@@ -108,20 +108,46 @@ export default function VideosPage() {
       <main className="flex-1 relative">
         {/* Hero Section */}
         <section className="pt-36 pb-16 px-4 bg-gradient-to-b from-black to-gray-950 relative overflow-hidden">
+          {/* Background animation elements */}
+          <motion.div 
+            className="absolute top-20 left-10 w-64 h-64 bg-red-500/10 rounded-full blur-[80px] -z-10"
+            animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div 
+            className="absolute bottom-10 right-10 w-80 h-80 bg-orange-500/10 rounded-full blur-[100px] -z-10"
+            animate={{ scale: [1.2, 1, 1.2], opacity: [0.4, 0.2, 0.4] }}
+            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          />
+          
           <div className="max-w-5xl mx-auto text-center relative z-10">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <div className="inline-flex items-center mb-4 bg-gradient-to-r from-red-900/30 to-orange-900/30 px-4 py-2 rounded-full">
-                <Youtube className="text-red-500 w-5 h-5 mr-2" />
+              <motion.div 
+                className="inline-flex items-center mb-4 bg-gradient-to-r from-red-900/30 to-orange-900/30 px-4 py-2 rounded-full"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <motion.div
+                  animate={{ rotate: [0, 10, -10, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <Youtube className="text-red-500 w-5 h-5 mr-2" />
+                </motion.div>
                 <span className="text-red-300 font-medium">Educational Crypto Content</span>
-              </div>
+              </motion.div>
               
-              <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-red-400 via-orange-400 to-yellow-400">
+              <motion.h1 
+                className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-red-400 via-orange-400 to-yellow-400"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.2 }}
+              >
                 Crypto Videos & Tutorials
-              </h1>
+              </motion.h1>
               
               <motion.p 
                 className="text-xl md:text-2xl text-gray-300 mb-6 max-w-3xl mx-auto"
@@ -131,6 +157,28 @@ export default function VideosPage() {
               >
                 Learn about cryptocurrency, blockchain, and Web3 with our curated collection of videos and tutorials.
               </motion.p>
+              
+              {/* YouTube Subscribe Button */}
+              <motion.div 
+                className="mt-8 flex justify-center"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7, duration: 0.6 }}
+              >
+                <motion.a 
+                  href="https://youtube.com/@1ewis_com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center px-6 py-3 rounded-lg bg-red-800/90 text-white shadow-md hover:bg-red-700/90 transition-colors"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <svg className="mr-3 h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="white"/>
+                  </svg>
+                  <span className="font-bold">Subscribe @1ewis_com</span>
+                </motion.a>
+              </motion.div>
             </motion.div>
           </div>
         </section>
@@ -154,47 +202,131 @@ export default function VideosPage() {
             </section>
           ) : null}
           {/* Category Filter */}
-          <CategorySelector 
-            categories={videoCategories} 
-            activeCategory={activeCategory} 
-            setActiveCategory={setActiveCategory} 
-          />
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <CategorySelector 
+              categories={videoCategories} 
+              activeCategory={activeCategory} 
+              setActiveCategory={setActiveCategory} 
+            />
+          </motion.div>
 
           {/* Featured Playlists */}
           {!loading && !error && filteredPlaylists.length > 0 && (
-            <section className="mb-16">
-              <div className="flex items-center mb-6">
-                <ListVideo className="h-6 w-6 text-blue-400 mr-2" />
-                <h2 className="text-2xl font-bold">Featured Playlists</h2>
-              </div>
+            <motion.section 
+              className="mb-16"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.7 }}
+            >
+              <motion.div 
+                className="flex items-center mb-6"
+                initial={{ x: -20 }}
+                animate={{ x: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <motion.div
+                  animate={{ rotate: [0, 10, -10, 0] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <ListVideo className="h-6 w-6 text-blue-400 mr-2" />
+                </motion.div>
+                <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">Featured Playlists</h2>
+              </motion.div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredPlaylists.map((playlist) => (
-                  <PlaylistCard key={playlist.id} playlist={playlist} />
+              <motion.div 
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                variants={{
+                  hidden: { opacity: 0 },
+                  show: {
+                    opacity: 1,
+                    transition: {
+                      staggerChildren: 0.1
+                    }
+                  }
+                }}
+                initial="hidden"
+                animate="show"
+              >
+                {filteredPlaylists.map((playlist, index) => (
+                  <motion.div
+                    key={playlist.id}
+                    variants={{
+                      hidden: { opacity: 0, y: 20 },
+                      show: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+                    }}
+                    whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                  >
+                    <PlaylistCard playlist={playlist} />
+                  </motion.div>
                 ))}
-              </div>
-            </section>
+              </motion.div>
+            </motion.section>
           )}
           
           {/* Videos Grid */}
           {!loading && !error && (
             filteredVideos.length > 0 ? (
-              <section>
-                <div className="flex items-center mb-6">
-                  <PlaySquare className="h-6 w-6 text-purple-400 mr-2" />
-                  <h2 className="text-2xl font-bold">Latest Videos</h2>
-                </div>
+              <motion.section
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.7 }}
+              >
+                <motion.div 
+                  className="flex items-center mb-6"
+                  initial={{ x: -20 }}
+                  animate={{ x: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                >
+                  <motion.div
+                    animate={{ rotate: [0, -10, 10, 0] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                  >
+                    <PlaySquare className="h-6 w-6 text-purple-400 mr-2" />
+                  </motion.div>
+                  <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">Latest Videos</h2>
+                </motion.div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredVideos.map((video) => (
-                    <VideoCard key={video.id} video={video} />
+                <motion.div 
+                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                  variants={{
+                    hidden: { opacity: 0 },
+                    show: {
+                      opacity: 1,
+                      transition: {
+                        staggerChildren: 0.1
+                      }
+                    }
+                  }}
+                  initial="hidden"
+                  animate="show"
+                >
+                  {filteredVideos.map((video, index) => (
+                    <motion.div
+                      key={video.id}
+                      variants={{
+                        hidden: { opacity: 0, y: 20 },
+                        show: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+                      }}
+                      whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                    >
+                      <VideoCard video={video} />
+                    </motion.div>
                   ))}
-                </div>
-              </section>
+                </motion.div>
+              </motion.section>
             ) : (
-              <div className="text-center py-12">
+              <motion.div 
+                className="text-center py-12"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+              >
                 <p className="text-gray-400 text-lg">No videos found for this category.</p>
-              </div>
+              </motion.div>
             )
           )}
         </div>

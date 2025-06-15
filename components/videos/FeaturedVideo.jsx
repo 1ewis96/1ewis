@@ -56,13 +56,6 @@ export default function FeaturedVideo({ video }) {
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
               
               <div className="absolute bottom-4 left-4 flex items-center space-x-2 text-sm">
-                {duration && (
-                  <div className="bg-black/70 text-white px-2 py-1 rounded flex items-center">
-                    <Clock className="h-3 w-3 mr-1" />
-                    {duration}
-                  </div>
-                )}
-                
                 {publishedAt && (
                   <div className="bg-black/70 text-white px-2 py-1 rounded flex items-center">
                     <Calendar className="h-3 w-3 mr-1" />
