@@ -6,26 +6,95 @@ import VideoCard from '../../components/videos/VideoCard';
 import PlaylistCard from '../../components/videos/PlaylistCard';
 import CategorySelector from '../../components/videos/CategorySelector';
 import FeaturedVideo from '../../components/videos/FeaturedVideo';
-import FloatingCTA from '../../components/FloatingCTA';
-import { featuredVideos, featuredPlaylists, videoCategories } from '../../data/videoData';
-import { Youtube, PlaySquare, ListVideo } from 'lucide-react';
+// FloatingCTA removed as requested
+import { videoCategories } from '../../data/videoData';
+import { Youtube, PlaySquare, ListVideo, Loader2 } from 'lucide-react';
 
 export default function VideosPage() {
   const [activeCategory, setActiveCategory] = useState('all');
-  const [filteredVideos, setFilteredVideos] = useState(featuredVideos);
-  const [filteredPlaylists, setFilteredPlaylists] = useState(featuredPlaylists);
-  const [showCTA, setShowCTA] = useState(true);
+  const [videos, setVideos] = useState([]);
+  const [playlists, setPlaylists] = useState([]);
+  const [filteredVideos, setFilteredVideos] = useState([]);
+  const [filteredPlaylists, setFilteredPlaylists] = useState([]);
+  // FloatingCTA state removed
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Filter videos and playlists when category changes
+  // Fetch videos and playlists from API
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      
+      try {
+        // Fetch videos
+        const videosResponse = await fetch('https://api.1ewis.com/videos');
+        if (!videosResponse.ok) {
+          throw new Error('Failed to fetch videos');
+        }
+        const videosData = await videosResponse.json();
+        
+        // Fetch playlists
+        const playlistsResponse = await fetch('https://api.1ewis.com/videos/playlists');
+        if (!playlistsResponse.ok) {
+          throw new Error('Failed to fetch playlists');
+        }
+        const playlistsData = await playlistsResponse.json();
+        
+        // Process videos data
+        const processedVideos = videosData.videos.map(video => ({
+          id: video.PK,
+          videoId: video.PK, // Using PK as videoId
+          title: video.title,
+          description: video.description,
+          thumbnail: `https://img.youtube.com/vi/${video.PK}/maxresdefault.jpg`,
+          channelName: '1ewis',
+          publishedAt: video.publishedAt,
+          category: video.category,
+          duration: '10:00' // Default duration since it's not provided in the API
+        }));
+        
+        // Process playlists data
+        const processedPlaylists = playlistsData.playlists.map(playlist => {
+          // Extract playlist ID from PK (format: PLAYLIST#PLYA85ojmB_kmpkD8jKEt8nCtT8tyGyM-r)
+          const playlistId = playlist.PK.split('#')[1];
+          
+          // Get the thumbnail from the API response if available, otherwise use a default
+          return {
+            id: playlistId,
+            playlistId: playlistId,
+            title: playlist.title,
+            description: playlist.description,
+            thumbnail: playlist.thumbnail || `https://i.ytimg.com/vi/default/hqdefault.jpg`,
+            channelName: '1ewis',
+            category: playlist.category,
+            createdAt: playlist.createdAt
+          };
+        });
+        
+        setVideos(processedVideos);
+        setPlaylists(processedPlaylists);
+        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+    
+    fetchData();
+  }, []);
+
+  // Filter videos and playlists when category changes or data is loaded
   useEffect(() => {
     if (activeCategory === 'all') {
-      setFilteredVideos(featuredVideos);
-      setFilteredPlaylists(featuredPlaylists);
+      setFilteredVideos(videos);
+      setFilteredPlaylists(playlists);
     } else {
-      setFilteredVideos(featuredVideos.filter(video => video.category === activeCategory));
-      setFilteredPlaylists(featuredPlaylists.filter(playlist => playlist.category === activeCategory));
+      setFilteredVideos(videos.filter(video => video.category === activeCategory));
+      setFilteredPlaylists(playlists.filter(playlist => playlist.category === activeCategory));
     }
-  }, [activeCategory]);
+  }, [activeCategory, videos, playlists]);
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-black text-white">
@@ -69,9 +138,21 @@ export default function VideosPage() {
         {/* Content Section */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           {/* Featured Video */}
-          <section className="mb-16">
-            <FeaturedVideo video={featuredVideos[0]} />
-          </section>
+          {loading ? (
+            <div className="flex justify-center items-center py-16">
+              <Loader2 className="h-12 w-12 text-blue-500 animate-spin" />
+              <span className="ml-3 text-xl text-gray-300">Loading videos...</span>
+            </div>
+          ) : error ? (
+            <div className="bg-red-900/20 border border-red-800 rounded-lg p-6 mb-16">
+              <p className="text-red-300 text-center">{error}</p>
+              <p className="text-gray-400 text-center mt-2">Please try refreshing the page.</p>
+            </div>
+          ) : videos.length > 0 ? (
+            <section className="mb-16">
+              <FeaturedVideo video={videos[0]} />
+            </section>
+          ) : null}
           {/* Category Filter */}
           <CategorySelector 
             categories={videoCategories} 
@@ -80,7 +161,7 @@ export default function VideosPage() {
           />
 
           {/* Featured Playlists */}
-          {filteredPlaylists.length > 0 && (
+          {!loading && !error && filteredPlaylists.length > 0 && (
             <section className="mb-16">
               <div className="flex items-center mb-6">
                 <ListVideo className="h-6 w-6 text-blue-400 mr-2" />
@@ -96,31 +177,32 @@ export default function VideosPage() {
           )}
           
           {/* Videos Grid */}
-          {filteredVideos.length > 0 ? (
-            <section>
-              <div className="flex items-center mb-6">
-                <PlaySquare className="h-6 w-6 text-purple-400 mr-2" />
-                <h2 className="text-2xl font-bold">Latest Videos</h2>
+          {!loading && !error && (
+            filteredVideos.length > 0 ? (
+              <section>
+                <div className="flex items-center mb-6">
+                  <PlaySquare className="h-6 w-6 text-purple-400 mr-2" />
+                  <h2 className="text-2xl font-bold">Latest Videos</h2>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredVideos.map((video) => (
+                    <VideoCard key={video.id} video={video} />
+                  ))}
+                </div>
+              </section>
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-gray-400 text-lg">No videos found for this category.</p>
               </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredVideos.map((video) => (
-                  <VideoCard key={video.id} video={video} />
-                ))}
-              </div>
-            </section>
-          ) : (
-            <div className="text-center py-12">
-              <p className="text-gray-400 text-lg">No videos found for this category.</p>
-            </div>
+            )
           )}
         </div>
       </main>
       
       <Footer />
       
-      {/* Floating CTA */}
-      {showCTA && <FloatingCTA onClose={() => setShowCTA(false)} />}
+      {/* Floating CTA removed as requested */}
     </div>
   );
 }

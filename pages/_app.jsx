@@ -2,14 +2,18 @@ import '../styles/globals.css';
 import Head from 'next/head';
 import Script from 'next/script';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Navigation from '../components/navigation';
 import ConsentManager from '../components/ConsentManager';
 import { initializeGoogleConsentMode, initializeTCF } from '../utils/consentManager';
+import { FloatingVideoProvider } from '../context/FloatingVideoContext';
+import FloatingVideoPlayerWrapper from '../components/videos/FloatingVideoPlayerWrapper';
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
   const canonicalUrl = `https://1ewis.com${router.asPath === '/' ? '' : router.asPath}`;
+  // We don't need this state since we're using the context
+  // const [activeFloatingVideo, setActiveFloatingVideo] = useState(null);
   
   // Initialize Google Consent Mode and TCF API on client-side only
   useEffect(() => {
@@ -21,7 +25,7 @@ function MyApp({ Component, pageProps }) {
   }, []);
   
   return (
-    <>
+    <FloatingVideoProvider>
       <Head>
         {/* Default meta tags - will be overridden by page-specific ones */}
         <title>1ewis.com | Best Crypto Exchanges, Wallets & Tools with Exclusive Bonuses</title>
@@ -58,6 +62,12 @@ function MyApp({ Component, pageProps }) {
         src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2205553060041282"
         crossOrigin="anonymous"
       />
+      
+      {/* Google Tag Manager - No Script */}
+      <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX"
+          height="0" width="0" style={{ display: 'none', visibility: 'hidden' }}></iframe>
+      </noscript>
       
       {/* Global site tag - Google Analytics */}
       <Script
@@ -98,7 +108,10 @@ function MyApp({ Component, pageProps }) {
       <Component {...pageProps} />
       {/* Only show ConsentManager on non-admin pages */}
       {!router.pathname.startsWith('/admin') && <ConsentManager />}
-    </>
+      
+      {/* Floating Video Player - Shows on all pages once activated */}
+      <FloatingVideoPlayerWrapper />
+    </FloatingVideoProvider>
   );
 }
 

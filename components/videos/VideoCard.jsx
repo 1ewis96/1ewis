@@ -1,9 +1,11 @@
 import React from 'react';
-import { Play, Clock, Calendar, ExternalLink } from 'lucide-react';
+import { Play, Calendar, ExternalLink, Minimize2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useFloatingVideo } from '../../context/FloatingVideoContext';
 
 export default function VideoCard({ video }) {
-  const { title, thumbnail, videoId, channelName, publishedAt, duration, description } = video;
+  const { title, thumbnail, videoId, channelName, publishedAt, description } = video;
+  const { playInFloatingPlayer } = useFloatingVideo();
   
   return (
     <motion.div 
@@ -22,22 +24,26 @@ export default function VideoCard({ video }) {
           />
         </div>
         <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 bg-black/50">
-          <a 
-            href={`https://www.youtube.com/watch?v=${videoId}`} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="bg-red-600 hover:bg-red-700 text-white p-4 rounded-full transition-transform duration-300 transform hover:scale-110"
-          >
-            <Play className="h-6 w-6" />
-          </a>
+          <div className="flex space-x-3">
+            <a 
+              href={`https://www.youtube.com/watch?v=${videoId}`} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="bg-red-600 hover:bg-red-700 text-white p-4 rounded-full transition-transform duration-300 transform hover:scale-110"
+            >
+              <Play className="h-6 w-6" />
+            </a>
+            <button
+              onClick={() => playInFloatingPlayer(video)}
+              className="bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full transition-transform duration-300 transform hover:scale-110"
+              aria-label="Play in floating player"
+            >
+              <Minimize2 className="h-6 w-6" />
+            </button>
+          </div>
         </div>
         
-        {duration && (
-          <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded flex items-center">
-            <Clock className="h-3 w-3 mr-1" />
-            {duration}
-          </div>
-        )}
+        {/* Duration label removed as requested */}
       </div>
       
       <div className="p-4 flex-1 flex flex-col">
