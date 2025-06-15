@@ -69,7 +69,7 @@ export default function AdminNavigation() {
                 <button 
                   onClick={() => setIsApprovalsOpen(!isApprovalsOpen)}
                   className={`relative px-4 py-2 rounded-md transition-all duration-300 group flex items-center ${
-                    router.pathname.includes('/admin/approvals') 
+                    router.pathname.includes('/admin/approvals')
                       ? 'text-white font-medium bg-white/5' 
                       : 'text-gray-300 hover:text-white hover:bg-white/10'
                   }`}

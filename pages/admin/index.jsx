@@ -564,7 +564,40 @@ function AdminHome() {
             </div>
           </motion.div>
           
-          {/* Quick Actions Section */}
+          {/* Guides Section */}
+          <motion.div 
+            className="mt-10"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+          >
+            <h2 className="text-2xl font-bold text-white mb-6">Guides</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <button 
+                onClick={() => router.push('/admin/guides/create')}
+                className="bg-black/60 backdrop-blur-xl rounded-xl border border-white/10 p-6 hover:border-cyan-500/50 transition-all duration-300 text-left"
+              >
+                <div className="p-3 rounded-lg bg-cyan-500/10 text-cyan-400 w-fit mb-4">
+                  <Plus className="w-6 h-6" />
+                </div>
+                <h3 className="text-lg font-semibold text-white">Create Guide</h3>
+                <p className="text-gray-400 text-sm mt-1">Create a new interactive guide with sections and content</p>
+              </button>
+              
+              <button 
+                onClick={() => router.push('/admin/guides/manage')}
+                className="bg-black/60 backdrop-blur-xl rounded-xl border border-white/10 p-6 hover:border-teal-500/50 transition-all duration-300 text-left"
+              >
+                <div className="p-3 rounded-lg bg-teal-500/10 text-teal-400 w-fit mb-4">
+                  <Edit className="w-6 h-6" />
+                </div>
+                <h3 className="text-lg font-semibold text-white">Manage Guides</h3>
+                <p className="text-gray-400 text-sm mt-1">Edit, publish, and organize existing guides</p>
+              </button>
+            </div>
+          </motion.div>
+          
+          {/* Article Management Section */}
           <motion.div 
             className="mt-10"
             initial={{ opacity: 0, y: 20 }}
