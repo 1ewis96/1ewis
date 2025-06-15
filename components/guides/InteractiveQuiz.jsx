@@ -103,7 +103,24 @@ export default function InteractiveQuiz({ quizId, quizData: propQuizData }) {
     if (!isMounted) return;
 
     if (propQuizData) {
-      setQuizData(propQuizData);
+      // Format the quiz data if it's from the JSON file format
+      if (propQuizData.questions && propQuizData.questions[0] && 'text' in propQuizData.questions[0]) {
+        // Convert from guide-example.json format to our component's expected format
+        const formattedQuizData = {
+          title: propQuizData.title,
+          description: propQuizData.description,
+          questions: propQuizData.questions.map(q => ({
+            question: q.text,
+            answers: q.options,
+            correctAnswer: q.correctAnswer,
+            explanation: q.explanation
+          }))
+        };
+        setQuizData(formattedQuizData);
+      } else {
+        // Already in the right format
+        setQuizData(propQuizData);
+      }
       setLoading(false);
       return;
     }

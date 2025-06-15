@@ -1,14 +1,37 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Footer from '../../../components/Footer';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Calendar, Tag, Clock, Share2, ArrowRight } from 'lucide-react';
-import CryptoPriceTracker from '../../../components/guides/CryptoPriceTracker';
-import CryptoCalculator from '../../../components/guides/CryptoCalculator';
-import InteractiveQuiz from '../../../components/guides/InteractiveQuiz';
-import SingleTokenPrice from '../../../components/guides/SingleTokenPrice';
-import AutoplayVideoPlayer from '../../../components/guides/AutoplayVideoPlayer';
+import GuideSidebar from '../../../components/guides/GuideSidebar';
+import { ArrowLeft, Calendar, Tag, Clock, Share2, ArrowRight, ExternalLink } from 'lucide-react';
+import dynamic from 'next/dynamic';
+
+// Dynamically import components with SSR disabled to prevent hydration issues
+const CryptoPriceTracker = dynamic(
+  () => import('../../../components/guides/CryptoPriceTracker'),
+  { ssr: false }
+);
+
+const CryptoCalculator = dynamic(
+  () => import('../../../components/guides/CryptoCalculator'),
+  { ssr: false }
+);
+
+const InteractiveQuiz = dynamic(
+  () => import('../../../components/guides/InteractiveQuiz'),
+  { ssr: false }
+);
+
+const SingleTokenPrice = dynamic(
+  () => import('../../../components/guides/SingleTokenPrice'),
+  { ssr: false }
+);
+
+const AutoplayVideoPlayer = dynamic(
+  () => import('../../../components/guides/AutoplayVideoPlayer'),
+  { ssr: false }
+);
 
 export default function GuidePage() {
   const router = useRouter();
@@ -16,193 +39,215 @@ export default function GuidePage() {
   const [activeSection, setActiveSection] = useState(0);
   const [showAutoplayVideo, setShowAutoplayVideo] = useState(false);
   const [isBrowser, setIsBrowser] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
+  const hasSetupAutoplay = useRef(false);
+  const [guideData, setGuideData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  // Helper function to parse markdown-style links in text: [[link text]](url)
+  const parseMarkdownLinks = (text) => {
+    if (!text) return text;
+    
+    // Regex to match markdown-style links: [[text]](url)
+    const linkRegex = /\[\[([^\]]+)\]\]\(([^)]+)\)/g;
+    
+    // If no links, return the text as is
+    if (!linkRegex.test(text)) return text;
+    
+    // Reset regex state
+    linkRegex.lastIndex = 0;
+    
+    let lastIndex = 0;
+    const elements = [];
+    let match;
+    
+    // Find all links and build elements array
+    while ((match = linkRegex.exec(text)) !== null) {
+      // Add text before the link
+      if (match.index > lastIndex) {
+        elements.push(
+          <span key={`text-${lastIndex}`}>
+            {text.substring(lastIndex, match.index)}
+          </span>
+        );
+      }
+      
+      // Add the link
+      const linkText = match[1];
+      const linkUrl = match[2];
+      elements.push(
+        <a 
+          key={`link-${match.index}`}
+          href={linkUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-cyan-400 hover:text-cyan-300 transition-colors underline inline-flex items-center"
+        >
+          {linkText}
+          <ExternalLink className="w-3 h-3 ml-1" />
+        </a>
+      );
+      
+      lastIndex = match.index + match[0].length;
+    }
+    
+    // Add any remaining text after the last link
+    if (lastIndex < text.length) {
+      elements.push(
+        <span key="text-end">
+          {text.substring(lastIndex)}
+        </span>
+      );
+    }
+    
+    return elements;
+  };
   
   // Detect client-side rendering
   useEffect(() => {
     setIsBrowser(true);
+    // Mark hydration as complete
+    setIsHydrated(true);
   }, []);
+  
+  // Fetch guide data from API
+  useEffect(() => {
+    if (slug) {
+      setLoading(true);
+      fetch(`/api/guides/${slug}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Guide not found');
+          }
+          return response.json();
+        })
+        .then(data => {
+          setGuideData(data.guide);
+          setLoading(false);
+        })
+        .catch(err => {
+          console.error('Error fetching guide:', err);
+          setError(err.message);
+          setLoading(false);
+        });
+    }
+  }, [slug]);
   
   // Show autoplay video after 10 seconds of reading the guide (client-side only)
   useEffect(() => {
-    if (slug && isBrowser) {
+    if (slug && isBrowser && !hasSetupAutoplay.current && guideData?.interactiveElements?.videoPlayer) {
+      hasSetupAutoplay.current = true;
+      const showDelay = guideData.interactiveElements.videoPlayer.showDelay || 10000;
+      
       const timer = setTimeout(() => {
         setShowAutoplayVideo(true);
-      }, 10000); // 10 seconds
+      }, showDelay);
       
       return () => clearTimeout(timer);
     }
-  }, [slug, isBrowser]);
+  }, [slug, isBrowser, guideData]);
 
-  // Sample quiz data for the interactive quiz component
-  const quizData = {
-    title: 'Test Your Crypto Knowledge',
-    description: 'See how much you know about cryptocurrency basics',
-    questions: [
-      {
-        question: 'Who created Bitcoin?',
-        answers: ['Vitalik Buterin', 'Satoshi Nakamoto', 'Charlie Lee', 'Nick Szabo'],
-        correctAnswer: 1
-      },
-      {
-        question: 'What consensus mechanism does Bitcoin use?',
-        answers: ['Proof of Stake', 'Delegated Proof of Stake', 'Proof of Work', 'Proof of Authority'],
-        correctAnswer: 2
-      },
-      {
-        question: 'What is a blockchain?',
-        answers: ['A centralized database', 'A distributed ledger', 'A programming language', 'A type of cryptocurrency'],
-        correctAnswer: 1
-      },
-      {
-        question: 'What is a smart contract?',
-        answers: ['A legal document', 'Self-executing code on a blockchain', 'A type of wallet', 'A trading algorithm'],
-        correctAnswer: 1
-      },
-      {
-        question: 'Which of these is NOT a cryptocurrency?',
-        answers: ['Ethereum', 'Litecoin', 'Blockchain', 'Dogecoin'],
-        correctAnswer: 2
-      }
-    ]
-  };
-  
-  // This would normally come from an API based on the slug
-  // For now we'll use a placeholder guide
-  const guide = {
-    title: 'Getting Started with Cryptocurrency',
-    description: 'Learn the basics of cryptocurrency, blockchain technology, and how to make your first purchase.',
-    category: 'Beginner',
-    image: '/images/guides/crypto-basics.jpg',
-    publishedDate: '2025-05-15',
-    readTime: '8 min read',
+  // All guide data comes from the API/JSON file
+  // We'll use a minimal fallback only if the API fails
+  const fallbackGuide = {
+    title: 'Guide Not Found',
+    description: 'The requested guide could not be loaded.',
+    slug: '',
+    publishedDate: new Date().toISOString(),
     author: {
-      name: 'Lewis',
-      image: '/images/author.jpg'
+      name: 'System',
+      avatar: ''
     },
     content: [
       {
         type: 'paragraph',
-        text: 'Cryptocurrency has revolutionized the way we think about money and financial transactions. As a digital or virtual form of currency, it uses cryptography for security, making it difficult to counterfeit. Unlike traditional currencies issued by governments (fiat currencies), most cryptocurrencies operate on decentralized networks based on blockchain technology—a distributed ledger enforced by a disparate network of computers.'
-      },
-      {
-        type: 'video',
-        youtubeId: 'SSo_EIwHSd4',
-        title: 'What is Cryptocurrency? A Simple Explanation'
-      },
-      {
-        type: 'heading',
-        text: 'What is Cryptocurrency?'
-      },
-      {
-        type: 'paragraph',
-        text: 'Cryptocurrency is a digital or virtual currency that uses cryptography for security, making it difficult to counterfeit. It operates on technology called blockchain, which is a distributed ledger enforced by a network of computers.'
-      },
-      {
-        type: 'singleToken',
-        tokenId: 'bitcoin',
-        title: 'Bitcoin (BTC) Live Price'
-      },
-      {
-        type: 'paragraph',
-        text: 'Blockchain technology creates a record that can\'t be changed without the consensus of the entire network.'
-      },
-      {
-        type: 'paragraph',
-        text: 'This decentralized nature is what makes blockchain so revolutionary. There is no central authority controlling the ledger, making it transparent and resistant to modification of the data.'
-      },
-      {
-        type: 'heading',
-        text: 'Popular Cryptocurrencies'
-      },
-      {
-        type: 'paragraph',
-        text: 'While Bitcoin was the first and remains the most well-known cryptocurrency, there are now thousands of alternative cryptocurrencies with various functions and specifications. Some of these are clones or forks of Bitcoin, while others are new currencies built from scratch.'
-      },
-      {
-        type: 'priceTracker',
-        title: 'Live Cryptocurrency Prices',
-        description: 'Track the latest prices of major cryptocurrencies'
-      },
-      {
-        type: 'list',
-        items: [
-          'Choose a reputable cryptocurrency exchange or broker.',
-          'Create and verify your account.',
-          'Deposit cash to your account.',
-          'Place a cryptocurrency order.',
-          'Store your cryptocurrency in a secure wallet.'
-        ]
-      },
-      {
-        type: 'list',
-        items: [
-          'Bitcoin (BTC): The original cryptocurrency, created in 2009.',
-          'Ethereum (ETH): A platform for decentralized applications and smart contracts.',
-          'Ripple (XRP): Designed for cross-border payments and remittances.',
-          'Cardano (ADA): A proof-of-stake blockchain platform.',
-          'Solana (SOL): Known for high throughput and fast transaction speeds.'
-        ]
-      },
-      {
-        type: 'heading',
-        text: 'How to Buy Cryptocurrency'
-      },
-      {
-        type: 'paragraph',
-        text: 'Getting started with cryptocurrency is easier than you might think. Here\'s a simple process to follow:'
-      },
-      {
-        type: 'calculator',
-        title: 'Cryptocurrency Converter',
-        description: 'Convert between different cryptocurrencies and fiat currencies'
-      },
-      {
-        type: 'heading',
-        text: 'Test Your Knowledge'
-      },
-      {
-        type: 'paragraph',
-        text: 'Now that you\'ve learned the basics of cryptocurrency, test your knowledge with this quick quiz!'
-      },
-      {
-        type: 'quiz',
-        quizId: 'crypto-basics',
-        title: 'Cryptocurrency Quiz',
-        description: 'Test your understanding of crypto concepts'
+        text: 'Please try again later or check the URL.'
       }
     ]
   };
   
-  // For a real app, this would come from an API
-  const relatedGuides = [
-    {
-      id: 2,
-      title: 'How to Set Up a Secure Crypto Wallet',
-      description: 'A step-by-step guide to setting up and securing your cryptocurrency wallet.',
-      category: 'Security',
-      image: '/images/guides/secure-wallet.jpg',
-      slug: 'how-to-set-up-secure-crypto-wallet',
-    },
-    {
-      id: 3,
-      title: 'Understanding DeFi Platforms',
-      description: 'Explore decentralized finance platforms and how they\'re revolutionizing traditional financial services.',
-      category: 'DeFi',
-      image: '/images/guides/defi-platforms.jpg',
-      slug: 'understanding-defi-platforms',
-    },
-  ];
+  // In a real app, related guides would come from the API
+  // For now, we'll use an empty array as all data should come from the API
+  const relatedGuides = [];
   
+  // Use the guide data from the API if available, otherwise use the fallback
+  const currentGuide = guideData || fallbackGuide;
+  
+  // We're now using parseMarkdownLinks instead of renderTextWithLinks
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="flex flex-col min-h-screen bg-black text-white">
+        <Head>
+          <title>Loading Guide... | 1ewis.com</title>
+        </Head>
+        <main className="flex-1 flex items-center justify-center">
+          <div className="text-center p-8">
+            <div className="inline-block w-12 h-12 border-4 border-t-cyan-500 border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin mb-4"></div>
+            <h2 className="text-xl font-medium text-white">Loading guide...</h2>
+            <p className="text-gray-400 mt-2">Please wait while we prepare your content</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="flex flex-col min-h-screen bg-black text-white">
+        <Head>
+          <title>Guide Not Found | 1ewis.com</title>
+        </Head>
+        <main className="flex-1 flex items-center justify-center">
+          <div className="text-center p-8 max-w-md">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-900/30 mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-bold text-white mb-2">Guide Not Found</h2>
+            <p className="text-gray-400 mb-6">{error}</p>
+            <button 
+              onClick={() => router.push('/news/guides')}
+              className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-md transition-colors"
+            >
+              Back to All Guides
+            </button>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  // currentGuide is already defined above
+
   return (
     <div className="flex flex-col min-h-screen bg-black text-white">
       <Head>
-        <title>{guide.title} | 1ewis.com</title>
-        <meta name="description" content={guide.description} />
+        <title>{currentGuide.title || 'Guide'} | 1ewis</title>
+        <meta name="description" content={currentGuide.description || 'A comprehensive guide by 1ewis'} />
+        <link rel="icon" href="/favicon.ico" />
+        <style jsx global>{`
+          html {
+            scroll-behavior: smooth;
+          }
+        `}</style>
       </Head>
       
       <main className="flex-1">
         {/* Hero Section */}
         <section className="pt-36 pb-16 px-4 bg-gradient-to-b from-black to-gray-950 relative overflow-hidden">
+          {/* Animated background elements */}
+          <div className="absolute top-0 left-0 w-full h-full overflow-hidden opacity-20 pointer-events-none">
+            <div className="absolute top-10 left-1/4 w-72 h-72 bg-cyan-500 rounded-full mix-blend-screen filter blur-[80px] animate-pulse"></div>
+            <div className="absolute top-40 right-1/3 w-96 h-96 bg-blue-600 rounded-full mix-blend-screen filter blur-[100px] animate-pulse" style={{ animationDelay: '1s' }}></div>
+            <div className="absolute bottom-20 right-1/4 w-64 h-64 bg-indigo-600 rounded-full mix-blend-screen filter blur-[70px] animate-pulse" style={{ animationDelay: '2s' }}></div>
+          </div>
           {/* Background animation elements */}
           <motion.div 
             className="absolute top-20 left-10 w-64 h-64 bg-cyan-500/10 rounded-full blur-[80px] -z-10"
@@ -234,7 +279,7 @@ export default function GuidePage() {
               </div>
               
               <div className="inline-flex items-center mb-4 bg-gradient-to-r from-cyan-900/30 to-blue-900/30 px-4 py-2 rounded-full">
-                <span className="text-cyan-300 font-medium">{guide.category}</span>
+                <span className="text-cyan-300 font-medium">{currentGuide.category}</span>
               </div>
               
               <motion.h1 
@@ -243,7 +288,7 @@ export default function GuidePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.2 }}
               >
-                {guide.title}
+                {currentGuide.title}
               </motion.h1>
               
               <motion.p 
@@ -252,40 +297,98 @@ export default function GuidePage() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3, duration: 0.6 }}
               >
-                {guide.description}
+                {currentGuide.description}
               </motion.p>
               
-              <div className="flex flex-wrap items-center text-sm text-gray-400 gap-4 mt-8">
+              <motion.div className="flex flex-wrap items-center text-sm text-gray-400 gap-4 mt-8"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3, duration: 0.6 }}
+              >
+                {/* Published Date */}
                 <div className="flex items-center">
-                  <Calendar className="w-4 h-4 mr-2" />
-                  <span>{new Date(guide.publishedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                  <Calendar className="w-4 h-4 mr-2 text-cyan-400" />
+                  <span>Published: {new Date(currentGuide.publishedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                 </div>
                 
-                <div className="flex items-center">
-                  <Clock className="w-4 h-4 mr-2" />
-                  <span>{guide.readTime}</span>
-                </div>
+                {/* Updated Date if different from published */}
+                {currentGuide.updatedDate && currentGuide.updatedDate !== currentGuide.publishedDate && (
+                  <div className="flex items-center">
+                    <Calendar className="w-4 h-4 mr-2 text-cyan-400" />
+                    <span>Updated: {new Date(currentGuide.updatedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                  </div>
+                )}
                 
+                {/* Read Time */}
                 <div className="flex items-center">
-                  <Tag className="w-4 h-4 mr-2" />
-                  <span>{guide.category}</span>
+                  <Clock className="w-4 h-4 mr-2 text-cyan-400" />
+                  <span>{currentGuide.readTime} min read</span>
                 </div>
-              </div>
+              </motion.div>
+              
+              {/* Tags */}
+              {currentGuide.tags && currentGuide.tags.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-4">
+                  {currentGuide.tags.map((tag, index) => (
+                    <span 
+                      key={index} 
+                      className="px-3 py-1 bg-gray-800 text-cyan-300 text-xs font-medium rounded-full"
+                    >
+                      #{tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+              
+              {/* Author Information */}
+              {currentGuide.author && (
+                <motion.div 
+                  className="flex items-center mt-6 p-4 bg-gray-900/50 rounded-lg border border-gray-800"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4, duration: 0.6 }}
+                >
+                  {currentGuide.author.avatar && (
+                    <img 
+                      src={currentGuide.author.avatar} 
+                      alt={currentGuide.author.name}
+                      className="w-12 h-12 rounded-full mr-4 object-cover"
+                    />
+                  )}
+                  <div>
+                    <p className="font-medium text-white">{currentGuide.author.name}</p>
+                    {currentGuide.author.bio && (
+                      <p className="text-sm text-gray-400 mt-1">{currentGuide.author.bio}</p>
+                    )}
+                  </div>
+                </motion.div>
+              )}
             </motion.div>
           </div>
         </section>
 
-        {/* Main Content */}
+        {/* Main Content with Sidebar */}
         <section className="py-12 px-4">
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">  
+            {/* Main Content Column */}
+            <div className="flex-1">
             {/* Featured Image */}
-            <div className="mb-12 rounded-xl overflow-hidden shadow-xl">
+            <motion.div 
+              className="mb-12 rounded-xl overflow-hidden shadow-2xl relative group"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 z-10 opacity-60 group-hover:opacity-40 transition-opacity duration-300"></div>
               <img 
-                src={guide.image || "https://via.placeholder.com/1200x600/1e293b/e2e8f0?text=1ewis+Guide"} 
-                alt={guide.title}
-                className="w-full h-auto object-cover"
+                src={currentGuide.image || currentGuide.fallbackImage || "https://via.placeholder.com/1200x600/1e293b/e2e8f0?text=1ewis+Guide"} 
+                alt={currentGuide.title}
+                className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700"
                 onError={(e) => {
-                  if (e.target.src !== "https://via.placeholder.com/1200x600/1e293b/e2e8f0?text=1ewis+Guide") {
+                  if (currentGuide.fallbackImage && e.target.src !== currentGuide.fallbackImage) {
+                    e.target.onerror = null;
+                    e.target.src = currentGuide.fallbackImage;
+                  } else if (e.target.src !== "https://via.placeholder.com/1200x600/1e293b/e2e8f0?text=1ewis+Guide") {
                     e.target.onerror = null;
                     e.target.src = "https://via.placeholder.com/1200x600/1e293b/e2e8f0?text=1ewis+Guide";
                   } else {
@@ -294,7 +397,7 @@ export default function GuidePage() {
                   }
                 }}
               />
-            </div>
+            </motion.div>
             
             {/* Guide Content */}
             <motion.div 
@@ -303,153 +406,335 @@ export default function GuidePage() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8 }}
             >
-              {guide.content.map((block, index) => {
-                switch(block.type) {
-                  case 'heading':
-                    return (
-                      <motion.h2 
-                        key={index} 
-                        className="text-2xl font-bold mt-8 mb-4 text-cyan-300"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 * index, duration: 0.5 }}
-                      >
-                        {block.text}
-                      </motion.h2>
-                    );
-                  case 'paragraph':
-                    return (
-                      <motion.p 
-                        key={index} 
+              {/* If we have sections from the API, use those */}
+              {currentGuide.sections ? (
+                // Render sections from the API data
+                currentGuide.sections.map((section, sectionIndex) => (
+                  <motion.div
+                    key={section.id || sectionIndex}
+                    id={`section-${sectionIndex}`}
+                    className="mb-12 scroll-mt-24"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 * sectionIndex, duration: 0.6 }}
+                  >
+                    <motion.h2 
+                      className="text-2xl font-bold mt-10 mb-6 text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-300 pb-2 border-b border-gray-800/50"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.1 * sectionIndex, duration: 0.5 }}
+                      whileInView={{ scale: [null, 1.02, 1] }}
+                      viewport={{ once: true }}
+                    >
+                      {section.title}
+                    </motion.h2>
+                    
+                    {/* Section image if available */}
+                    {section.image && (
+                      <div className="my-6 rounded-lg overflow-hidden shadow-lg border border-gray-800/50 group relative">
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-60 transition-opacity duration-300 z-10"></div>
+                        <img
+                          src={section.image}
+                          alt={section.title}
+                          className="w-full h-auto transform group-hover:scale-105 transition-transform duration-500"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.style.display = 'none';
+                          }}
+                        />
+                      </div>
+                    )}
+                    
+                    {/* Render content - either HTML string or array of paragraph objects */}
+                    {Array.isArray(section.content) ? (
+                      // Render array of paragraph objects
+                      section.content.map((contentBlock, contentIndex) => {
+                        if (contentBlock.type === 'paragraph') {
+                          return (
+                            <motion.p 
+                              key={contentIndex} 
+                              className="mb-6 text-gray-300 leading-relaxed tracking-wide first-letter:text-lg first-letter:font-medium first-letter:text-cyan-300"
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: 0.1 * contentIndex, duration: 0.5 }}
+                              whileInView={{ opacity: [null, 0.9, 1] }}
+                              viewport={{ once: true, margin: "-50px" }}
+                            >
+                              {parseMarkdownLinks(contentBlock.text)}
+                            </motion.p>
+                          );
+                        } else if (contentBlock.type === 'list') {
+                          return (
+                            <motion.ul
+                              key={contentIndex}
+                              className="list-disc pl-5 mb-8 text-gray-300 space-y-3"
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: 0.1 * contentIndex, duration: 0.5 }}
+                              whileInView={{ opacity: [null, 0.9, 1] }}
+                              viewport={{ once: true, margin: "-50px" }}
+                            >
+                              {contentBlock.items.map((item, itemIndex) => (
+                                <motion.li 
+                                  key={itemIndex} 
+                                  className="ml-2 pl-2 marker:text-cyan-400"
+                                  initial={{ opacity: 0, x: -5 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ delay: 0.05 * itemIndex + 0.1 * contentIndex, duration: 0.4 }}
+                                >
+                                  {item}
+                                </motion.li>
+                              ))}
+                            </motion.ul>
+                          );
+                        }
+                        return null; // Handle other content types as needed
+                      })
+                    ) : (
+                      // Render HTML content (legacy format)
+                      <div 
                         className="mb-6 text-gray-300 leading-relaxed"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.1 * index, duration: 0.5 }}
-                      >
-                        {block.text}
-                      </motion.p>
-                    );
-                  case 'list':
-                    return (
-                      <motion.ul 
-                        key={index} 
-                        className="mb-6 pl-6 space-y-2"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.1 * index, duration: 0.5 }}
-                      >
-                        {block.items.map((item, itemIndex) => (
-                          <motion.li 
-                            key={itemIndex} 
-                            className="text-gray-300"
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.1 * index + 0.05 * itemIndex, duration: 0.3 }}
-                          >
-                            {item}
-                          </motion.li>
-                        ))}
-                      </motion.ul>
-                    );
-                  case 'video':
-                    return (
-                      <motion.div
-                        key={index}
-                        className="mb-10 mt-6 rounded-xl overflow-hidden shadow-lg bg-gray-900 border border-gray-800"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 * index, duration: 0.6 }}
-                      >
-                        <div className="aspect-w-16 aspect-h-9">
-                          <iframe
-                            src={`https://www.youtube.com/embed/${block.youtubeId}`}
-                            title={block.title}
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                            className="w-full h-full"
-                          ></iframe>
-                        </div>
-                        <div className="p-4">
-                          <h3 className="text-lg font-medium text-white">{block.title}</h3>
-                        </div>
-                      </motion.div>
-                    );
-                  case 'priceTracker':
-                    return (
-                      <motion.div
-                        key={index}
-                        className="mb-10 mt-6"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 * index, duration: 0.6 }}
-                      >
-                        <CryptoPriceTracker />
-                      </motion.div>
-                    );
-                  case 'singleToken':
-                    return (
-                      <motion.div
-                        key={index}
-                        className="mb-10 mt-6"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 * index, duration: 0.6 }}
-                      >
-                        <SingleTokenPrice tokenId={block.tokenId || 'bitcoin'} />
-                      </motion.div>
-                    );
-                  case 'calculator':
-                    return (
-                      <motion.div
-                        key={index}
-                        className="mb-10 mt-6"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 * index, duration: 0.6 }}
-                      >
-                        <CryptoCalculator />
-                      </motion.div>
-                    );
-                  case 'quiz':
-                    return (
-                      <motion.div
-                        key={index}
-                        className="mb-10 mt-6"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 * index, duration: 0.6 }}
-                      >
-                        <InteractiveQuiz quizId={block.quizId} />
-                      </motion.div>
-                    );
-                  default:
-                    return null;
-                }
-              })}
+                        dangerouslySetInnerHTML={{ __html: section.content }}
+                      />
+                    )}
+                    
+                    {/* Render token price tracker if section has one */}
+                    {section.hasTokenPriceTracker && isHydrated && (
+                      <div className="my-8">
+                        <CryptoPriceTracker 
+                          coins={section.trackedTokens || ['bitcoin', 'ethereum']} 
+                        />
+                      </div>
+                    )}
+                  </motion.div>
+                ))
+              ) : (
+                // Fall back to the original content blocks
+                currentGuide.content.map((block, index) => {
+                  switch(block.type) {
+                    case 'heading':
+                      return (
+                        <motion.h2 
+                          key={index} 
+                          className="text-2xl font-bold mt-8 mb-4 text-cyan-300"
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.1 * index, duration: 0.5 }}
+                        >
+                          {block.text}
+                        </motion.h2>
+                      );
+                    case 'paragraph':
+                      return (
+                        <motion.p 
+                          key={index} 
+                          className="mb-6 text-gray-300 leading-relaxed"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 0.1 * index, duration: 0.5 }}
+                        >
+                          {parseMarkdownLinks(block.text)}
+                        </motion.p>
+                      );
+                    case 'list':
+                      return (
+                        <motion.ul 
+                          key={index} 
+                          className="mb-6 pl-6 space-y-2"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 0.1 * index, duration: 0.5 }}
+                        >
+                          {block.items.map((item, itemIndex) => (
+                            <motion.li 
+                              key={itemIndex} 
+                              className="text-gray-300"
+                              initial={{ opacity: 0, x: -10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: 0.1 * index + 0.05 * itemIndex, duration: 0.3 }}
+                            >
+                              {item}
+                            </motion.li>
+                          ))}
+                        </motion.ul>
+                      );
+                    case 'video':
+                      return (
+                        <motion.div
+                          key={index}
+                          className="mb-10 mt-6 rounded-xl overflow-hidden shadow-lg bg-gray-900 border border-gray-800"
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.1 * index, duration: 0.6 }}
+                        >
+                          <div className="aspect-w-16 aspect-h-9">
+                            <iframe
+                              src={`https://www.youtube.com/embed/${block.youtubeId}`}
+                              title={block.title}
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen
+                              className="w-full h-full"
+                            ></iframe>
+                          </div>
+                          <div className="p-4">
+                            <h3 className="text-lg font-medium text-white">{block.title}</h3>
+                          </div>
+                        </motion.div>
+                      );
+                    case 'priceTracker':
+                      return (
+                        <motion.div
+                          key={index}
+                          className="mb-10 mt-6"
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.1 * index, duration: 0.6 }}
+                        >
+                          {isHydrated && <CryptoPriceTracker />}
+                        </motion.div>
+                      );
+                    case 'singleToken':
+                      return (
+                        <motion.div
+                          key={index}
+                          className="mb-10 mt-6"
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.1 * index, duration: 0.6 }}
+                        >
+                          {isHydrated && <SingleTokenPrice tokenId={block.tokenId || 'bitcoin'} />}
+                        </motion.div>
+                      );
+                    case 'calculator':
+                      return (
+                        <motion.div
+                          key={index}
+                          className="mb-10 mt-6"
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.1 * index, duration: 0.6 }}
+                        >
+                          {isHydrated && <CryptoCalculator />}
+                        </motion.div>
+                      );
+                    case 'quiz':
+                      return (
+                        <motion.div
+                          key={index}
+                          className="mb-10 mt-6"
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.1 * index, duration: 0.6 }}
+                        >
+                          {isHydrated && <InteractiveQuiz quizId={block.quizId} />}
+                        </motion.div>
+                      );
+                    default:
+                      return null;
+                  }
+                })
+              )}
+              
+              {/* Coin Widget from guide data if available */}
+              {currentGuide.interactiveElements?.coinWidget && isHydrated && (
+                <motion.div
+                  className="mt-12 mb-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3, duration: 0.6 }}
+                >
+                  <SingleTokenPrice 
+                    tokenId={currentGuide.interactiveElements.coinWidget.tokenId || 'bitcoin'}
+                    currency={currentGuide.interactiveElements.coinWidget.currency || 'usd'}
+                    showRefreshButton={currentGuide.interactiveElements.coinWidget.showRefreshButton !== false}
+                    position={currentGuide.interactiveElements.coinWidget.position || 'top'}
+                  />
+                </motion.div>
+              )}
+              
+              {/* Interactive Quiz from guide data if available */}
+              {currentGuide.interactiveElements?.quiz && isHydrated && (
+                <motion.div
+                  className="mt-12 mb-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5, duration: 0.6 }}
+                >
+                  <h2 className="text-2xl font-bold mb-4 text-cyan-300">Test Your Knowledge</h2>
+                  <InteractiveQuiz 
+                    quizData={currentGuide.interactiveElements.quiz} 
+                  />
+                </motion.div>
+              )}
+              
+              {/* Call to Action from guide data if available */}
+              {currentGuide.interactiveElements?.callToAction && (
+                <motion.div
+                  className="mt-16 mb-8"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6, duration: 0.7 }}
+                >
+                  <div 
+                    className="p-8 rounded-xl shadow-lg text-center"
+                    style={{
+                      backgroundColor: currentGuide.interactiveElements.callToAction.backgroundColor || '#3d14b4',
+                      color: currentGuide.interactiveElements.callToAction.textColor || '#ffffff',
+                      backgroundImage: 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.1) 100%)'
+                    }}
+                  >
+                    <h2 className="text-3xl font-bold mb-4">{currentGuide.interactiveElements.callToAction.text}</h2>
+                    <motion.button
+                      className="mt-4 px-8 py-3 rounded-full font-medium text-lg shadow-lg transition-transform"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.98 }}
+                      style={{
+                        backgroundColor: 'rgba(255,255,255,0.2)',
+                        backdropFilter: 'blur(5px)',
+                        border: '1px solid rgba(255,255,255,0.3)'
+                      }}
+                      onClick={() => {
+                        if (currentGuide.interactiveElements.callToAction.url) {
+                          window.location.href = currentGuide.interactiveElements.callToAction.url;
+                        }
+                      }}
+                    >
+                      {currentGuide.interactiveElements.callToAction.buttonText}
+                    </motion.button>
+                  </div>
+                </motion.div>
+              )}
             </motion.div>
+            </div>
+            
+            {/* Sidebar */}
+            <GuideSidebar guide={currentGuide} />
           </div>
         </section>
         
         {/* Related Guides */}
-        <section className="py-12 px-4 bg-gray-950">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl font-bold mb-8 text-white">Related Guides</h2>
-            
-            <motion.div 
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-              variants={{
-                hidden: { opacity: 0 },
-                show: {
-                  opacity: 1,
-                  transition: {
-                    staggerChildren: 0.1
+        {(currentGuide.relatedGuides && currentGuide.relatedGuides.length > 0) && (
+          <section className="py-12 px-4 bg-gray-950">
+            <div className="max-w-6xl mx-auto">
+              <h2 className="text-2xl font-bold mb-8 text-white">
+                {currentGuide.relatedGuidesTitle || "Related Guides"}
+              </h2>
+              
+              <motion.div 
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                variants={{
+                  hidden: { opacity: 0 },
+                  show: {
+                    opacity: 1,
+                    transition: {
+                      staggerChildren: 0.1
+                    }
                   }
-                }
-              }}
-              initial="hidden"
-              animate="show"
-            >
-              {relatedGuides.map((relatedGuide) => (
+                }}
+                initial="hidden"
+                animate="show"
+              >
+                {(currentGuide.relatedGuides || []).map((relatedGuide) => (
                 <motion.div
                   key={relatedGuide.id}
                   className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl overflow-hidden border border-gray-700 shadow-lg hover:shadow-cyan-900/20 transition-all"
@@ -515,15 +800,20 @@ export default function GuidePage() {
             </motion.div>
           </div>
         </section>
+        )}
       </main>
       
       <Footer />
       
-      {/* Autoplay Video Player - only rendered client-side */}
-      {isBrowser && (
+      {/* Autoplay Video Player - only rendered client-side after hydration */}
+      {isBrowser && isHydrated && (
         <AnimatePresence>
-          {showAutoplayVideo && (
-            <AutoplayVideoPlayer onClose={() => setShowAutoplayVideo(false)} />
+          {showAutoplayVideo && currentGuide.interactiveElements?.videoPlayer && (
+            <AutoplayVideoPlayer 
+              videoUrl={currentGuide.interactiveElements.videoPlayer.url}
+              title={currentGuide.interactiveElements.videoPlayer.title}
+              onClose={() => setShowAutoplayVideo(false)} 
+            />
           )}
         </AnimatePresence>
       )}
