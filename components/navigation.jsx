@@ -105,6 +105,7 @@ export default function Navigation() {
     { name: 'Latest News', path: '/news', color: 'green' },
     { name: 'Market Updates', path: '/news/market', color: 'emerald' },
     { name: 'Trending Topics', path: '/news/trending', color: 'teal' },
+    { name: 'Guides', path: '/news/guides', color: 'cyan' },
   ];
   
   const qaItems = [

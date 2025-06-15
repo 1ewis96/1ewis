@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import ClientOnlyTime from './common/ClientOnlyTime';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -471,7 +472,7 @@ export default function TokenPriceChart({ symbol, color }) {
                 </span>
               </div>
               <div className="text-xs px-2 py-1 rounded bg-gray-800/50">
-                Updated {new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                Updated <ClientOnlyTime format="time" />
               </div>
             </motion.div>
           )}
