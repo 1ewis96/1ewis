@@ -2,28 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, X, Award, ArrowRight, RefreshCw, Loader } from 'lucide-react';
 
-// Default quiz data in case none is provided
-const defaultQuizData = {
-  title: 'Cryptocurrency Quiz',
-  description: 'Test your knowledge about cryptocurrencies',
-  questions: [
-    {
-      question: 'Who created Bitcoin?',
-      answers: ['Vitalik Buterin', 'Satoshi Nakamoto', 'Charlie Lee', 'Nick Szabo'],
-      correctAnswer: 1
-    },
-    {
-      question: 'What consensus mechanism does Bitcoin use?',
-      answers: ['Proof of Stake', 'Delegated Proof of Stake', 'Proof of Work', 'Proof of Authority'],
-      correctAnswer: 2
-    },
-    {
-      question: 'What is a blockchain?',
-      answers: ['A centralized database', 'A distributed ledger', 'A programming language', 'A type of cryptocurrency'],
-      correctAnswer: 1
-    }
-  ]
-};
+// No default quiz data - we'll only use what comes from the API
 
 export default function InteractiveQuiz({ quizId, quizData: propQuizData }) {
   const [quizData, setQuizData] = useState(null);
@@ -41,74 +20,22 @@ export default function InteractiveQuiz({ quizId, quizData: propQuizData }) {
     setIsMounted(true);
   }, []);
 
-  // Mock quiz data store - in a real app, this would be fetched from an API
-  const mockQuizStore = {
-    'crypto-basics': {
-      title: 'Cryptocurrency Basics',
-      description: 'Test your knowledge of cryptocurrency fundamentals',
-      questions: [
-        {
-          question: 'What year was Bitcoin created?',
-          answers: ['2007', '2008', '2009', '2010'],
-          correctAnswer: 2
-        },
-        {
-          question: 'Which of these is NOT a cryptocurrency?',
-          answers: ['Ethereum', 'Litecoin', 'Blockchain', 'Dogecoin'],
-          correctAnswer: 2
-        },
-        {
-          question: 'What is the maximum supply of Bitcoin?',
-          answers: ['1 million', '10 million', '21 million', 'Unlimited'],
-          correctAnswer: 2
-        },
-        {
-          question: 'What does DeFi stand for?',
-          answers: ['Decentralized Finance', 'Digital Finance', 'Distributed Funding', 'Direct Financial Investment'],
-          correctAnswer: 0
-        },
-        {
-          question: 'Which of these is a privacy-focused cryptocurrency?',
-          answers: ['Bitcoin', 'Ethereum', 'Monero', 'Cardano'],
-          correctAnswer: 2
-        }
-      ]
-    },
-    'blockchain-tech': {
-      title: 'Blockchain Technology',
-      description: 'Test your understanding of blockchain technology',
-      questions: [
-        {
-          question: 'What is a block in a blockchain?',
-          answers: ['A type of cryptocurrency', 'A collection of transactions', 'A mining computer', 'A digital wallet'],
-          correctAnswer: 1
-        },
-        {
-          question: 'What is a smart contract?',
-          answers: ['A legal document', 'Self-executing code on a blockchain', 'A type of wallet', 'A trading algorithm'],
-          correctAnswer: 1
-        },
-        {
-          question: 'Which blockchain was the first to implement smart contracts?',
-          answers: ['Bitcoin', 'Ethereum', 'Litecoin', 'Ripple'],
-          correctAnswer: 1
-        }
-      ]
-    }
-  };
+  // No mock quiz store - we'll only use data passed from props
 
-  // Load quiz data based on quizId or use provided data
+  // Load quiz data from props only
   useEffect(() => {
     // Only run this effect on the client side
     if (!isMounted) return;
-
+    
+    console.log('Quiz props received:', { quiz: propQuizData, questions: propQuizData?.questions });
+    
     if (propQuizData) {
       // Format the quiz data if it's from the JSON file format
       if (propQuizData.questions && propQuizData.questions[0] && 'text' in propQuizData.questions[0]) {
         // Convert from guide-example.json format to our component's expected format
         const formattedQuizData = {
-          title: propQuizData.title,
-          description: propQuizData.description,
+          title: propQuizData.title || 'Quiz',
+          description: propQuizData.description || '',
           questions: propQuizData.questions.map(q => ({
             question: q.text,
             answers: q.options,
@@ -116,33 +43,20 @@ export default function InteractiveQuiz({ quizId, quizData: propQuizData }) {
             explanation: q.explanation
           }))
         };
+        console.log('Formatted quiz data:', formattedQuizData);
         setQuizData(formattedQuizData);
       } else {
         // Already in the right format
+        console.log('Using quiz data as-is:', propQuizData);
         setQuizData(propQuizData);
       }
       setLoading(false);
-      return;
-    }
-
-    if (quizId) {
-      // Simulate API fetch with timeout
-      setTimeout(() => {
-        const quiz = mockQuizStore[quizId];
-        if (quiz) {
-          setQuizData(quiz);
-          setLoading(false);
-        } else {
-          setError(`Quiz with ID "${quizId}" not found`);
-          setQuizData(defaultQuizData); // Fallback to default quiz
-          setLoading(false);
-        }
-      }, 800);
     } else {
-      setQuizData(defaultQuizData);
+      console.error('No quiz data provided to InteractiveQuiz component');
+      setError('Quiz data not available');
       setLoading(false);
     }
-  }, [quizId, propQuizData, isMounted]);
+  }, [propQuizData, isMounted]);
 
   const handleAnswerClick = (answerIndex) => {
     if (answered || !quizData?.questions) return;

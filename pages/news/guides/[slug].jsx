@@ -115,15 +115,30 @@ export default function GuidePage() {
   useEffect(() => {
     if (slug) {
       setLoading(true);
-      fetch(`/api/guides/${slug}`)
+      console.log(`Fetching guide with slug: ${slug}`);
+      
+      // Use the direct API endpoint
+      fetch(`https://api.1ewis.com/guides/fetch/${slug}`)
         .then(response => {
+          console.log('API response status:', response.status);
           if (!response.ok) {
-            throw new Error('Guide not found');
+            throw new Error(`Guide not found: ${response.status}`);
           }
           return response.json();
         })
         .then(data => {
-          setGuideData(data.guide);
+          // Log the complete guide data for debugging
+          console.log('Guide data received:', data);
+          console.log('Interactive elements:', data.interactiveElements);
+          
+          // Based on the API response, the quiz is directly in interactiveElements.quiz
+          if (data.interactiveElements?.quiz) {
+            console.log('Quiz found in interactiveElements.quiz:', data.interactiveElements.quiz);
+          } else {
+            console.log('No quiz found in expected location');
+          }
+          
+          setGuideData(data); // The API returns the guide directly, not nested
           setLoading(false);
         })
         .catch(err => {
@@ -148,28 +163,21 @@ export default function GuidePage() {
     }
   }, [slug, isBrowser, guideData]);
 
-  // All guide data comes from the API/JSON file
-  // We'll use a minimal fallback only if the API fails
+  // Minimal fallback guide for error cases
   const fallbackGuide = {
     title: 'Guide Not Found',
     description: 'The requested guide could not be loaded.',
     slug: '',
     publishedDate: new Date().toISOString(),
-    author: {
-      name: 'System',
-      avatar: ''
-    },
-    content: [
+    author: { name: 'System' },
+    sections: [
       {
-        type: 'paragraph',
-        text: 'Please try again later or check the URL.'
+        id: 'error',
+        title: 'Error',
+        content: [{ type: 'paragraph', text: 'Please try again later or check the URL.' }]
       }
     ]
   };
-  
-  // In a real app, related guides would come from the API
-  // For now, we'll use an empty array as all data should come from the API
-  const relatedGuides = [];
   
   // Use the guide data from the API if available, otherwise use the fallback
   const currentGuide = guideData || fallbackGuide;
@@ -482,10 +490,66 @@ export default function GuidePage() {
                                   animate={{ opacity: 1, x: 0 }}
                                   transition={{ delay: 0.05 * itemIndex + 0.1 * contentIndex, duration: 0.4 }}
                                 >
-                                  {item}
+                                  {parseMarkdownLinks(item)}
                                 </motion.li>
                               ))}
                             </motion.ul>
+                          );
+                        } else if (contentBlock.type === 'callout') {
+                          // Determine callout style based on type
+                          const calloutStyles = {
+                            info: "border-blue-600 bg-blue-900/20 text-blue-200",
+                            warning: "border-amber-600 bg-amber-900/20 text-amber-200",
+                            tip: "border-green-600 bg-green-900/20 text-green-200",
+                            note: "border-purple-600 bg-purple-900/20 text-purple-200",
+                            danger: "border-red-600 bg-red-900/20 text-red-200",
+                          };
+                          
+                          const style = calloutStyles[contentBlock.calloutType || 'info'] || calloutStyles.info;
+                          
+                          return (
+                            <motion.div
+                              key={contentIndex}
+                              className={`mb-8 p-4 border-l-4 rounded-r-lg ${style}`}
+                              initial={{ opacity: 0, x: -10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: 0.1 * contentIndex, duration: 0.5 }}
+                            >
+                              {contentBlock.title && (
+                                <h4 className="font-bold mb-2">{contentBlock.title}</h4>
+                              )}
+                              <div>{parseMarkdownLinks(contentBlock.text)}</div>
+                            </motion.div>
+                          );
+                        } else if (contentBlock.type === 'code') {
+                          return (
+                            <motion.div
+                              key={contentIndex}
+                              className="mb-8 rounded-lg overflow-hidden bg-gray-900 border border-gray-700"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: 0.1 * contentIndex, duration: 0.5 }}
+                            >
+                              {contentBlock.language && (
+                                <div className="px-4 py-2 bg-gray-800 border-b border-gray-700 flex justify-between items-center">
+                                  <span className="text-sm font-mono text-gray-400">{contentBlock.language}</span>
+                                  {contentBlock.copyable !== false && (
+                                    <button 
+                                      className="text-gray-400 hover:text-white transition-colors" 
+                                      onClick={() => navigator.clipboard.writeText(contentBlock.code)}
+                                      aria-label="Copy code"
+                                    >
+                                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                      </svg>
+                                    </button>
+                                  )}
+                                </div>
+                              )}
+                              <pre className="p-4 overflow-x-auto">
+                                <code className="font-mono text-sm text-gray-300 whitespace-pre">{contentBlock.code}</code>
+                              </pre>
+                            </motion.div>
                           );
                         }
                         return null; // Handle other content types as needed
@@ -498,13 +562,82 @@ export default function GuidePage() {
                       />
                     )}
                     
-                    {/* Render token price tracker if section has one */}
-                    {section.hasTokenPriceTracker && isHydrated && (
+                    {/* Render token price tracker if section has one AND we're not using the global price tracker */}
+                    {section.hasTokenPriceTracker && isHydrated && !currentGuide.interactiveElements?.priceTracker && (
                       <div className="my-8">
                         <CryptoPriceTracker 
                           coins={section.trackedTokens || ['bitcoin', 'ethereum']} 
                         />
                       </div>
+                    )}
+                    
+                    {/* Render coin widget if section has one AND we're not using the global coin widget */}
+                    {section.hasCoinWidget && isHydrated && !currentGuide.interactiveElements?.coinWidget && (
+                      <div className="my-8 p-4 bg-gray-800/50 rounded-xl border border-gray-700">
+                        <SingleTokenPrice 
+                          tokenId={section.coinWidgetToken || 'bitcoin'}
+                          showRefresh={true}
+                          currency={'usd'}
+                        />
+                      </div>
+                    )}
+                    
+                    {/* Render video player if section has one AND we're not using the global video player */}
+                    {section.hasVideo && section.videoId && !currentGuide.interactiveElements?.videoPlayer && (
+                      <motion.div
+                        className="my-8 rounded-xl overflow-hidden shadow-lg bg-gray-900 border border-gray-800"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.1, duration: 0.6 }}
+                      >
+                        <div className="aspect-w-16 aspect-h-9">
+                          <iframe
+                            src={`https://www.youtube.com/embed/${section.videoId}${section.autoplay ? '?autoplay=1' : ''}`}
+                            title={section.videoTitle || section.title}
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                            className="w-full h-full"
+                          ></iframe>
+                        </div>
+                        {section.videoTitle && (
+                          <div className="p-4">
+                            <h3 className="text-lg font-medium text-white">{section.videoTitle}</h3>
+                          </div>
+                        )}
+                        {section.hasQuiz && section.quiz && isHydrated && !currentGuide.interactiveElements?.quiz && (
+                          <motion.div className="mt-6 mb-4">
+                            <h3 className="text-xl font-bold mb-3 text-cyan-300">{section.quiz.title || "Section Quiz"}</h3>
+                            <InteractiveQuiz quizData={section.quiz} />
+                          </motion.div>
+                        )}
+                      </motion.div>
+                    )}
+                    
+                    {/* Render quiz if section has one AND we're not rendering the quiz globally */}
+                    {section.hasQuiz && section.quizId && isHydrated && !currentGuide.interactiveElements?.quiz && (
+                      <motion.div
+                        className="my-8"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2, duration: 0.6 }}
+                      >
+                        {/* Only render section-specific quizzes if they have a quizId and there's no global quiz */}
+                        {(() => {
+                          if (currentGuide.quizzes && Array.isArray(currentGuide.quizzes)) {
+                            const quiz = currentGuide.quizzes.find(q => q.id === section.quizId);
+                            if (quiz) {
+                              console.log('Rendering section quiz from quizzes array:', quiz);
+                              return <InteractiveQuiz quizData={quiz} />;
+                            }
+                          }
+                          // Check if the quiz is directly embedded in the section
+                          else if (section.quiz) {
+                            console.log('Rendering quiz directly from section:', section.quiz);
+                            return <InteractiveQuiz quizData={section.quiz} />;
+                          }
+                          return null;
+                        })()}
+                      </motion.div>
                     )}
                   </motion.div>
                 ))
@@ -626,13 +759,35 @@ export default function GuidePage() {
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: 0.1 * index, duration: 0.6 }}
                         >
-                          {isHydrated && <InteractiveQuiz quizId={block.quizId} />}
+                          {isHydrated && block.quiz && <InteractiveQuiz quizData={block.quiz} />}
+                          {isHydrated && !block.quiz && <div className="p-4 bg-red-900/30 border border-red-700/50 rounded-lg">
+                            <p className="text-red-300">Quiz data not available</p>
+                          </div>}
                         </motion.div>
                       );
                     default:
                       return null;
                   }
                 })
+              )}
+              
+              {/* Video Player will be shown as a floating component in the bottom right corner */}
+              
+              {/* Price Tracker from guide data if available */}
+              {currentGuide.interactiveElements?.priceTracker && isHydrated && (
+                <motion.div
+                  className="mt-12 mb-8"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3, duration: 0.6 }}
+                >
+                  <h3 className="text-xl font-bold mb-4 text-cyan-300">Live Cryptocurrency Prices</h3>
+                  <CryptoPriceTracker 
+                    coins={currentGuide.interactiveElements.priceTracker.tokens || ['bitcoin', 'ethereum']}
+                    refreshInterval={currentGuide.interactiveElements.priceTracker.refreshInterval || 60000}
+                    defaultTimeframe={currentGuide.interactiveElements.priceTracker.defaultTimeframe || '24h'}
+                  />
+                </motion.div>
               )}
               
               {/* Coin Widget from guide data if available */}
@@ -660,9 +815,16 @@ export default function GuidePage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5, duration: 0.6 }}
                 >
-                  <h2 className="text-2xl font-bold mb-4 text-cyan-300">Test Your Knowledge</h2>
+                  <h2 className="text-2xl font-bold mb-4 text-cyan-300">
+                    {currentGuide.interactiveElements.quiz.title || "Test Your Knowledge"}
+                  </h2>
+                  {currentGuide.interactiveElements.quiz.description && (
+                    <p className="text-gray-300 mb-6">{currentGuide.interactiveElements.quiz.description}</p>
+                  )}
+                  {/* Debug the quiz data */}
+                  {console.log('Rendering quiz with data:', JSON.stringify(currentGuide.interactiveElements.quiz))}
                   <InteractiveQuiz 
-                    quizData={currentGuide.interactiveElements.quiz} 
+                    quizData={currentGuide.interactiveElements.quiz}
                   />
                 </motion.div>
               )}
@@ -809,11 +971,45 @@ export default function GuidePage() {
       {isBrowser && isHydrated && (
         <AnimatePresence>
           {showAutoplayVideo && currentGuide.interactiveElements?.videoPlayer && (
-            <AutoplayVideoPlayer 
-              videoUrl={currentGuide.interactiveElements.videoPlayer.url}
-              title={currentGuide.interactiveElements.videoPlayer.title}
-              onClose={() => setShowAutoplayVideo(false)} 
-            />
+            <motion.div
+              className="fixed bottom-6 right-6 w-80 bg-gray-900 rounded-lg shadow-2xl border border-gray-700 overflow-hidden z-50"
+              initial={{ opacity: 0, y: 50, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 50, scale: 0.9 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="relative">
+                {/* Close button */}
+                <button 
+                  className="absolute top-2 right-2 bg-black/60 hover:bg-black/80 text-white p-1 rounded-full z-10 transition-colors"
+                  onClick={() => setShowAutoplayVideo(false)}
+                  aria-label="Close video"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+                
+                {/* Video player */}
+                <div className="aspect-w-16 aspect-h-9">
+                  <iframe
+                    src={`https://www.youtube.com/embed/${currentGuide.interactiveElements.videoPlayer.videoId}?autoplay=1&mute=1`}
+                    title={currentGuide.interactiveElements.videoPlayer.title || "Video"}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-full h-full"
+                  ></iframe>
+                </div>
+                
+                {/* Video title */}
+                <div className="p-3">
+                  <h4 className="text-sm font-medium text-white">{currentGuide.interactiveElements.videoPlayer.title || "Related Video"}</h4>
+                  {currentGuide.interactiveElements.videoPlayer.description && (
+                    <p className="text-xs text-gray-400 mt-1 line-clamp-2">{currentGuide.interactiveElements.videoPlayer.description}</p>
+                  )}
+                </div>
+              </div>
+            </motion.div>
           )}
         </AnimatePresence>
       )}
