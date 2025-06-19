@@ -39,16 +39,27 @@ export default function InteractiveQuiz({ quizId, quizData: propQuizData }) {
           questions: propQuizData.questions.map(q => ({
             question: q.text,
             answers: q.options,
-            correctAnswer: q.correctAnswer,
+            // Convert correctAnswer to number if it's a string
+            correctAnswer: typeof q.correctAnswer === 'string' ? parseInt(q.correctAnswer, 10) : q.correctAnswer,
             explanation: q.explanation
           }))
         };
         console.log('Formatted quiz data:', formattedQuizData);
         setQuizData(formattedQuizData);
       } else {
-        // Already in the right format
-        console.log('Using quiz data as-is:', propQuizData);
-        setQuizData(propQuizData);
+        // Process the API response format
+        const processedQuizData = {
+          ...propQuizData,
+          questions: propQuizData.questions?.map(q => ({
+            ...q,
+            // Convert correctAnswer to number if it's a string
+            correctAnswer: typeof q.correctAnswer === 'string' ? parseInt(q.correctAnswer, 10) : q.correctAnswer,
+            // Map options to answers if options exists but answers doesn't
+            answers: q.answers || q.options || []
+          })) || []
+        };
+        console.log('Using processed quiz data:', processedQuizData);
+        setQuizData(processedQuizData);
       }
       setLoading(false);
     } else {
@@ -63,6 +74,13 @@ export default function InteractiveQuiz({ quizId, quizData: propQuizData }) {
     
     setSelectedAnswer(answerIndex);
     setAnswered(true);
+    
+    // Debug the comparison
+    console.log('Answer comparison:', { 
+      selectedIndex: answerIndex, 
+      correctAnswer: quizData.questions[currentQuestion]?.correctAnswer,
+      type: typeof quizData.questions[currentQuestion]?.correctAnswer
+    });
     
     // Check if answer is correct
     if (answerIndex === quizData.questions[currentQuestion]?.correctAnswer) {
@@ -241,7 +259,12 @@ export default function InteractiveQuiz({ quizId, quizData: propQuizData }) {
                     disabled={answered}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-white">{answer}</span>
+                      <span className={`${index === quizData.questions[currentQuestion]?.correctAnswer && answered && selectedAnswer !== index ? 'text-green-400 font-medium' : 'text-white'}`}>
+                        {answer}
+                        {index === quizData.questions[currentQuestion]?.correctAnswer && answered && selectedAnswer !== index && 
+                          <span className="ml-2 text-sm text-green-400">(Correct Answer)</span>
+                        }
+                      </span>
                       {answered && (
                         index === quizData.questions[currentQuestion]?.correctAnswer ? (
                           <Check className="w-5 h-5 text-green-400" />
@@ -254,18 +277,37 @@ export default function InteractiveQuiz({ quizId, quizData: propQuizData }) {
                 ))}
               </div>
               
-              {/* Navigation */}
-              <div className="mt-6 flex justify-between items-center">
-                <div className="text-sm text-gray-400">
-                  {answered ? (
-                    currentQuestion < quizData.questions.length - 1 ? (
-                      <span>Next question in a moment...</span>
+              {/* Feedback and Navigation */}
+              <div className="mt-6">
+                {/* Feedback message when answer is wrong */}
+                {answered && selectedAnswer !== quizData.questions[currentQuestion]?.correctAnswer && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="p-3 mb-3 bg-red-900/20 border border-red-800/50 rounded-lg text-sm"
+                  >
+                    <p className="text-red-300">
+                      <X className="inline w-4 h-4 mr-1" />
+                      Incorrect. The correct answer is: <span className="font-medium text-green-400">
+                        {quizData.questions[currentQuestion]?.answers[quizData.questions[currentQuestion]?.correctAnswer]}
+                      </span>
+                    </p>
+                  </motion.div>
+                )}
+                
+                {/* Navigation */}
+                <div className="flex justify-between items-center">
+                  <div className="text-sm text-gray-400">
+                    {answered ? (
+                      currentQuestion < quizData.questions.length - 1 ? (
+                        <span>Next question in a moment...</span>
+                      ) : (
+                        <span>Loading results...</span>
+                      )
                     ) : (
-                      <span>Loading results...</span>
-                    )
-                  ) : (
-                    <span>Select an answer</span>
-                  )}
+                      <span>Select an answer</span>
+                    )}
+                  </div>
                 </div>
               </div>
             </motion.div>

@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import GuideSidebar from '../../../components/guides/GuideSidebar';
 import { ArrowLeft, Calendar, Tag, Clock, Share2, ArrowRight, ExternalLink } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import SectionInteractiveElements from '../../../components/guides/SectionInteractiveElements';
 
 // Dynamically import components with SSR disabled to prevent hydration issues
 const CryptoPriceTracker = dynamic(
@@ -453,113 +454,123 @@ export default function GuidePage() {
                       </div>
                     )}
                     
-                    {/* Render content - either HTML string or array of paragraph objects */}
-                    {Array.isArray(section.content) ? (
-                      // Render array of paragraph objects
-                      section.content.map((contentBlock, contentIndex) => {
-                        if (contentBlock.type === 'paragraph') {
-                          return (
-                            <motion.p 
-                              key={contentIndex} 
-                              className="mb-6 text-gray-300 leading-relaxed tracking-wide first-letter:text-lg first-letter:font-medium first-letter:text-cyan-300"
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: 0.1 * contentIndex, duration: 0.5 }}
-                              whileInView={{ opacity: [null, 0.9, 1] }}
-                              viewport={{ once: true, margin: "-50px" }}
-                            >
-                              {parseMarkdownLinks(contentBlock.text)}
-                            </motion.p>
-                          );
-                        } else if (contentBlock.type === 'list') {
-                          return (
-                            <motion.ul
-                              key={contentIndex}
-                              className="list-disc pl-5 mb-8 text-gray-300 space-y-3"
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: 0.1 * contentIndex, duration: 0.5 }}
-                              whileInView={{ opacity: [null, 0.9, 1] }}
-                              viewport={{ once: true, margin: "-50px" }}
-                            >
-                              {contentBlock.items.map((item, itemIndex) => (
-                                <motion.li 
-                                  key={itemIndex} 
-                                  className="ml-2 pl-2 marker:text-cyan-400"
-                                  initial={{ opacity: 0, x: -5 }}
-                                  animate={{ opacity: 1, x: 0 }}
-                                  transition={{ delay: 0.05 * itemIndex + 0.1 * contentIndex, duration: 0.4 }}
-                                >
-                                  {parseMarkdownLinks(item)}
-                                </motion.li>
-                              ))}
-                            </motion.ul>
-                          );
-                        } else if (contentBlock.type === 'callout') {
-                          // Determine callout style based on type
-                          const calloutStyles = {
-                            info: "border-blue-600 bg-blue-900/20 text-blue-200",
-                            warning: "border-amber-600 bg-amber-900/20 text-amber-200",
-                            tip: "border-green-600 bg-green-900/20 text-green-200",
-                            note: "border-purple-600 bg-purple-900/20 text-purple-200",
-                            danger: "border-red-600 bg-red-900/20 text-red-200",
-                          };
-                          
-                          const style = calloutStyles[contentBlock.calloutType || 'info'] || calloutStyles.info;
-                          
-                          return (
-                            <motion.div
-                              key={contentIndex}
-                              className={`mb-8 p-4 border-l-4 rounded-r-lg ${style}`}
-                              initial={{ opacity: 0, x: -10 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ delay: 0.1 * contentIndex, duration: 0.5 }}
-                            >
-                              {contentBlock.title && (
-                                <h4 className="font-bold mb-2">{contentBlock.title}</h4>
-                              )}
-                              <div>{parseMarkdownLinks(contentBlock.text)}</div>
-                            </motion.div>
-                          );
-                        } else if (contentBlock.type === 'code') {
-                          return (
-                            <motion.div
-                              key={contentIndex}
-                              className="mb-8 rounded-lg overflow-hidden bg-gray-900 border border-gray-700"
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              transition={{ delay: 0.1 * contentIndex, duration: 0.5 }}
-                            >
-                              {contentBlock.language && (
-                                <div className="px-4 py-2 bg-gray-800 border-b border-gray-700 flex justify-between items-center">
-                                  <span className="text-sm font-mono text-gray-400">{contentBlock.language}</span>
-                                  {contentBlock.copyable !== false && (
-                                    <button 
-                                      className="text-gray-400 hover:text-white transition-colors" 
-                                      onClick={() => navigator.clipboard.writeText(contentBlock.code)}
-                                      aria-label="Copy code"
-                                    >
-                                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                                      </svg>
-                                    </button>
-                                  )}
-                                </div>
-                              )}
-                              <pre className="p-4 overflow-x-auto">
-                                <code className="font-mono text-sm text-gray-300 whitespace-pre">{contentBlock.code}</code>
-                              </pre>
-                            </motion.div>
-                          );
-                        }
-                        return null; // Handle other content types as needed
-                      })
-                    ) : (
-                      // Render HTML content (legacy format)
-                      <div 
-                        className="mb-6 text-gray-300 leading-relaxed"
-                        dangerouslySetInnerHTML={{ __html: section.content }}
+                    {/* Render interactive elements from the section */}
+                    {section.interactiveElements && section.interactiveElements.length > 0 && (
+                      <SectionInteractiveElements 
+                        interactiveElements={section.interactiveElements} 
+                        isHydrated={isHydrated} 
                       />
+                    )}
+                    
+                    {/* Render content - either HTML string or array of paragraph objects */}
+                    {section.content && section.content.length > 0 && (
+                      Array.isArray(section.content) ? (
+                        // Render array of paragraph objects
+                        section.content.map((contentBlock, contentIndex) => {
+                          if (contentBlock.type === 'paragraph') {
+                            return (
+                              <motion.p 
+                                key={contentIndex} 
+                                className="mb-6 text-gray-300 leading-relaxed tracking-wide first-letter:text-lg first-letter:font-medium first-letter:text-cyan-300"
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.1 * contentIndex, duration: 0.5 }}
+                                whileInView={{ opacity: [null, 0.9, 1] }}
+                                viewport={{ once: true, margin: "-50px" }}
+                              >
+                                {parseMarkdownLinks(contentBlock.text)}
+                              </motion.p>
+                            );
+                          } else if (contentBlock.type === 'list') {
+                            return (
+                              <motion.ul
+                                key={contentIndex}
+                                className="list-disc pl-5 mb-8 text-gray-300 space-y-3"
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.1 * contentIndex, duration: 0.5 }}
+                                whileInView={{ opacity: [null, 0.9, 1] }}
+                                viewport={{ once: true, margin: "-50px" }}
+                              >
+                                {contentBlock.items.map((item, itemIndex) => (
+                                  <motion.li 
+                                    key={itemIndex} 
+                                    className="ml-2 pl-2 marker:text-cyan-400"
+                                    initial={{ opacity: 0, x: -5 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: 0.05 * itemIndex + 0.1 * contentIndex, duration: 0.4 }}
+                                  >
+                                    {parseMarkdownLinks(item)}
+                                  </motion.li>
+                                ))}
+                              </motion.ul>
+                            );
+                          } else if (contentBlock.type === 'callout') {
+                            // Determine callout style based on type
+                            const calloutStyles = {
+                              info: "border-blue-600 bg-blue-900/20 text-blue-200",
+                              warning: "border-amber-600 bg-amber-900/20 text-amber-200",
+                              tip: "border-green-600 bg-green-900/20 text-green-200",
+                              note: "border-purple-600 bg-purple-900/20 text-purple-200",
+                              danger: "border-red-600 bg-red-900/20 text-red-200",
+                            };
+                            
+                            const style = calloutStyles[contentBlock.calloutType || 'info'] || calloutStyles.info;
+                            
+                            return (
+                              <motion.div
+                                key={contentIndex}
+                                className={`mb-8 p-4 border-l-4 rounded-r-lg ${style}`}
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.1 * contentIndex, duration: 0.5 }}
+                              >
+                                {contentBlock.title && (
+                                  <h4 className="font-bold mb-2">{contentBlock.title}</h4>
+                                )}
+                                <div>{parseMarkdownLinks(contentBlock.text)}</div>
+                              </motion.div>
+                            );
+                          } else if (contentBlock.type === 'code') {
+                            return (
+                              <motion.div
+                                key={contentIndex}
+                                className="mb-8 rounded-lg overflow-hidden bg-gray-900 border border-gray-700"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.1 * contentIndex, duration: 0.5 }}
+                              >
+                                {contentBlock.language && (
+                                  <div className="px-4 py-2 bg-gray-800 border-b border-gray-700 flex justify-between items-center">
+                                    <span className="text-sm font-mono text-gray-400">{contentBlock.language}</span>
+                                    {contentBlock.copyable !== false && (
+                                      <button 
+                                        className="text-gray-400 hover:text-white transition-colors" 
+                                        onClick={() => navigator.clipboard.writeText(contentBlock.code)}
+                                        aria-label="Copy code"
+                                      >
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                        </svg>
+                                      </button>
+                                    )}
+                                  </div>
+                                )}
+                                <pre className="p-4 overflow-x-auto">
+                                  <code className="font-mono text-sm text-gray-300 whitespace-pre">{contentBlock.code}</code>
+                                </pre>
+                              </motion.div>
+                            );
+                          }
+                          return null; // Handle other content types as needed
+                        })
+                      ) : (
+                        // Render HTML content (legacy format)
+                        <div 
+                          className="mb-6 text-gray-300 leading-relaxed"
+                          dangerouslySetInnerHTML={{ __html: section.content }}
+                        />
+                      )
                     )}
                     
                     {/* Render token price tracker if section has one AND we're not using the global price tracker */}

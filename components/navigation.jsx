@@ -12,7 +12,7 @@ export default function Navigation() {
   const [walletsOpen, setWalletsOpen] = useState(false);
   const [cardsOpen, setCardsOpen] = useState(false);
   const [toolsOpen, setToolsOpen] = useState(false);
-  const [newsOpen, setNewsOpen] = useState(false);
+  // Removed newsOpen state as it's no longer needed
   const [qaOpen, setQaOpen] = useState(false);
   const router = useRouter();
   
@@ -23,7 +23,7 @@ export default function Navigation() {
     if (dropdown !== 'wallets') setWalletsOpen(false);
     if (dropdown !== 'cards') setCardsOpen(false);
     if (dropdown !== 'tools') setToolsOpen(false);
-    if (dropdown !== 'news') setNewsOpen(false);
+    // Removed news dropdown toggle
     if (dropdown !== 'qa') setQaOpen(false);
     
     // Toggle the selected dropdown
@@ -40,9 +40,7 @@ export default function Navigation() {
       case 'tools':
         setToolsOpen(prev => !prev);
         break;
-      case 'news':
-        setNewsOpen(prev => !prev);
-        break;
+      // Removed news case
       case 'qa':
         setQaOpen(prev => !prev);
         break;
@@ -101,10 +99,7 @@ export default function Navigation() {
     { name: 'CoinTracking', path: '/tools/cointracking', color: 'violet' },
   ];
   
-  const newsItems = [
-    { name: 'Latest News', path: '/news', color: 'green' },
-    { name: 'Guides', path: '/news/guides', color: 'cyan' },
-  ];
+  // Removed newsItems array as it's no longer needed
   
   const qaItems = [
     { name: 'Q&A Home', path: '/qa', color: 'blue' },
@@ -185,52 +180,30 @@ export default function Navigation() {
          
           {/* Categories Dropdowns */}
           
-          {/* News Dropdown */}
-          <div className="relative">
-            <motion.button 
-              onClick={() => toggleDropdown('news')}
-              className="flex items-center px-4 py-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-md transition-all duration-300 relative group"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <motion.span
-                className="absolute inset-0 rounded-md bg-gradient-to-r from-green-500/20 to-teal-500/20 opacity-0 group-hover:opacity-100"
-                initial={{ scale: 0.8 }}
-                whileHover={{ scale: 1 }}
-                transition={{ duration: 0.2 }}
+          {/* Guides Link */}
+          <Link 
+            href="/news/guides"
+            className={`relative px-4 py-2 rounded-md transition-all duration-300 group ${
+              isActive('/news/guides') 
+                ? 'text-white font-medium bg-white/5' 
+                : 'text-gray-300 hover:text-white hover:bg-white/10'
+            }`}
+          >
+            <motion.span
+              className="absolute inset-0 rounded-md bg-gradient-to-r from-green-500/20 to-teal-500/20 opacity-0 group-hover:opacity-100"
+              initial={{ scale: 0.8 }}
+              whileHover={{ scale: 1 }}
+              transition={{ duration: 0.2 }}
+            />
+            {isActive('/news/guides') && (
+              <motion.span 
+                className="absolute inset-0 bg-white/10 rounded-md z-0" 
+                layoutId="navbar-active-item"
+                transition={{ type: 'spring', duration: 0.6 }}
               />
-              <span>News</span>
-              <motion.div
-                animate={{ rotate: newsOpen ? 180 : 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <ChevronDown className="ml-1 w-4 h-4" />
-              </motion.div>
-            </motion.button>
-            
-            <AnimatePresence>
-              {newsOpen && (
-                <motion.div 
-                  className="absolute left-0 mt-2 w-48 rounded-md shadow-xl bg-gray-900/95 backdrop-blur-sm ring-1 ring-white/10 overflow-hidden z-50 border border-green-500/20"
-                  initial={{ opacity: 0, y: -10, height: 0 }}
-                  animate={{ opacity: 1, y: 0, height: 'auto' }}
-                  exit={{ opacity: 0, y: -10, height: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {newsItems.map((item) => (
-                    <Link 
-                      key={item.path} 
-                      href={item.path}
-                      className={`block px-4 py-3 transition-colors border-l-2 ${isActive(item.path) ? `border-${item.color}-500 bg-white/5 text-white font-medium` : `border-transparent text-gray-300 hover:border-${item.color}-500 hover:bg-white/5 hover:text-white`}`}
-                      onClick={() => setNewsOpen(false)}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+            )}
+            <span className="relative z-10">Guides</span>
+          </Link>
           
           {/* Exchanges Dropdown */}
           <div className="relative">

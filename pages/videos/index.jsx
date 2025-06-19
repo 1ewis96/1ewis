@@ -185,23 +185,14 @@ export default function VideosPage() {
 
         {/* Content Section */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          {/* Featured Video */}
-          {loading ? (
-            <div className="flex justify-center items-center py-16">
-              <Loader2 className="h-12 w-12 text-blue-500 animate-spin" />
-              <span className="ml-3 text-xl text-gray-300">Loading videos...</span>
-            </div>
-          ) : error ? (
-            <div className="bg-red-900/20 border border-red-800 rounded-lg p-6 mb-16">
-              <p className="text-red-300 text-center">{error}</p>
-              <p className="text-gray-400 text-center mt-2">Please try refreshing the page.</p>
-            </div>
-          ) : videos.length > 0 ? (
+          {/* Featured Video - Only show when not loading */}
+          {!loading && !error && videos.length > 0 && (
             <section className="mb-16">
               <FeaturedVideo video={videos[0]} />
             </section>
-          ) : null}
-          {/* Category Filter */}
+          )}
+          
+          {/* Category Filter - Always show this */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -213,6 +204,19 @@ export default function VideosPage() {
               setActiveCategory={setActiveCategory} 
             />
           </motion.div>
+          
+          {/* Loading spinner - Now positioned below categories */}
+          {loading ? (
+            <div className="flex justify-center items-center py-16">
+              <Loader2 className="h-12 w-12 text-blue-500 animate-spin" />
+              <span className="ml-3 text-xl text-gray-300">Loading videos...</span>
+            </div>
+          ) : error ? (
+            <div className="bg-red-900/20 border border-red-800 rounded-lg p-6 mb-16">
+              <p className="text-red-300 text-center">{error}</p>
+              <p className="text-gray-400 text-center mt-2">Please try refreshing the page.</p>
+            </div>
+          ) : null}
 
           {/* Featured Playlists */}
           {!loading && !error && filteredPlaylists.length > 0 && (

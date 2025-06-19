@@ -6,6 +6,7 @@ import { Search, MessageCircle, TrendingUp, Clock, Award, Tag, Users, HelpCircle
 import Footer from '../components/Footer';
 import ClientOnly from '../components/ClientOnly';
 import BetaSignupModal from '../components/qa/BetaSignupModal';
+import SidebarAd from '../components/guides/SidebarAd';
 // Router is imported at the top
 
 // Sample data for questions and answers
@@ -739,6 +740,11 @@ export default function QAPage() {
                 <HelpCircle className="inline-block h-5 w-5 mr-2 -mt-1" />
                 Ask a Question
               </a>
+            </div>
+            
+            {/* Sidebar Ad */}
+            <div className="mb-6">
+              <SidebarAd />
             </div>
             
             {/* Latest Questions Panel */}

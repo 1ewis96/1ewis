@@ -41,9 +41,9 @@ export default function GuidesPage() {
         <meta name="description" content="Comprehensive guides on cryptocurrency, blockchain, and Web3 technologies." />
       </Head>
 
-      <main className="flex-1">
+      <main className="flex-1 relative">
         {/* Hero Section */}
-        <section className="pt-24 pb-12 px-4 bg-gradient-to-b from-black to-gray-950 relative overflow-hidden">
+        <section className="pt-36 pb-16 px-4 bg-gradient-to-b from-black to-gray-950 relative overflow-hidden">
           {/* Background animation elements */}
           <motion.div 
             className="absolute top-20 left-10 w-64 h-64 bg-cyan-500/10 rounded-full blur-[80px] -z-10"
@@ -90,8 +90,7 @@ export default function GuidesPage() {
           </div>
         </section>
 
-        <div className="max-w-6xl mx-auto px-4 py-12">
-          
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           {loading ? (
             <div className="flex justify-center items-center py-20">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cyan-500"></div>
