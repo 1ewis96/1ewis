@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { Github, Twitter, Rss, Mail } from 'lucide-react';
+import { Github, Twitter, Rss, Mail, Map } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -47,6 +47,15 @@ export default function Footer() {
             >
               <Rss className="w-4 h-4 mr-1" />
               RSS Feed
+            </a>
+            <a 
+              href="/sitemap.xml" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center hover:text-gray-300 transition-colors duration-200"
+            >
+              <Map className="w-4 h-4 mr-1" />
+              Sitemap
             </a>
           </div>
         </div>

@@ -8,4 +8,8 @@
     <loc>https://1ewis.com/api/sitemaps/questions.xml</loc>
     <lastmod>2025-06-08</lastmod>
   </sitemap>
+  <sitemap>
+    <loc>https://1ewis.com/api/sitemaps/guides.xml</loc>
+    <lastmod>2025-06-19</lastmod>
+  </sitemap>
 </sitemapindex>

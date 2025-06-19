@@ -238,9 +238,73 @@ export default function GuidePage() {
   return (
     <div className="flex flex-col min-h-screen bg-black text-white">
       <Head>
+        {/* Primary Meta Tags */}
         <title>{currentGuide.title || 'Guide'} | 1ewis</title>
         <meta name="description" content={currentGuide.description || 'A comprehensive guide by 1ewis'} />
+        <meta name="keywords" content={`${currentGuide.category || 'cryptocurrency'}, ${currentGuide.tags?.join(', ') || 'blockchain, crypto'}, guide, tutorial, 1ewis`} />
+        <meta name="author" content={currentGuide.author?.name || '1ewis'} />
+        <link rel="canonical" href={`https://1ewis.com/news/guides/${currentGuide.slug}`} />
+        
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content={`https://1ewis.com/news/guides/${currentGuide.slug}`} />
+        <meta property="og:title" content={`${currentGuide.title || 'Guide'} | 1ewis`} />
+        <meta property="og:description" content={currentGuide.description || 'A comprehensive guide by 1ewis'} />
+        <meta property="og:image" content={currentGuide.image || 'https://s3.1ewis.com/default-guide-image.webp'} />
+        <meta property="article:published_time" content={currentGuide.publishedDate} />
+        <meta property="article:author" content={currentGuide.author?.name || '1ewis'} />
+        <meta property="article:section" content={currentGuide.category || 'Cryptocurrency'} />
+        {currentGuide.tags?.map((tag, index) => (
+          <meta key={`tag-${index}`} property="article:tag" content={tag} />
+        ))}
+        
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@1ewis" />
+        <meta name="twitter:title" content={`${currentGuide.title || 'Guide'} | 1ewis`} />
+        <meta name="twitter:description" content={currentGuide.description || 'A comprehensive guide by 1ewis'} />
+        <meta name="twitter:image" content={currentGuide.image || 'https://s3.1ewis.com/default-guide-image.webp'} />
+        <meta name="twitter:label1" content="Reading time" />
+        <meta name="twitter:data1" content={`${currentGuide.readTime || '5 min'}`} />
+        
+        {/* Structured Data for SEO */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Article",
+              "headline": currentGuide.title,
+              "description": currentGuide.description,
+              "image": currentGuide.image || 'https://s3.1ewis.com/default-guide-image.webp',
+              "author": {
+                "@type": "Person",
+                "name": currentGuide.author?.name || '1ewis'
+              },
+              "publisher": {
+                "@type": "Organization",
+                "name": "1ewis",
+                "logo": {
+                  "@type": "ImageObject",
+                  "url": "https://1ewis.com/logo.png"
+                }
+              },
+              "datePublished": currentGuide.publishedDate,
+              "dateModified": currentGuide.updatedDate || currentGuide.publishedDate,
+              "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": `https://1ewis.com/news/guides/${currentGuide.slug}`
+              }
+            })
+          }}
+        />
+        
+        {/* Additional Meta Tags */}
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="robots" content="index, follow" />
+        <meta name="theme-color" content="#000000" />
         <link rel="icon" href="/favicon.ico" />
+        
         <style jsx global>{`
           html {
             scroll-behavior: smooth;
