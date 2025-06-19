@@ -750,22 +750,33 @@ export default function Navigation() {
               >
                 <h3 className="px-4 text-sm font-medium text-gray-400 uppercase tracking-wider mb-2">Crypto News</h3>
                 <div className="space-y-1">
-                  {newsItems.map((item, index) => (
-                    <motion.div
-                      key={item.path}
-                      initial={{ x: 50, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      transition={{ delay: 0.6 + (index * 0.05) }}
+                  {/* News items links */}
+                  <motion.div
+                    initial={{ x: 50, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.6 }}
+                  >
+                    <Link 
+                      href="/news"
+                      className={`block py-3 px-4 text-lg rounded-md transition-colors border-l-2 ${isActive('/news') ? 'border-blue-500 bg-white/5 text-white font-medium' : 'border-transparent text-gray-300 hover:border-blue-500 hover:bg-white/5 hover:text-white'}`}
+                      onClick={() => setIsMenuOpen(false)}
                     >
-                      <Link 
-                        href={item.path}
-                        className={`block py-3 px-4 text-lg rounded-md transition-colors border-l-2 ${isActive(item.path) ? `border-${item.color}-500 bg-white/5 text-white font-medium` : `border-transparent text-gray-300 hover:border-${item.color}-500 hover:bg-white/5 hover:text-white`}`}
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        {item.name}
-                      </Link>
-                    </motion.div>
-                  ))}
+                      Latest News
+                    </Link>
+                  </motion.div>
+                  <motion.div
+                    initial={{ x: 50, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.65 }}
+                  >
+                    <Link 
+                      href="/news/guides"
+                      className={`block py-3 px-4 text-lg rounded-md transition-colors border-l-2 ${isActive('/news/guides') ? 'border-green-500 bg-white/5 text-white font-medium' : 'border-transparent text-gray-300 hover:border-green-500 hover:bg-white/5 hover:text-white'}`}
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Guides
+                    </Link>
+                  </motion.div>
                 </div>
               </motion.div>
             </div>
