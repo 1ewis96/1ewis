@@ -581,6 +581,7 @@ function CreateGuidePage() {
                   interactiveElements={interactiveElements}
                   setInteractiveElements={setInteractiveElements}
                   tagsInput={tagsInput}
+                  isEditing={isEditing}
                 />
               </div>
             )}

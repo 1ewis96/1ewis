@@ -11,7 +11,8 @@ const BasicInfoForm = ({
   uploadProgress,
   interactiveElements,
   setInteractiveElements,
-  tagsInput
+  tagsInput,
+  isEditing
 }) => {
   const [showAutoplayEditor, setShowAutoplayEditor] = useState(false);
   
@@ -40,13 +41,14 @@ const BasicInfoForm = ({
   return (
     <div className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">Guide Title</label>
+        <label className="block text-sm font-medium text-gray-300 mb-2">Guide Title {isEditing && <span className="text-xs text-amber-400">(cannot be changed)</span>}</label>
         <input 
           type="text" 
-          className="w-full px-4 py-2 bg-gray-900/80 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-white"
+          className={`w-full px-4 py-2 bg-gray-900/80 border border-gray-700 rounded-lg focus:outline-none ${!isEditing ? 'focus:ring-2 focus:ring-cyan-500 focus:border-transparent' : ''} text-white ${isEditing ? 'opacity-70 cursor-not-allowed' : ''}`}
           placeholder="Enter guide title..."
           value={guideData.title}
           onChange={(e) => handleBasicInfoChange('title', e.target.value)}
+          disabled={isEditing}
         />
       </div>
       
@@ -160,16 +162,17 @@ const BasicInfoForm = ({
       </div>
       
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">Slug (auto-generated from title)</label>
+        <label className="block text-sm font-medium text-gray-300 mb-2">Slug {isEditing && <span className="text-xs text-amber-400">(cannot be changed)</span>}</label>
         <input 
           type="text" 
-          className="w-full px-4 py-2 bg-gray-900/80 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-white"
+          className={`w-full px-4 py-2 bg-gray-900/80 border border-gray-700 rounded-lg focus:outline-none ${!isEditing ? 'focus:ring-2 focus:ring-cyan-500 focus:border-transparent' : ''} text-white ${isEditing ? 'opacity-70 cursor-not-allowed' : ''}`}
           placeholder="guide-url-slug"
           value={guideData.slug}
           onChange={(e) => {
             handleBasicInfoChange('slug', e.target.value);
             handleBasicInfoChange('id', e.target.value);
           }}
+          disabled={isEditing}
         />
       </div>
       
