@@ -1,7 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus, Trash2, GripVertical, ChevronUp, ChevronDown, Image, Code, Upload, Loader, Eye, EyeOff } from 'lucide-react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import InteractiveElementEditor from './InteractiveElementEditor';
+import dynamic from 'next/dynamic';
+
+// Dynamically import React-Quill to avoid SSR issues
+const ReactQuill = dynamic(() => import('react-quill'), {
+  ssr: false,
+  loading: () => <div className="h-[150px] w-full bg-gray-800 animate-pulse rounded-lg"></div>
+});
 
 const SectionEditor = ({ 
   sections, 
@@ -160,11 +167,38 @@ const SectionEditor = ({
                               </button>
                             </div>
                             {!section.hideContent && (
-                              <textarea 
-                                className="w-full px-4 py-2 bg-gray-900/80 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-white min-h-[150px]"
-                                value={section.content}
-                                onChange={(e) => updateSection(index, 'content', e.target.value)}
-                              />
+                              <div className="rich-text-editor">
+                                <ReactQuill 
+                                  theme="snow"
+                                  value={section.content}
+                                  onChange={(content) => updateSection(index, 'content', content)}
+                                  modules={{
+                                    toolbar: [
+                                      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                                      ['bold', 'italic', 'underline', 'strike'],
+                                      [{'list': 'ordered'}, {'list': 'bullet'}],
+                                      [{'script': 'sub'}, {'script': 'super'}],
+                                      [{'indent': '-1'}, {'indent': '+1'}],
+                                      [{'color': []}, {'background': []}],
+                                      ['link', 'image', 'video'],
+                                      ['clean']
+                                    ]
+                                  }}
+                                  formats={[
+                                    'header',
+                                    'bold', 'italic', 'underline', 'strike',
+                                    'list', 'bullet',
+                                    'script',
+                                    'indent',
+                                    'color', 'background',
+                                    'link', 'image', 'video'
+                                  ]}
+                                  className="bg-gray-900/80 text-white rounded-lg border border-gray-700 min-h-[150px]"
+                                />
+                                <div className="text-xs text-gray-400 mt-1">
+                                  HTML content will be preserved when the guide is displayed
+                                </div>
+                              </div>
                             )}
                             {section.hideContent && (
                               <div className="p-3 bg-gray-800/50 border border-gray-700 rounded-lg text-gray-400 text-sm">

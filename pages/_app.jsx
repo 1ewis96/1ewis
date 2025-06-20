@@ -1,4 +1,5 @@
 import '../styles/globals.css';
+import '../styles/quill.css';
 import Head from 'next/head';
 import Script from 'next/script';
 import { useRouter } from 'next/router';

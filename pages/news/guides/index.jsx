@@ -256,7 +256,7 @@ export default function GuidesPage() {
                     </div>
                     <div className="absolute top-4 right-4 z-20">
                       <span className="bg-black/50 backdrop-blur-sm text-gray-300 text-xs font-medium px-2.5 py-1 rounded-full border border-gray-700/50">
-                        {guide.readTime || '5 min read'}
+                        {guide.readTime ? `${guide.readTime} mins` : '5 min read'}
                       </span>
                     </div>
                     <img 

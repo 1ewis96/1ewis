@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Save, ArrowLeft, Eye } from 'lucide-react';
 import withAdminAuth from '../../../components/withAdminAuth';
 import AdminNavigation from '../../../components/AdminNavigation';
+import { useRouter } from 'next/router';
 
 // Import our new components
 import BasicInfoForm from '../../../components/admin/guides/BasicInfoForm';
@@ -12,10 +13,17 @@ import GuidePreview from '../../../components/admin/guides/GuidePreview';
 import { uploadImage, generateSlug, generateGuideJson } from '../../../components/admin/guides/utils';
 
 function CreateGuidePage() {
+  const router = useRouter();
+  const { edit } = router.query;
+  
   const [activeTab, setActiveTab] = useState('basic');
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadError, setLoadError] = useState(null);
+  const [tagsInput, setTagsInput] = useState('');
   
   // Guide basic information state
   const [guideData, setGuideData] = useState({
@@ -81,6 +89,136 @@ function CreateGuidePage() {
       sectionId: null
     }
   });
+  
+  // Fetch guide data if edit parameter is present
+  useEffect(() => {
+    if (edit && router.isReady) {
+      fetchGuideData(edit);
+    }
+  }, [edit, router.isReady]);
+  
+  // Fetch guide data from API
+  const fetchGuideData = async (slug) => {
+    setIsLoading(true);
+    setLoadError(null);
+    setIsEditing(true);
+    
+    try {
+      const response = await fetch(`https://api.1ewis.com/guides/fetch/${slug}`);
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch guide: ${response.status}`);
+      }
+      
+      const guideData = await response.json();
+      
+      // Populate form with fetched data
+      populateFormWithGuideData(guideData);
+    } catch (error) {
+      console.error('Error fetching guide data:', error);
+      setLoadError(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  // Populate form with fetched guide data
+  const populateFormWithGuideData = (guide) => {
+    // Set basic guide data
+    setGuideData({
+      id: guide.id || guide.slug,
+      slug: guide.slug,
+      title: guide.title,
+      description: guide.description,
+      image: guide.image || 'https://s3.1ewis.com/placeholder.webp',
+      fallbackImage: guide.fallbackImage || guide.image || 'https://s3.1ewis.com/placeholder.webp',
+      publishedDate: guide.publishedDate,
+      updatedDate: new Date().toISOString(),
+      author: {
+        name: guide.author?.name || '',
+        avatar: guide.author?.avatar || 'https://s3.1ewis.com/placeholder.webp',
+        bio: guide.author?.bio || ''
+      },
+      category: guide.category || '',
+      tags: guide.tags || [],
+      readTime: guide.readTime || 5,
+      relatedGuides: guide.relatedGuides || []
+    });
+    
+    // Set tags input field
+    if (guide.tags && guide.tags.length > 0) {
+      setTagsInput(guide.tags.join(', '));
+    }
+    
+    // Set sections
+    if (guide.sections && guide.sections.length > 0) {
+      setSections(guide.sections.map(section => ({
+        ...section,
+        interactiveElements: section.interactiveElements?.map(el => el.type) || []
+      })));
+    }
+    
+    // Set interactive elements
+    const newInteractiveElements = {
+      quiz: {
+        id: '',
+        title: '',
+        description: '',
+        questions: [],
+        sectionId: null
+      },
+      videoPlayer: {
+        id: '',
+        title: '',
+        videoUrl: '',
+        thumbnailUrl: '',
+        sectionId: null
+      },
+      callToAction: {
+        id: '',
+        title: '',
+        buttonText: '',
+        buttonUrl: '',
+        sectionId: null
+      },
+      codeBlock: {
+        id: '',
+        language: 'javascript',
+        code: '',
+        sectionId: null
+      }
+    };
+    
+    // Process global interactive elements
+    if (guide.interactiveElements) {
+      if (guide.interactiveElements.videoPlayer) {
+        newInteractiveElements.videoPlayer = {
+          ...guide.interactiveElements.videoPlayer,
+          sectionId: null
+        };
+      }
+    }
+    
+    // Process section-specific interactive elements
+    guide.sections?.forEach(section => {
+      section.interactiveElements?.forEach(element => {
+        if (element.type && newInteractiveElements[element.type]) {
+          // If this is the first element of this type, set it directly
+          if (!newInteractiveElements[element.type].id) {
+            newInteractiveElements[element.type] = {
+              ...element,
+              sectionId: section.id
+            };
+            delete newInteractiveElements[element.type].type;
+          }
+          // Otherwise, we'd need to handle multiple elements of the same type
+          // This would require restructuring the state to support arrays of elements
+        }
+      });
+    });
+    
+    setInteractiveElements(newInteractiveElements);
+  };
 
   // Handle basic info changes
   const handleBasicInfoChange = (field, value) => {
@@ -115,7 +253,11 @@ function CreateGuidePage() {
   // Handle tags input
   const handleTagsChange = (e) => {
     const tagsString = e.target.value;
-    const tagsArray = tagsString.split(',').map(tag => tag.trim()).filter(tag => tag);
+    setTagsInput(tagsString);
+    
+    // Only update the actual tags array when saving or when needed for validation
+    const tagsArray = tagsString.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
+    
     setGuideData({
       ...guideData,
       tags: tagsArray
@@ -259,21 +401,41 @@ function CreateGuidePage() {
         throw new Error('Admin API key not found');
       }
       
-      const response = await fetch('https://api.1ewis.com/admin/create/guide', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({ guide: guideJson })
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Save failed: ${response.status}`);
+      if (isEditing) {
+        // Update existing guide
+        const response = await fetch('https://api.1ewis.com/admin/update/guide', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+          },
+          body: JSON.stringify({ guide: guideJson })
+        });
+        
+        if (!response.ok) {
+          throw new Error(`Update failed: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        alert('Guide updated successfully!');
+      } else {
+        // Create new guide
+        const response = await fetch('https://api.1ewis.com/admin/create/guide', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+          },
+          body: JSON.stringify({ guide: guideJson })
+        });
+        
+        if (!response.ok) {
+          throw new Error(`Save failed: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        alert('Guide saved successfully!');
       }
-      
-      const data = await response.json();
-      alert('Guide saved successfully!');
       
       // Optionally redirect to the guide list or edit page
       // window.location.href = '/admin/guides';
@@ -310,7 +472,7 @@ function CreateGuidePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                Create New Guide
+                {isEditing ? 'Edit Guide' : 'Create New Guide'}
               </motion.h1>
               <motion.p 
                 className="text-gray-400 mt-2"
@@ -418,6 +580,7 @@ function CreateGuidePage() {
                   uploadProgress={uploadProgress}
                   interactiveElements={interactiveElements}
                   setInteractiveElements={setInteractiveElements}
+                  tagsInput={tagsInput}
                 />
               </div>
             )}

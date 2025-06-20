@@ -12,15 +12,15 @@ const GuideSidebar = ({ guide }) => {
     <div className="w-full lg:w-80 space-y-8">
       {/* Quick Navigation */}
       {guide.sections && guide.sections.length > 0 && (
-        <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-800/80 shadow-lg sticky top-4">
-          <h3 className="text-xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-300">In This Guide</h3>
-          <div className="h-px w-full bg-gradient-to-r from-cyan-800/50 to-transparent mb-4"></div>
-          <nav className="space-y-2">
+        <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/50 backdrop-blur-sm rounded-xl p-4 border border-gray-800/80 shadow-lg sticky top-4">
+          <h3 className="text-xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-300">In This Guide</h3>
+          <div className="h-px w-full bg-gradient-to-r from-cyan-800/50 to-transparent mb-2"></div>
+          <nav className="space-y-0.5">
             {guide.sections.map((section, index) => (
               <motion.a 
                 key={index}
                 href={`#section-${index}`}
-                className="flex items-center py-2.5 px-4 rounded-lg hover:bg-gray-800/70 text-gray-300 hover:text-cyan-300 transition-all border border-transparent hover:border-cyan-800/30 group"
+                className="flex items-center py-1.5 px-3 rounded-lg hover:bg-gray-800/70 text-gray-300 hover:text-cyan-300 transition-all border border-transparent hover:border-cyan-800/30 group text-sm"
                 whileHover={{ x: 4 }}
                 onClick={(e) => {
                   // Prevent default behavior
@@ -52,30 +52,13 @@ const GuideSidebar = ({ guide }) => {
         </div>
       )}
       
-      {/* Popular Tags */}
-      <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-800/80 shadow-lg">
-        <h3 className="text-xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-300">Popular Tags</h3>
-        <div className="h-px w-full bg-gradient-to-r from-cyan-800/50 to-transparent mb-4"></div>
-        <div className="flex flex-wrap gap-2">
-          {['Bitcoin', 'Ethereum', 'DeFi', 'NFTs', 'Blockchain', 'Trading', 'Security', 'Wallets'].map((tag, index) => (
-            <motion.a 
-              key={index}
-              href={`/news/tags/${tag.toLowerCase()}`}
-              className="px-3 py-1.5 bg-gradient-to-r from-gray-800/80 to-gray-900/80 text-cyan-300 text-xs font-medium rounded-full hover:from-cyan-900/30 hover:to-blue-900/30 transition-all border border-gray-700/30 hover:border-cyan-700/50 hover:text-white hover:shadow-md hover:shadow-cyan-900/20"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              #{tag}
-            </motion.a>
-          ))}
-        </div>
-      </div>
+      {/* Popular Tags section removed */}
       
       {/* Dynamic Sidebar Ad from API */}
       <SidebarAd />
       
       {/* Related Questions */}
-      <RelatedQuestions />
+      <RelatedQuestions guide={guide} />
       
       {/* Dynamic Sponsored Panel */}
       <SponsoredPanel />

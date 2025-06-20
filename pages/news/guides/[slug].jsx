@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Footer from '../../../components/Footer';
+import Navigation from '../../../components/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import GuideSidebar from '../../../components/guides/GuideSidebar';
 import { ArrowLeft, Calendar, Tag, Clock, Share2, ArrowRight, ExternalLink } from 'lucide-react';
@@ -45,65 +46,34 @@ export default function GuidePage() {
   const [guideData, setGuideData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [readingProgress, setReadingProgress] = useState(0);
+  const mainContentRef = useRef(null);
   
-  // Helper function to parse markdown-style links in text: [[link text]](url)
-  const parseMarkdownLinks = (text) => {
-    if (!text) return text;
-    
-    // Regex to match markdown-style links: [[text]](url)
-    const linkRegex = /\[\[([^\]]+)\]\]\(([^)]+)\)/g;
-    
-    // If no links, return the text as is
-    if (!linkRegex.test(text)) return text;
-    
-    // Reset regex state
-    linkRegex.lastIndex = 0;
-    
-    let lastIndex = 0;
-    const elements = [];
-    let match;
-    
-    // Find all links and build elements array
-    while ((match = linkRegex.exec(text)) !== null) {
-      // Add text before the link
-      if (match.index > lastIndex) {
-        elements.push(
-          <span key={`text-${lastIndex}`}>
-            {text.substring(lastIndex, match.index)}
-          </span>
-        );
-      }
-      
-      // Add the link
-      const linkText = match[1];
-      const linkUrl = match[2];
-      elements.push(
-        <a 
-          key={`link-${match.index}`}
-          href={linkUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-cyan-400 hover:text-cyan-300 transition-colors underline inline-flex items-center"
-        >
-          {linkText}
-          <ExternalLink className="w-3 h-3 ml-1" />
-        </a>
-      );
-      
-      lastIndex = match.index + match[0].length;
-    }
-    
-    // Add any remaining text after the last link
-    if (lastIndex < text.length) {
-      elements.push(
-        <span key="text-end">
-          {text.substring(lastIndex)}
-        </span>
-      );
-    }
-    
-    return elements;
+  // Simple text rendering function that preserves newlines
+  const renderText = (text) => {
+    if (!text) return null;
+    return text.split('\n').map((line, i) => (
+      <React.Fragment key={i}>
+        {line}
+        {i < text.split('\n').length - 1 && <br />}
+      </React.Fragment>
+    ));
   };
+  
+  // Process text to HTML, including markdown links and newlines
+  const processTextToHtml = (text) => {
+    if (!text) return '';
+    let processedText = text.replace(/\n/g, '<br>');
+    const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+    processedText = processedText.replace(linkRegex, (match, linkText, linkUrl) => {
+      return `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer" class="text-cyan-400 hover:text-cyan-300 transition-colors underline inline-flex items-center">${linkText}</a>`;
+    });
+    return processedText;
+  };
+  
+  // For compatibility with existing code
+  const processTextContent = renderText;
+  const parseMarkdownLinks = renderText;
   
   // Detect client-side rendering
   useEffect(() => {
@@ -111,6 +81,24 @@ export default function GuidePage() {
     // Mark hydration as complete
     setIsHydrated(true);
   }, []);
+  
+  // Track reading progress
+  useEffect(() => {
+    if (!isBrowser) return;
+    
+    const handleScroll = () => {
+      // Calculate scroll progress based on entire document height
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrolled = Math.min(100, Math.max(0, (window.scrollY / totalHeight) * 100));
+      setReadingProgress(scrolled);
+    };
+    
+    // Initial calculation
+    handleScroll();
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isBrowser]);
   
   // Fetch guide data from API
   useEffect(() => {
@@ -185,21 +173,44 @@ export default function GuidePage() {
   
   // We're now using parseMarkdownLinks instead of renderTextWithLinks
 
-  // Show loading state
+  // Show loading state or error
   if (loading) {
     return (
-      <div className="flex flex-col min-h-screen bg-black text-white">
+      <div className="flex flex-col min-h-screen bg-black text-white justify-center items-center p-4">
         <Head>
-          <title>Loading Guide... | 1ewis.com</title>
+          <title>Loading... | 1ewis</title>
+          <link rel="icon" href="/favicon.ico" />
         </Head>
-        <main className="flex-1 flex items-center justify-center">
-          <div className="text-center p-8">
-            <div className="inline-block w-12 h-12 border-4 border-t-cyan-500 border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin mb-4"></div>
-            <h2 className="text-xl font-medium text-white">Loading guide...</h2>
-            <p className="text-gray-400 mt-2">Please wait while we prepare your content</p>
+        
+        <div className="w-full max-w-4xl">
+          {/* Skeleton Header */}
+          <div className="animate-pulse mb-8">
+            <div className="h-10 bg-gray-700 rounded-md w-3/4 mb-4"></div>
+            <div className="h-4 bg-gray-700 rounded-md w-full mb-2"></div>
+            <div className="h-4 bg-gray-700 rounded-md w-5/6"></div>
           </div>
-        </main>
-        <Footer />
+          
+          {/* Skeleton Image */}
+          <div className="animate-pulse mb-8 w-full h-64 bg-gray-700 rounded-lg"></div>
+          
+          {/* Skeleton Content */}
+          <div className="animate-pulse">
+            <div className="h-6 bg-gray-700 rounded-md w-1/3 mb-6"></div>
+            <div className="space-y-3 mb-8">
+              <div className="h-4 bg-gray-700 rounded-md w-full"></div>
+              <div className="h-4 bg-gray-700 rounded-md w-11/12"></div>
+              <div className="h-4 bg-gray-700 rounded-md w-4/5"></div>
+              <div className="h-4 bg-gray-700 rounded-md w-full"></div>
+            </div>
+            
+            <div className="h-6 bg-gray-700 rounded-md w-1/4 mb-6"></div>
+            <div className="space-y-3">
+              <div className="h-4 bg-gray-700 rounded-md w-full"></div>
+              <div className="h-4 bg-gray-700 rounded-md w-10/12"></div>
+              <div className="h-4 bg-gray-700 rounded-md w-full"></div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -236,7 +247,21 @@ export default function GuidePage() {
   // currentGuide is already defined above
 
   return (
-    <div className="flex flex-col min-h-screen bg-black text-white">
+    <div className="flex flex-col min-h-screen bg-black text-white relative">
+      {/* Reading Progress Indicator */}
+      {isBrowser && (
+        <div className="fixed top-0 left-0 w-full h-1 bg-gray-800 z-50">
+          <div 
+            className="h-full bg-gradient-to-r from-cyan-500 to-blue-500" 
+            style={{ width: `${readingProgress}%`, transition: 'width 0.2s ease-out' }}
+            role="progressbar"
+            aria-valuenow={readingProgress}
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-label="Reading progress"
+          />
+        </div>
+      )}
       <Head>
         {/* Primary Meta Tags */}
         <title>{currentGuide.title || 'Guide'} | 1ewis</title>
@@ -265,7 +290,7 @@ export default function GuidePage() {
         <meta name="twitter:description" content={currentGuide.description || 'A comprehensive guide by 1ewis'} />
         <meta name="twitter:image" content={currentGuide.image || 'https://s3.1ewis.com/default-guide-image.webp'} />
         <meta name="twitter:label1" content="Reading time" />
-        <meta name="twitter:data1" content={`${currentGuide.readTime || '5 min'}`} />
+        <meta name="twitter:data1" content={`${currentGuide.readTime || '5'} min`} />
         
         {/* Structured Data for SEO */}
         <script
@@ -305,6 +330,17 @@ export default function GuidePage() {
         <meta name="theme-color" content="#000000" />
         <link rel="icon" href="/favicon.ico" />
         
+        {/* Print Styles */}
+        <style media="print">{`
+          @page { margin: 2cm; }
+          body { font-size: 12pt; }
+          nav, footer, .no-print { display: none !important; }
+          article { width: 100% !important; }
+          img, pre { page-break-inside: avoid; }
+          h2, h3 { page-break-after: avoid; }
+          p, h2, h3 { orphans: 3; widows: 3; }
+        `}</style>
+        
         <style jsx global>{`
           html {
             scroll-behavior: smooth;
@@ -312,7 +348,15 @@ export default function GuidePage() {
         `}</style>
       </Head>
       
-      <main className="flex-1">
+      {/* Skip to content link for accessibility */}
+      <a 
+        href={`#guide-${slug}`}
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-cyan-700 focus:text-white focus:rounded"
+      >
+        Skip to main content
+      </a>
+      
+      <main id={`guide-${slug}`} className="flex-1" ref={mainContentRef}>
         {/* Hero Section */}
         <section className="pt-36 pb-16 px-4 bg-gradient-to-b from-black to-gray-950 relative overflow-hidden">
           {/* Animated background elements */}
@@ -518,123 +562,111 @@ export default function GuidePage() {
                       </div>
                     )}
                     
-                    {/* Render interactive elements from the section */}
-                    {section.interactiveElements && section.interactiveElements.length > 0 && (
-                      <SectionInteractiveElements 
-                        interactiveElements={section.interactiveElements} 
-                        isHydrated={isHydrated} 
-                      />
-                    )}
-                    
                     {/* Render content - either HTML string or array of paragraph objects */}
-                    {section.content && section.content.length > 0 && (
-                      Array.isArray(section.content) ? (
-                        // Render array of paragraph objects
-                        section.content.map((contentBlock, contentIndex) => {
-                          if (contentBlock.type === 'paragraph') {
-                            return (
-                              <motion.p 
-                                key={contentIndex} 
-                                className="mb-6 text-gray-300 leading-relaxed tracking-wide first-letter:text-lg first-letter:font-medium first-letter:text-cyan-300"
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.1 * contentIndex, duration: 0.5 }}
-                                whileInView={{ opacity: [null, 0.9, 1] }}
-                                viewport={{ once: true, margin: "-50px" }}
-                              >
-                                {parseMarkdownLinks(contentBlock.text)}
-                              </motion.p>
-                            );
-                          } else if (contentBlock.type === 'list') {
-                            return (
-                              <motion.ul
-                                key={contentIndex}
-                                className="list-disc pl-5 mb-8 text-gray-300 space-y-3"
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.1 * contentIndex, duration: 0.5 }}
-                                whileInView={{ opacity: [null, 0.9, 1] }}
-                                viewport={{ once: true, margin: "-50px" }}
-                              >
-                                {contentBlock.items.map((item, itemIndex) => (
-                                  <motion.li 
-                                    key={itemIndex} 
-                                    className="ml-2 pl-2 marker:text-cyan-400"
-                                    initial={{ opacity: 0, x: -5 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: 0.05 * itemIndex + 0.1 * contentIndex, duration: 0.4 }}
-                                  >
-                                    {parseMarkdownLinks(item)}
-                                  </motion.li>
-                                ))}
-                              </motion.ul>
-                            );
-                          } else if (contentBlock.type === 'callout') {
-                            // Determine callout style based on type
-                            const calloutStyles = {
-                              info: "border-blue-600 bg-blue-900/20 text-blue-200",
-                              warning: "border-amber-600 bg-amber-900/20 text-amber-200",
-                              tip: "border-green-600 bg-green-900/20 text-green-200",
-                              note: "border-purple-600 bg-purple-900/20 text-purple-200",
-                              danger: "border-red-600 bg-red-900/20 text-red-200",
-                            };
-                            
-                            const style = calloutStyles[contentBlock.calloutType || 'info'] || calloutStyles.info;
-                            
-                            return (
-                              <motion.div
-                                key={contentIndex}
-                                className={`mb-8 p-4 border-l-4 rounded-r-lg ${style}`}
-                                initial={{ opacity: 0, x: -10 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: 0.1 * contentIndex, duration: 0.5 }}
-                              >
-                                {contentBlock.title && (
-                                  <h4 className="font-bold mb-2">{contentBlock.title}</h4>
-                                )}
-                                <div>{parseMarkdownLinks(contentBlock.text)}</div>
-                              </motion.div>
-                            );
-                          } else if (contentBlock.type === 'code') {
-                            return (
-                              <motion.div
-                                key={contentIndex}
-                                className="mb-8 rounded-lg overflow-hidden bg-gray-900 border border-gray-700"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 0.1 * contentIndex, duration: 0.5 }}
-                              >
-                                {contentBlock.language && (
-                                  <div className="px-4 py-2 bg-gray-800 border-b border-gray-700 flex justify-between items-center">
-                                    <span className="text-sm font-mono text-gray-400">{contentBlock.language}</span>
-                                    {contentBlock.copyable !== false && (
-                                      <button 
-                                        className="text-gray-400 hover:text-white transition-colors" 
-                                        onClick={() => navigator.clipboard.writeText(contentBlock.code)}
-                                        aria-label="Copy code"
-                                      >
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                                        </svg>
-                                      </button>
-                                    )}
-                                  </div>
-                                )}
-                                <pre className="p-4 overflow-x-auto">
-                                  <code className="font-mono text-sm text-gray-300 whitespace-pre">{contentBlock.code}</code>
-                                </pre>
-                              </motion.div>
-                            );
-                          }
-                          return null; // Handle other content types as needed
-                        })
-                      ) : (
-                        // Render HTML content (legacy format)
-                        <div 
-                          className="mb-6 text-gray-300 leading-relaxed"
-                          dangerouslySetInnerHTML={{ __html: section.content }}
-                        />
-                      )
+                    {Array.isArray(section.content) ? (
+                      // Render array of paragraph objects
+                      section.content.map((contentBlock, contentIndex) => {
+                        if (contentBlock.type === 'paragraph') {
+                          return (
+                            <motion.div 
+                              key={contentIndex} 
+                              className="mb-6 text-gray-300 leading-relaxed tracking-wide"
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: 0.1 * contentIndex, duration: 0.5 }}
+                              whileInView={{ opacity: [null, 0.9, 1] }}
+                              viewport={{ once: true, margin: "-50px" }}
+                              dangerouslySetInnerHTML={{ __html: processTextToHtml(contentBlock.text) }}
+                            />
+                          );
+                        } else if (contentBlock.type === 'list') {
+                          return (
+                            <motion.ul
+                              key={contentIndex}
+                              className="list-disc pl-5 mb-8 text-gray-300 space-y-3"
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: 0.1 * contentIndex, duration: 0.5 }}
+                              whileInView={{ opacity: [null, 0.9, 1] }}
+                              viewport={{ once: true, margin: "-50px" }}
+                            >
+                              {contentBlock.items.map((item, itemIndex) => (
+                                <motion.li 
+                                  key={itemIndex} 
+                                  className="ml-2 pl-2 marker:text-cyan-400"
+                                  initial={{ opacity: 0, x: -5 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ delay: 0.05 * itemIndex + 0.1 * contentIndex, duration: 0.4 }}
+                                  dangerouslySetInnerHTML={{ __html: processTextToHtml(item) }}
+                                />
+                              ))}
+                            </motion.ul>
+                          );
+                        } else if (contentBlock.type === 'callout') {
+                          // Determine callout style based on type
+                          const calloutStyles = {
+                            info: "border-blue-600 bg-blue-900/20 text-blue-200",
+                            warning: "border-amber-600 bg-amber-900/20 text-amber-200",
+                            tip: "border-green-600 bg-green-900/20 text-green-200",
+                            note: "border-purple-600 bg-purple-900/20 text-purple-200",
+                            danger: "border-red-600 bg-red-900/20 text-red-200",
+                          };
+                          
+                          const style = calloutStyles[contentBlock.calloutType || 'info'] || calloutStyles.info;
+                          
+                          return (
+                            <motion.div
+                              key={contentIndex}
+                              className={`mb-8 p-4 border-l-4 rounded-r-lg ${style}`}
+                              initial={{ opacity: 0, x: -10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: 0.1 * contentIndex, duration: 0.5 }}
+                            >
+                              {contentBlock.title && (
+                                <h4 className="font-bold mb-2">{contentBlock.title}</h4>
+                              )}
+                              <div dangerouslySetInnerHTML={{ __html: processTextToHtml(contentBlock.text) }} />
+                            </motion.div>
+                          );
+                        } else if (contentBlock.type === 'code') {
+                          return (
+                            <motion.div
+                              key={contentIndex}
+                              className="mb-8 rounded-lg overflow-hidden bg-gray-900 border border-gray-700"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: 0.1 * contentIndex, duration: 0.5 }}
+                            >
+                              {contentBlock.language && (
+                                <div className="px-4 py-2 bg-gray-800 border-b border-gray-700 flex justify-between items-center">
+                                  <span className="text-sm font-mono text-gray-400">{contentBlock.language}</span>
+                                  {contentBlock.copyable !== false && (
+                                    <button 
+                                      className="text-gray-400 hover:text-white transition-colors" 
+                                      onClick={() => navigator.clipboard.writeText(contentBlock.code)}
+                                      aria-label="Copy code"
+                                    >
+                                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                      </svg>
+                                    </button>
+                                  )}
+                                </div>
+                              )}
+                              <pre className="p-4 overflow-x-auto">
+                                <code className="font-mono text-sm text-gray-300 whitespace-pre">{contentBlock.code}</code>
+                              </pre>
+                            </motion.div>
+                          );
+                        }
+                        return null; // Handle other content types as needed
+                      })
+                    ) : (
+                      // Render HTML content (legacy format)
+                      <div 
+                        className="mb-6 text-gray-300 leading-relaxed"
+                        dangerouslySetInnerHTML={{ __html: section.content }}
+                      />
                     )}
                     
                     {/* Render token price tracker if section has one AND we're not using the global price tracker */}
@@ -688,6 +720,14 @@ export default function GuidePage() {
                       </motion.div>
                     )}
                     
+                    {/* Render interactive elements from the section (AFTER content) */}
+                    {section.interactiveElements && section.interactiveElements.length > 0 && (
+                      <SectionInteractiveElements 
+                        interactiveElements={section.interactiveElements} 
+                        isHydrated={isHydrated} 
+                      />
+                    )}
+                    
                     {/* Render quiz if section has one AND we're not rendering the quiz globally */}
                     {section.hasQuiz && section.quizId && isHydrated && !currentGuide.interactiveElements?.quiz && (
                       <motion.div
@@ -734,15 +774,14 @@ export default function GuidePage() {
                       );
                     case 'paragraph':
                       return (
-                        <motion.p 
+                        <motion.div 
                           key={index} 
                           className="mb-6 text-gray-300 leading-relaxed"
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           transition={{ delay: 0.1 * index, duration: 0.5 }}
-                        >
-                          {parseMarkdownLinks(block.text)}
-                        </motion.p>
+                          dangerouslySetInnerHTML={{ __html: processTextToHtml(block.text) }}
+                        />
                       );
                     case 'list':
                       return (
@@ -1038,6 +1077,58 @@ export default function GuidePage() {
           </div>
         </section>
         )}
+        {/* Feedback Mechanism */}
+        <section className="py-12 px-4 bg-gray-900">
+          <div className="max-w-4xl mx-auto">
+            <motion.div 
+              className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-8 border border-gray-700 shadow-lg"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.5 }}
+            >
+              <h2 className="text-2xl font-bold mb-6 text-white text-center">Was this guide helpful?</h2>
+              
+              <div className="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-6">
+                <button 
+                  className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center justify-center transition-colors w-full md:w-auto"
+                  aria-label="This guide was helpful"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
+                  </svg>
+                  Yes, it was helpful
+                </button>
+                
+                <button 
+                  className="px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg flex items-center justify-center transition-colors w-full md:w-auto"
+                  aria-label="This guide was not helpful"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M18 9.5a1.5 1.5 0 11-3 0v-6a1.5 1.5 0 013 0v6zM14 9.667v-5.43a2 2 0 00-1.105-1.79l-.05-.025A4 4 0 0011.055 2H5.64a2 2 0 00-1.962 1.608l-1.2 6A2 2 0 004.44 12H8v4a2 2 0 002 2 1 1 0 001-1v-.667a4 4 0 01.8-2.4l1.4-1.866a4 4 0 00.8-2.4z" />
+                  </svg>
+                  No, needs improvement
+                </button>
+              </div>
+              
+              <div className="mt-6 pt-6 border-t border-gray-700">
+                <h3 className="text-lg font-medium mb-4 text-white">Leave additional feedback</h3>
+                <textarea 
+                  className="w-full p-4 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
+                  rows="4"
+                  placeholder="Share your thoughts about this guide..."
+                  aria-label="Additional feedback"
+                ></textarea>
+                <button 
+                  className="mt-4 px-6 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg transition-colors"
+                  aria-label="Submit feedback"
+                >
+                  Submit Feedback
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        </section>
       </main>
       
       <Footer />

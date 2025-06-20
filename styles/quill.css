@@ -1,0 +1,80 @@
+/* React Quill Editor Styles */
+@import '~react-quill/dist/quill.snow.css';
+
+/* Custom styles for Quill in dark mode */
+.rich-text-editor .ql-toolbar {
+  background-color: rgba(31, 41, 55, 0.8);
+  border-color: #4B5563;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+
+.rich-text-editor .ql-container {
+  border-color: #4B5563;
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  background-color: rgba(17, 24, 39, 0.8);
+  color: white;
+  font-family: inherit;
+}
+
+.rich-text-editor .ql-editor {
+  min-height: 150px;
+  font-size: 0.95rem;
+}
+
+/* Button styles */
+.rich-text-editor .ql-picker {
+  color: #E5E7EB;
+}
+
+.rich-text-editor .ql-stroke {
+  stroke: #E5E7EB;
+}
+
+.rich-text-editor .ql-fill {
+  fill: #E5E7EB;
+}
+
+.rich-text-editor .ql-picker-options {
+  background-color: #1F2937;
+  border-color: #4B5563;
+}
+
+.rich-text-editor .ql-picker-item {
+  color: #E5E7EB;
+}
+
+.rich-text-editor .ql-active .ql-stroke {
+  stroke: #06B6D4;
+}
+
+.rich-text-editor .ql-active .ql-fill {
+  fill: #06B6D4;
+}
+
+.rich-text-editor .ql-picker.ql-expanded .ql-picker-label {
+  color: #06B6D4;
+  border-color: #06B6D4;
+}
+
+.rich-text-editor .ql-picker.ql-expanded .ql-picker-label .ql-stroke {
+  stroke: #06B6D4;
+}
+
+.rich-text-editor .ql-tooltip {
+  background-color: #1F2937;
+  border-color: #4B5563;
+  color: #E5E7EB;
+}
+
+.rich-text-editor .ql-tooltip input[type=text] {
+  background-color: #111827;
+  border-color: #4B5563;
+  color: #E5E7EB;
+}
+
+.rich-text-editor .ql-tooltip a.ql-action,
+.rich-text-editor .ql-tooltip a.ql-remove {
+  color: #06B6D4;
+}

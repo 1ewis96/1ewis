@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { Upload, Loader } from 'lucide-react';
+import { Upload, Loader, Trash2 } from 'lucide-react';
 
 const AutoplayVideoEditor = ({ 
   videoData, 
   onUpdate, 
   handleFileSelect,
   uploading, 
-  uploadProgress 
+  uploadProgress,
+  onDelete
 }) => {
   const [showPreview, setShowPreview] = useState(false);
 
@@ -19,7 +20,19 @@ const AutoplayVideoEditor = ({
 
   return (
     <div className="space-y-6 p-6 bg-gray-900/50 border border-gray-700 rounded-lg">
-      <h3 className="text-xl font-bold text-white mb-4">Autoplay Video Player</h3>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-xl font-bold text-white">Autoplay Video Player</h3>
+        
+        <button
+          onClick={() => onDelete && onDelete()}
+          className="px-3 py-1.5 bg-red-900/30 hover:bg-red-900/50 text-red-400 hover:text-red-300 rounded-md transition-colors flex items-center"
+          title="Delete autoplay video"
+          type="button"
+        >
+          <Trash2 className="w-4 h-4 mr-1.5" />
+          Delete
+        </button>
+      </div>
       <p className="text-gray-400 mb-4">
         This video will appear in the corner of the guide page after a delay. It's separate from section videos.
       </p>

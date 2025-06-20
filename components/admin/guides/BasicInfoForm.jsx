@@ -10,7 +10,8 @@ const BasicInfoForm = ({
   uploading, 
   uploadProgress,
   interactiveElements,
-  setInteractiveElements
+  setInteractiveElements,
+  tagsInput
 }) => {
   const [showAutoplayEditor, setShowAutoplayEditor] = useState(false);
   
@@ -23,6 +24,18 @@ const BasicInfoForm = ({
         id: videoData.id || `video-${Date.now()}`
       }
     }));
+  };
+  
+  // Handler for deleting autoplay video
+  const handleDeleteAutoplayVideo = () => {
+    setInteractiveElements(prev => {
+      const newElements = { ...prev };
+      delete newElements.videoPlayer;
+      return newElements;
+    });
+    
+    // Close the editor after deletion
+    setShowAutoplayEditor(false);
   };
   return (
     <div className="space-y-6">
@@ -257,7 +270,7 @@ const BasicInfoForm = ({
             type="text" 
             className="w-full px-4 py-2 bg-gray-900/80 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-white"
             placeholder="Enter tags separated by commas..."
-            value={guideData.tags.join(', ')}
+            value={tagsInput}
             onChange={handleTagsChange}
           />
         </div>
@@ -294,6 +307,7 @@ const BasicInfoForm = ({
               handleFileSelect={handleFileSelect}
               uploading={uploading}
               uploadProgress={uploadProgress}
+              onDelete={handleDeleteAutoplayVideo}
             />
           </div>
         )}
