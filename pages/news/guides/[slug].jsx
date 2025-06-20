@@ -9,6 +9,7 @@ import { ArrowLeft, Calendar, Tag, Clock, Share2, ArrowRight, ExternalLink } fro
 import dynamic from 'next/dynamic';
 import SectionInteractiveElements from '../../../components/guides/SectionInteractiveElements';
 
+
 // Dynamically import components with SSR disabled to prevent hydration issues
 const CryptoPriceTracker = dynamic(
   () => import('../../../components/guides/CryptoPriceTracker'),
@@ -47,6 +48,7 @@ export default function GuidePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [readingProgress, setReadingProgress] = useState(0);
+  const [contentProcessed, setContentProcessed] = useState(false);
   const mainContentRef = useRef(null);
   
   // Simple text rendering function that preserves newlines
@@ -60,14 +62,250 @@ export default function GuidePage() {
     ));
   };
   
-  // Process text to HTML, including markdown links and newlines
+  // State for keywords to hyperlink
+  const [keywordsToLink, setKeywordsToLink] = useState([]);
+  
+  // Fetch keywords from API
+  useEffect(() => {
+    fetch('https://api.1ewis.com/keywords/list')
+      .then(response => response.json())
+      .then(data => {
+        if (data && data.linkTerms && Array.isArray(data.linkTerms)) {
+          setKeywordsToLink(data.linkTerms);
+          setContentProcessed(true);
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching keywords:', error);
+      });
+  }, []);
+
+  // Process text to HTML, including markdown links, keywords, and newlines
   const processTextToHtml = (text) => {
     if (!text) return '';
+    
+    // First replace newlines with <br> tags
     let processedText = text.replace(/\n/g, '<br>');
+    
+    // Process markdown links first
     const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
     processedText = processedText.replace(linkRegex, (match, linkText, linkUrl) => {
       return `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer" class="text-cyan-400 hover:text-cyan-300 transition-colors underline inline-flex items-center">${linkText}</a>`;
     });
+    
+    // Process keywords with links
+    if (keywordsToLink && keywordsToLink.length > 0) {
+      // Sort keywords by length (longest first) to avoid replacing parts of longer keywords
+      const sortedKeywords = [...keywordsToLink].sort((a, b) => 
+        (b.keyword?.length || 0) - (a.keyword?.length || 0)
+      );
+      
+      // Process each keyword directly
+      sortedKeywords.forEach(({ keyword, url, caseSensitive }) => {
+        if (!keyword || !url) return;
+        
+        try {
+          // Create a simple string-based replacement function
+          // This avoids regex complexities and should work in all environments
+          const replaceKeywordWithLink = (text, keyword, url, caseSensitive) => {
+            // Split the HTML into segments to avoid processing inside HTML tags or URLs
+            const htmlSegments = [];
+            const textSegments = [];
+            const urlSegments = [];
+            
+            // First, split the text to separate HTML tags
+            let remainingText = text;
+            let insideTag = false;
+            let insideUrl = false;
+            let currentSegment = '';
+            
+            // Helper to add current segment to appropriate array
+            const addCurrentSegment = () => {
+              if (currentSegment) {
+                if (insideTag) {
+                  htmlSegments.push(currentSegment);
+                } else if (insideUrl) {
+                  urlSegments.push(currentSegment);
+                } else {
+                  textSegments.push(currentSegment);
+                }
+                currentSegment = '';
+              }
+            };
+            
+            // Parse the HTML to separate tags, URLs, and text content
+            for (let i = 0; i < remainingText.length; i++) {
+              const char = remainingText[i];
+              const nextChar = i < remainingText.length - 1 ? remainingText[i + 1] : '';
+              
+              // Detect HTML tags
+              if (char === '<' && !insideUrl) {
+                addCurrentSegment();
+                insideTag = true;
+                currentSegment += char;
+              } 
+              // Detect end of HTML tag
+              else if (char === '>' && insideTag) {
+                currentSegment += char;
+                addCurrentSegment();
+                insideTag = false;
+              }
+              // Detect URLs (http://, https://, www.)
+              else if (!insideTag && !insideUrl && 
+                      ((char === 'h' && remainingText.substring(i, i + 7).toLowerCase() === 'http://') || 
+                       (char === 'h' && remainingText.substring(i, i + 8).toLowerCase() === 'https://') || 
+                       (char === 'w' && remainingText.substring(i, i + 4).toLowerCase() === 'www.'))) {
+                addCurrentSegment();
+                insideUrl = true;
+                currentSegment += char;
+              }
+              // Detect end of URL (space or HTML tag)
+              else if (insideUrl && (char === ' ' || char === '<' || char === '\n' || char === '\r')) {
+                addCurrentSegment();
+                insideUrl = false;
+                
+                // Handle the current character appropriately
+                if (char === '<') {
+                  insideTag = true;
+                  currentSegment += char;
+                } else {
+                  currentSegment += char;
+                }
+              }
+              // Continue building current segment
+              else {
+                currentSegment += char;
+              }
+            }
+            
+            // Add the final segment
+            addCurrentSegment();
+            
+            // Now process only the text segments for keyword replacement
+            const processedSegments = [];
+            
+            // Add HTML and URL segments as is, process text segments for keywords
+            let segmentIndex = 0;
+            for (let i = 0; i < text.length; i++) {
+              if (insideTag || insideUrl) {
+                // Skip processing inside tags or URLs
+                continue;
+              }
+              
+              // Process each text segment
+              textSegments.forEach((segment, index) => {
+                // Process this text segment for keywords
+                let processedSegment = segment;
+                
+                // Find all occurrences of the keyword in this segment
+                let segmentRemaining = segment;
+                const segmentParts = [];
+                
+                let searchIndex = 0;
+                while (searchIndex < segmentRemaining.length) {
+                  // Find the next occurrence of the keyword
+                  const keywordIndex = caseSensitive 
+                    ? segmentRemaining.indexOf(keyword, searchIndex)
+                    : segmentRemaining.toLowerCase().indexOf(keyword.toLowerCase(), searchIndex);
+                  
+                  if (keywordIndex === -1) break; // No more occurrences
+                  
+                  // Check if this is a whole word (has word boundaries)
+                  const beforeChar = keywordIndex > 0 ? segmentRemaining[keywordIndex - 1] : ' ';
+                  const afterChar = keywordIndex + keyword.length < segmentRemaining.length 
+                    ? segmentRemaining[keywordIndex + keyword.length] 
+                    : ' ';
+                  
+                  const isWordBoundaryBefore = /[\s.,;:!?()\[\]{}"'<>]/.test(beforeChar);
+                  const isWordBoundaryAfter = /[\s.,;:!?()\[\]{}"'<>]/.test(afterChar);
+                  
+                  if (isWordBoundaryBefore && isWordBoundaryAfter) {
+                    // It's a whole word, replace it
+                    const before = segmentRemaining.substring(0, keywordIndex);
+                    const actualKeyword = segmentRemaining.substring(keywordIndex, keywordIndex + keyword.length);
+                    const after = segmentRemaining.substring(keywordIndex + keyword.length);
+                    
+                    // Add the part before the keyword
+                    segmentParts.push(before);
+                    
+                    // Add the keyword as a link
+                    segmentParts.push(`<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-cyan-500 hover:text-cyan-400 font-medium transition-colors">${actualKeyword}</a>`);
+                    
+                    // Continue with the remaining text
+                    segmentRemaining = after;
+                    searchIndex = 0;
+                  } else {
+                    // Not a whole word, skip this occurrence
+                    searchIndex = keywordIndex + 1;
+                  }
+                }
+                
+                // Add any remaining text
+                if (segmentRemaining.length > 0) {
+                  segmentParts.push(segmentRemaining);
+                }
+                
+                // Replace the segment with its processed version
+                processedSegment = segmentParts.join('');
+                processedSegments.push(processedSegment);
+              });
+            }
+            
+            // Reconstruct the full HTML by interleaving the segments
+            const result = [];
+            let htmlIndex = 0;
+            let textIndex = 0;
+            let urlIndex = 0;
+            
+            for (let i = 0; i < text.length;) {
+              if (i < text.length && text.substring(i, i + 1) === '<') {
+                // Add an HTML segment
+                if (htmlIndex < htmlSegments.length) {
+                  result.push(htmlSegments[htmlIndex]);
+                  i += htmlSegments[htmlIndex].length;
+                  htmlIndex++;
+                } else {
+                  i++;
+                }
+              } 
+              // Check for URL patterns
+              else if (i < text.length - 7 && 
+                      ((text.substring(i, i + 7).toLowerCase() === 'http://') || 
+                       (i < text.length - 8 && text.substring(i, i + 8).toLowerCase() === 'https://') || 
+                       (i < text.length - 4 && text.substring(i, i + 4).toLowerCase() === 'www.'))) {
+                // Add a URL segment
+                if (urlIndex < urlSegments.length) {
+                  result.push(urlSegments[urlIndex]);
+                  i += urlSegments[urlIndex].length;
+                  urlIndex++;
+                } else {
+                  i++;
+                }
+              } 
+              else {
+                // Add a text segment
+                if (textIndex < processedSegments.length) {
+                  result.push(processedSegments[textIndex]);
+                  i += textSegments[textIndex].length;
+                  textIndex++;
+                } else {
+                  i++;
+                }
+              }
+            }
+            
+            return result.join('');
+          };
+          
+          // Apply the replacement
+          processedText = replaceKeywordWithLink(processedText, keyword, url, caseSensitive);
+          
+        } catch (error) {
+          console.error(`Error processing keyword "${keyword}":`, error);
+        }
+      });
+    }
+    
     return processedText;
   };
   
@@ -118,11 +356,40 @@ export default function GuidePage() {
         .then(data => {
           // Log the complete guide data for debugging
           console.log('Guide data received:', data);
-          console.log('Interactive elements:', data.interactiveElements);
+          console.log('Interactive elements:', data.interactiveElements || {});
           
-          // Based on the API response, the quiz is directly in interactiveElements.quiz
+          // Debug guide sections and content
+          if (data.sections && data.sections.length > 0) {
+            console.log(`Guide has ${data.sections.length} sections`);
+            data.sections.forEach((section, idx) => {
+              console.log(`Section ${idx}: ${section.title}`);
+              if (Array.isArray(section.content)) {
+                console.log(`Section ${idx} has ${section.content.length} content blocks`);
+                section.content.forEach((block, blockIdx) => {
+                  console.log(`Content block ${idx}-${blockIdx} type: ${block.type}`);
+                  if (block.type === 'paragraph' && block.text) {
+                    console.log(`Paragraph ${idx}-${blockIdx} text preview:`, block.text.substring(0, 50) + '...');
+                    // Check if paragraph contains any keywords
+                    if (keywordsToLink && keywordsToLink.length > 0) {
+                      keywordsToLink.forEach(({ keyword }) => {
+                        if (block.text.toLowerCase().includes(keyword.toLowerCase())) {
+                          console.log(`FOUND KEYWORD: "${keyword}" in paragraph ${idx}-${blockIdx}`);
+                        }
+                      });
+                    }
+                  } else if (block.type === 'list' && block.items) {
+                    console.log(`List ${idx}-${blockIdx} has ${block.items.length} items`);
+                  }
+                });
+              } else {
+                console.log(`Section ${idx} has HTML content:`, typeof section.content);
+              }
+            });
+          }
+          
+          // Check for quiz
           if (data.interactiveElements?.quiz) {
-            console.log('Quiz found in interactiveElements.quiz:', data.interactiveElements.quiz);
+            console.log('Quiz found:', data.interactiveElements.quiz);
           } else {
             console.log('No quiz found in expected location');
           }
@@ -376,7 +643,7 @@ export default function GuidePage() {
             animate={{ scale: [1.2, 1, 1.2], opacity: [0.4, 0.2, 0.4] }}
             transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
           />
-          
+          {/* Debug components removed */}
           <div className="max-w-4xl mx-auto relative z-10">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -567,6 +834,7 @@ export default function GuidePage() {
                       // Render array of paragraph objects
                       section.content.map((contentBlock, contentIndex) => {
                         if (contentBlock.type === 'paragraph') {
+                          const processedHtml = processTextToHtml(contentBlock.text);
                           return (
                             <motion.div 
                               key={contentIndex} 
@@ -576,7 +844,7 @@ export default function GuidePage() {
                               transition={{ delay: 0.1 * contentIndex, duration: 0.5 }}
                               whileInView={{ opacity: [null, 0.9, 1] }}
                               viewport={{ once: true, margin: "-50px" }}
-                              dangerouslySetInnerHTML={{ __html: processTextToHtml(contentBlock.text) }}
+                              dangerouslySetInnerHTML={{ __html: processedHtml }}
                             />
                           );
                         } else if (contentBlock.type === 'list') {
@@ -590,16 +858,19 @@ export default function GuidePage() {
                               whileInView={{ opacity: [null, 0.9, 1] }}
                               viewport={{ once: true, margin: "-50px" }}
                             >
-                              {contentBlock.items.map((item, itemIndex) => (
+                              {contentBlock.items.map((item, itemIndex) => {
+                                const processedHtml = processTextToHtml(item);
+                                return (
                                 <motion.li 
                                   key={itemIndex} 
                                   className="ml-2 pl-2 marker:text-cyan-400"
                                   initial={{ opacity: 0, x: -5 }}
                                   animate={{ opacity: 1, x: 0 }}
                                   transition={{ delay: 0.05 * itemIndex + 0.1 * contentIndex, duration: 0.4 }}
-                                  dangerouslySetInnerHTML={{ __html: processTextToHtml(item) }}
+                                  dangerouslySetInnerHTML={{ __html: processedHtml }}
                                 />
-                              ))}
+                              );
+                              })}
                             </motion.ul>
                           );
                         } else if (contentBlock.type === 'callout') {
@@ -662,11 +933,21 @@ export default function GuidePage() {
                         return null; // Handle other content types as needed
                       })
                     ) : (
-                      // Render HTML content (legacy format)
-                      <div 
-                        className="mb-6 text-gray-300 leading-relaxed"
-                        dangerouslySetInnerHTML={{ __html: section.content }}
-                      />
+                      // Render HTML content as string with keyword processing
+                      (() => {
+                        const processedHtml = processTextToHtml(section.content);
+                        return (
+                          <motion.div 
+                            className="mb-6 text-gray-300 leading-relaxed"
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.1, duration: 0.5 }}
+                            whileInView={{ opacity: [null, 0.9, 1] }}
+                            viewport={{ once: true, margin: "-50px" }}
+                            dangerouslySetInnerHTML={{ __html: processedHtml }}
+                          />
+                        );
+                      })()
                     )}
                     
                     {/* Render token price tracker if section has one AND we're not using the global price tracker */}
