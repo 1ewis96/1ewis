@@ -8,7 +8,7 @@ const nextConfig = {
   
   // Image optimization for better performance
   images: {
-    domains: ['1ewis.com', 'www.1ewis.com'],
+    domains: ['1ewis.com', 'www.1ewis.com', 's3.1ewis.com'],
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 60,
   },

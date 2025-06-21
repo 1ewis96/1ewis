@@ -82,16 +82,27 @@ export default function Bitrue() {
     <div className="min-h-screen bg-black text-white">
       <Head>
         <title>Bitrue Review 2025 | XRP Trading, Fees & 30% Commission Bonus</title>
-        <meta name="description" content="Honest Bitrue review (2025): Compare fees, trading features, and security. Sign up with our referral link for exclusive 30% commission on trading fees and yield products." />
-        <meta name="keywords" content="bitrue review, bitrue vs binance, best crypto exchange for XRP, low fee crypto exchange 2025, bitrue referral code, bitrue power piggy" />
+        <meta name="description" content="Honest Bitrue review (2025): Compare fees, trading features, and security. Sign up with our referral link for exclusive 30% commission on trading fees and yield products up to 15% APR." />
+        <meta name="keywords" content="bitrue review, bitrue vs binance, best crypto exchange for XRP, low fee crypto exchange 2025, bitrue referral code, bitrue power piggy, crypto yield products, XRP trading platform" />
         <link rel="canonical" href="https://1ewis.com/bitrue" />
         <meta property="og:title" content="Bitrue Review 2025 | XRP Trading & 30% Commission Bonus" />
-        <meta property="og:description" content="Honest Bitrue review: Compare fees, trading features, and security. Get 30% commission on trading fees with our referral link." />
+        <meta property="og:description" content="Honest Bitrue review: Compare fees, trading features, and security. Get 30% commission on trading fees with our referral link and earn up to 15% APR on crypto." />
         <meta property="og:type" content="article" />
         <meta property="og:url" content="https://1ewis.com/bitrue" />
+        <meta property="og:image" content="https://1ewis.com/images/bitrue-review.jpg" />
+        <meta property="og:site_name" content="1ewis Crypto Reviews" />
+        <meta property="article:published_time" content="2025-01-15T08:00:00+01:00" />
+        <meta property="article:modified_time" content="2025-06-01T10:30:00+01:00" />
+        <meta property="article:author" content="https://1ewis.com/about" />
+        <meta property="article:section" content="Cryptocurrency Exchanges" />
+        <meta property="article:tag" content="Bitrue" />
+        <meta property="article:tag" content="XRP" />
+        <meta property="article:tag" content="Crypto Exchange" />
         <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@1ewiscom" />
         <meta name="twitter:title" content="Bitrue Review 2025 | XRP Trading & Bonuses" />
-        <meta name="twitter:description" content="Honest Bitrue review: Compare fees, trading features, and security. Get 30% commission on trading fees." />
+        <meta name="twitter:description" content="Honest Bitrue review: Compare fees, trading features, and security. Get 30% commission on trading fees and earn up to 15% APR on crypto." />
+        <meta name="twitter:image" content="https://1ewis.com/images/bitrue-review.jpg" />
         
         {/* Schema.org structured data for review */}
         <script type="application/ld+json">
@@ -104,32 +115,142 @@ export default function Bitrue() {
               "ratingValue": "4.5",
               "bestRating": "5"
             },
-            "reviewBody": "Bitrue is an excellent crypto exchange with a focus on XRP trading pairs and innovative yield products. The platform offers competitive fees, strong security measures, and a user-friendly interface for both beginners and advanced traders.",
+            "reviewBody": "Bitrue is an excellent crypto exchange with a focus on XRP trading pairs and innovative yield products. The platform offers competitive fees, strong security measures, and a user-friendly interface for both beginners and advanced traders. Their Power Piggy program provides up to 15% APR on crypto holdings.",
             "datePublished": "2025-01-15",
+            "dateModified": "2025-06-01",
             "author": {
               "@type": "Organization",
-              "name": "1ewis.com"
+              "name": "1ewis.com",
+              "url": "https://1ewis.com/about"
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "1ewis Crypto Reviews",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://1ewis.com/images/logo.png"
+              }
             },
             "itemReviewed": {
               "@type": "Product",
               "name": "Bitrue Exchange",
-              "description": "XRP-focused exchange with innovative crypto yield products",
+              "description": "XRP-focused exchange with innovative crypto yield products up to 15% APR",
+              "image": "https://1ewis.com/images/bitrue-logo.png",
               "brand": {
                 "@type": "Brand",
                 "name": "Bitrue"
+              },
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "4.5",
+                "reviewCount": "1"
               },
               "offers": {
                 "@type": "Offer",
                 "price": "0",
                 "priceCurrency": "USD",
-                "availability": "https://schema.org/InStock"
+                "availability": "https://schema.org/InStock",
+                "url": "https://1ewis.com/bitrue"
               }
             }
+          })}
+        </script>
+        
+        {/* FAQ Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is Bitrue Exchange?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Bitrue is a cryptocurrency exchange with a special focus on XRP and yield-generating products. It offers competitive trading fees, strong security measures, and innovative earning options like Power Piggy that provides up to 15% APR on crypto holdings."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Is Bitrue safe to use?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes, Bitrue employs industry-leading security measures including multi-factor authentication, cold storage for the majority of user funds, and a dedicated insurance fund to protect against potential losses."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What are Bitrue's trading fees?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Bitrue offers competitive trading fees starting at 0.098% for makers and 0.098% for takers. Users can get additional discounts by using BTR tokens or through the referral program which offers 30% commission on trading fees."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What is Bitrue Power Piggy?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Bitrue Power Piggy is a yield-generating program that allows users to earn interest on their crypto holdings with rates up to 15% APR. It supports multiple cryptocurrencies including BTC, ETH, XRP, and stablecoins, with flexible terms and daily interest payments."
+                }
+              }
+            ]
+          })}
+        </script>
+        
+        {/* Breadcrumb Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://1ewis.com/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Portfolio",
+                "item": "https://1ewis.com/portfolio"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Exchanges",
+                "item": "https://1ewis.com/exchanges"
+              },
+              {
+                "@type": "ListItem",
+                "position": 4,
+                "name": "Bitrue Review",
+                "item": "https://1ewis.com/bitrue"
+              }
+            ]
           })}
         </script>
       </Head>
 
       <main className="container mx-auto px-4 pt-32 pb-16">
+        {/* Breadcrumb Navigation */}
+        <nav className="text-sm mb-8" aria-label="Breadcrumb">
+          <div className="flex flex-wrap items-center">
+            <a href="/" className="text-gray-400 hover:text-yellow-400 transition-colors">Home</a>
+            <span className="mx-2 text-gray-600">/</span>
+            <a href="/portfolio" className="text-gray-400 hover:text-yellow-400 transition-colors">Portfolio</a>
+            <span className="mx-2 text-gray-600">/</span>
+            <a href="/exchanges" className="text-gray-400 hover:text-yellow-400 transition-colors">Exchanges</a>
+            <span className="mx-2 text-gray-600">/</span>
+            <span className="text-yellow-400" aria-current="page">Bitrue Review</span>
+          </div>
+        </nav>
+        
+        {/* Last Updated Info */}
+        <div className="mb-8 text-sm text-gray-400">
+          <span>Last updated: June 1, 2025</span> • <span>Reading time: 8 min</span>
+        </div>
         <section className="mb-16">
           <div className="flex flex-col md:flex-row items-center justify-between mb-12">
             <div className="md:w-1/2 mb-8 md:mb-0">
@@ -171,11 +292,21 @@ export default function Bitrue() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6 }}
-                className="relative w-full max-w-md"
+                className="relative w-full max-w-xl"
               >
                 <div className="bg-gradient-to-r from-yellow-500 to-yellow-300 rounded-full w-64 h-64 absolute -top-10 -right-10 blur-3xl opacity-20 z-0"></div>
-             
-              
+                
+                <div className="relative z-10 rounded-xl overflow-hidden shadow-2xl border border-yellow-500/30">
+                  <iframe
+                    width="100%"
+                    height="350"
+                    src="https://www.youtube.com/embed/pcPA400hEiU"
+                    title="Bitrue Exchange Tutorial"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="z-10"
+                  ></iframe>
+                </div>
               </motion.div>
             </div>
           </div>

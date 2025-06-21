@@ -6,6 +6,7 @@ import AnimatedFeatures from '../../components/AnimatedFeatures';
 import { useState } from 'react';
 import Head from 'next/head';
 import { getReferralLink } from '../../utils/referralLinks';
+import Footer from '../../components/Footer';
 
 export default function YouHodlerPage() {
   const [showMore, setShowMore] = useState(false);
@@ -65,11 +66,187 @@ export default function YouHodlerPage() {
   return (
     <div className="min-h-screen bg-black text-white">
       <Head>
-        <title>YouHodler | Earn, Borrow, and Multiply Your Crypto Assets</title>
-        <meta name="description" content="YouHodler is an all-in-one crypto platform for earning up to 13% APY, getting instant loans, and multiplying your digital assets." />
+        <title>YouHodler Review 2025 | Earn Up to 13% APY on Crypto Assets</title>
+        <meta name="description" content="YouHodler review (2025): Earn up to 13% APY on crypto, get instant loans with 90% LTV, and multiply your assets with up to 30x leverage. Regulated in Switzerland and EU." />
+        <meta name="keywords" content="youhodler review, crypto savings account, crypto interest rates, crypto loans, crypto yield platform, regulated crypto platform, multi hodl, crypto visa card" />
+        <link rel="canonical" href="https://1ewis.com/wallets/youhodler" />
+        
+        {/* Open Graph Tags */}
+        <meta property="og:title" content="YouHodler Review 2025 | Earn Up to 13% APY on Crypto Assets" />
+        <meta property="og:description" content="YouHodler offers up to 13% APY on crypto savings, instant loans with 90% LTV, and tools to multiply your assets with up to 30x leverage. Fully regulated in Switzerland and EU." />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="https://1ewis.com/wallets/youhodler" />
+        <meta property="og:image" content="https://1ewis.com/images/youhodler-review.jpg" />
+        <meta property="og:site_name" content="1ewis Crypto Reviews" />
+        <meta property="article:published_time" content="2025-02-15T10:00:00+01:00" />
+        <meta property="article:modified_time" content="2025-06-21T09:00:00+01:00" />
+        <meta property="article:author" content="https://1ewis.com/about" />
+        <meta property="article:section" content="Cryptocurrency Platforms" />
+        <meta property="article:tag" content="YouHodler" />
+        <meta property="article:tag" content="Crypto Savings" />
+        <meta property="article:tag" content="Crypto Loans" />
+        
+        {/* Twitter Card Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@1ewiscom" />
+        <meta name="twitter:title" content="YouHodler Review 2025 | Earn Up to 13% APY on Crypto" />
+        <meta name="twitter:description" content="YouHodler offers up to 13% APY on crypto savings, instant loans with 90% LTV, and tools to multiply your assets. Regulated in Switzerland and EU." />
+        <meta name="twitter:image" content="https://1ewis.com/images/youhodler-review.jpg" />
+        
+        {/* Schema.org structured data for review */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Review",
+            "name": "YouHodler Platform Review",
+            "reviewRating": {
+              "@type": "Rating",
+              "ratingValue": "4.6",
+              "bestRating": "5"
+            },
+            "reviewBody": "YouHodler is an excellent crypto platform offering high interest rates up to 13% APY on stablecoins and competitive rates on major cryptocurrencies. Their crypto-backed loans provide up to 90% LTV with instant approval, and their Multi HODL feature allows users to multiply their crypto holdings with leverage up to 30x. The platform is fully regulated in Switzerland and the EU, providing a secure environment for crypto financial services.",
+            "datePublished": "2025-02-15",
+            "dateModified": "2025-06-21",
+            "author": {
+              "@type": "Organization",
+              "name": "1ewis.com",
+              "url": "https://1ewis.com/about"
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "1ewis Crypto Reviews",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://1ewis.com/images/logo.png"
+              }
+            },
+            "itemReviewed": {
+              "@type": "Product",
+              "name": "YouHodler",
+              "description": "All-in-one crypto platform for earning, borrowing, and multiplying digital assets",
+              "image": "https://1ewis.com/images/youhodler-logo.png",
+              "brand": {
+                "@type": "Brand",
+                "name": "YouHodler"
+              },
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "4.6",
+                "reviewCount": "1"
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "USD",
+                "availability": "https://schema.org/InStock",
+                "url": "https://1ewis.com/wallets/youhodler"
+              }
+            }
+          })}
+        </script>
+        
+        {/* FAQ Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is YouHodler?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "YouHodler is an all-in-one crypto platform that offers crypto savings accounts with up to 13% APY, crypto-backed loans with up to 90% LTV, and tools like Multi HODL that allow users to multiply their crypto holdings with leverage up to 30x. The platform is fully regulated in Switzerland and the EU."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What interest rates does YouHodler offer?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "YouHodler offers some of the highest interest rates in the crypto industry, with up to 13% APY on stablecoins like USDT and USDC, 8% APY on Bitcoin (BTC), and 7% APY on Ethereum (ETH). Interest is paid weekly with no mandatory lock-up periods."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Is YouHodler safe and regulated?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes, YouHodler operates as a fully regulated financial entity across multiple jurisdictions including Switzerland, the European Union, Argentina, Italy, and Spain. The platform implements institutional-grade security measures and has up to $150 million in pooled crime insurance."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What is Multi HODL on YouHodler?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Multi HODL is YouHodler's leveraged trading feature that allows users to multiply their crypto holdings by up to 30x. It enables users to take advantage of both rising and falling markets without having to move their assets to a traditional exchange."
+                }
+              }
+            ]
+          })}
+        </script>
+        
+        {/* Breadcrumb Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://1ewis.com/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Portfolio",
+                "item": "https://1ewis.com/portfolio"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Wallets",
+                "item": "https://1ewis.com/wallets"
+              },
+              {
+                "@type": "ListItem",
+                "position": 4,
+                "name": "YouHodler Review",
+                "item": "https://1ewis.com/wallets/youhodler"
+              }
+            ]
+          })}
+        </script>
       </Head>
       
       <main className="container mx-auto px-4 pt-32 pb-16">
+        {/* Breadcrumb Navigation */}
+        <nav className="flex mb-6 text-sm text-gray-400">
+          <Link href="/" className="hover:text-teal-400 transition-colors">
+            Home
+          </Link>
+          <span className="mx-2">/</span>
+          <Link href="/portfolio" className="hover:text-teal-400 transition-colors">
+            Portfolio
+          </Link>
+          <span className="mx-2">/</span>
+          <Link href="/wallets" className="hover:text-teal-400 transition-colors">
+            Wallets
+          </Link>
+          <span className="mx-2">/</span>
+          <span className="text-teal-400">YouHodler Review</span>
+        </nav>
+        
+        {/* Last Updated Information */}
+        <div className="flex items-center text-xs text-gray-400 mb-8">
+          <span>Last updated: June 21, 2025</span>
+          <span className="mx-2">•</span>
+          <span>5 min read</span>
+        </div>
+        
         <section className="mb-16">
           <div className="flex flex-col md:flex-row items-center justify-between mb-12">
             <div className="md:w-1/2 mb-8 md:mb-0">
@@ -111,9 +288,21 @@ export default function YouHodlerPage() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6 }}
-                className="relative w-full max-w-md"
+                className="relative w-full max-w-xl"
               >
                 <div className="bg-gradient-to-r from-teal-500 to-teal-300 rounded-full w-64 h-64 absolute -top-10 -right-10 blur-3xl opacity-20 z-0"></div>
+                
+                <div className="relative z-10 rounded-xl overflow-hidden shadow-2xl border border-teal-500/30">
+                  <iframe
+                    width="100%"
+                    height="350"
+                    src="https://www.youtube.com/embed/pcPA400hEiU"
+                    title="YouHodler Platform Tutorial"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="z-10"
+                  ></iframe>
+                </div>
               </motion.div>
             </div>
           </div>
@@ -402,36 +591,7 @@ export default function YouHodlerPage() {
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="px-6 md:px-16 py-8 text-center text-sm text-gray-500 bg-black border-t border-gray-800">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div>
-              © 2025 1ewis.com — All Rights Reserved
-            </div>
-            <div className="flex items-center space-x-4 mt-4 md:mt-0">
-              <a 
-                href="https://github.com/1ewis96/1ewis" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center hover:text-gray-300 transition-colors duration-200"
-              >
-                <Shield className="w-5 h-5 mr-2" />
-                GitHub
-              </a>
-              <a 
-                href="https://x.com/1ewis_" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center hover:text-gray-300 transition-colors duration-200"
-              >
-                <Zap className="w-5 h-5 mr-2" />
-                Twitter
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
       
       {/* Fixed Referral Button */}
       <div className="fixed bottom-6 right-6 z-50">

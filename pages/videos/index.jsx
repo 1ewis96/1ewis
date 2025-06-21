@@ -100,9 +100,61 @@ export default function VideosPage() {
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-black text-white">
       <Head>
         <title>Crypto Videos & Tutorials | 1ewis.com</title>
-        <meta name="description" content="Watch the best cryptocurrency videos, tutorials, and educational content to help you navigate the crypto world." />
-        <meta name="keywords" content="crypto videos, cryptocurrency tutorials, blockchain education, crypto youtube" />
+        <meta name="description" content="Watch the best cryptocurrency videos, tutorials, and educational content to help you navigate the crypto world. Learn about Bitcoin, Ethereum, DeFi, NFTs, and more." />
+        <meta name="keywords" content="crypto videos, cryptocurrency tutorials, blockchain education, bitcoin videos, ethereum tutorials, defi education, crypto youtube" />
         <link rel="canonical" href="https://1ewis.com/videos" />
+        
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://1ewis.com/videos" />
+        <meta property="og:title" content="Crypto Videos & Tutorials | 1ewis.com" />
+        <meta property="og:description" content="Watch the best cryptocurrency videos, tutorials, and educational content to help you navigate the crypto world." />
+        <meta property="og:image" content="https://1ewis.com/images/og-videos.jpg" />
+        
+        {/* Twitter */}
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://1ewis.com/videos" />
+        <meta property="twitter:title" content="Crypto Videos & Tutorials | 1ewis.com" />
+        <meta property="twitter:description" content="Watch the best cryptocurrency videos, tutorials, and educational content to help you navigate the crypto world." />
+        <meta property="twitter:image" content="https://1ewis.com/images/og-videos.jpg" />
+        
+        {/* Additional SEO tags */}
+        <meta name="robots" content="index, follow" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#000000" />
+        
+        {/* Video structured data */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'ItemList',
+            'itemListElement': videos.slice(0, 10).map((video, index) => ({
+              '@type': 'ListItem',
+              'position': index + 1,
+              'item': {
+                '@type': 'VideoObject',
+                '@id': `https://1ewis.com/video/${video.videoId}`,
+                'name': video.title,
+                'description': video.description,
+                'thumbnailUrl': video.thumbnail,
+                'uploadDate': video.publishedAt,
+                'duration': 'PT10M', // Default duration format for Schema.org
+                'embedUrl': `https://www.youtube.com/embed/${video.videoId}`,
+                'contentUrl': `https://www.youtube.com/watch?v=${video.videoId}`,
+                'publisher': {
+                  '@type': 'Organization',
+                  'name': '1ewis',
+                  'logo': {
+                    '@type': 'ImageObject',
+                    'url': 'https://1ewis.com/images/logo.png',
+                    'width': '112',
+                    'height': '112'
+                  }
+                }
+              }
+            }))
+          })}
+        </script>
       </Head>
       
       <main className="flex-1 relative">

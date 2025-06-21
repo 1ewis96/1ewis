@@ -1,5 +1,6 @@
 import { Button, ButtonLink } from "../../components/ui/button";
-import { ArrowRight, ChevronDown, Shield, Zap, BarChart, Wallet, Github, Twitter, ExternalLink, Lock, Smartphone, Sparkles, Layers, RefreshCw, Check } from "lucide-react";
+import { ArrowRight, ChevronDown, Shield, Zap, BarChart, Wallet, ExternalLink, Lock, Smartphone, Sparkles, Layers, RefreshCw, Check } from "lucide-react";
+import Footer from '../../components/Footer';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -119,13 +120,190 @@ export default function LedgerPage() {
   return (
     <div className="min-h-screen bg-black text-white">
       <Head>
-        <title>Ledger Hardware Wallets | 1ewis.com</title>
-        <meta name="description" content="Explore Ledger hardware wallets for secure cryptocurrency storage. Compare Nano S Plus, Nano X, and Stax models with exclusive deals." />
+        <title>Ledger Hardware Wallets Review 2025 | Secure Your Crypto Assets</title>
+        <meta name="description" content="Ledger hardware wallets review (2025): Compare Nano S Plus, Nano X, and Stax models. Military-grade security for 5,500+ cryptocurrencies with exclusive deals." />
+        <meta name="keywords" content="ledger hardware wallet, ledger nano x review, ledger stax review, crypto hardware wallet, secure cryptocurrency storage, ledger nano s plus, best crypto wallet 2025" />
+        <link rel="canonical" href="https://1ewis.com/wallets/ledger" />
+        
+        {/* Open Graph Tags */}
+        <meta property="og:title" content="Ledger Hardware Wallets Review 2025 | Secure Your Crypto Assets" />
+        <meta property="og:description" content="Compare Ledger's hardware wallet lineup: Nano S Plus, Nano X, and Stax models. Military-grade security for 5,500+ cryptocurrencies with offline storage and exclusive deals." />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="https://1ewis.com/wallets/ledger" />
+        <meta property="og:image" content="https://1ewis.com/images/ledger-review.jpg" />
+        <meta property="og:site_name" content="1ewis Crypto Reviews" />
+        <meta property="article:published_time" content="2025-03-10T10:00:00+01:00" />
+        <meta property="article:modified_time" content="2025-06-21T09:00:00+01:00" />
+        <meta property="article:author" content="https://1ewis.com/about" />
+        <meta property="article:section" content="Cryptocurrency Wallets" />
+        <meta property="article:tag" content="Ledger" />
+        <meta property="article:tag" content="Hardware Wallet" />
+        <meta property="article:tag" content="Crypto Security" />
+        
+        {/* Twitter Card Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@1ewiscom" />
+        <meta name="twitter:title" content="Ledger Hardware Wallets Review 2025" />
+        <meta name="twitter:description" content="Compare Ledger's hardware wallet lineup: Nano S Plus, Nano X, and Stax. Military-grade security for 5,500+ cryptocurrencies with offline storage." />
+        <meta name="twitter:image" content="https://1ewis.com/images/ledger-review.jpg" />
+        
+        {/* Schema.org structured data for review */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Review",
+            "name": "Ledger Hardware Wallets Review",
+            "reviewRating": {
+              "@type": "Rating",
+              "ratingValue": "4.8",
+              "bestRating": "5"
+            },
+            "reviewBody": "Ledger hardware wallets provide industry-leading security for cryptocurrency storage with their certified secure chips and air-gapped protection. The lineup includes the affordable Nano S Plus, the Bluetooth-enabled Nano X for mobile management, and the premium Stax with its E-ink touchscreen. All devices support 5,500+ cryptocurrencies through the intuitive Ledger Live app, making them the gold standard for crypto security.",
+            "datePublished": "2025-03-10",
+            "dateModified": "2025-06-21",
+            "author": {
+              "@type": "Organization",
+              "name": "1ewis.com",
+              "url": "https://1ewis.com/about"
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "1ewis Crypto Reviews",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://1ewis.com/images/logo.png"
+              }
+            },
+            "itemReviewed": {
+              "@type": "Product",
+              "name": "Ledger Hardware Wallets",
+              "description": "Secure cryptocurrency hardware wallets with offline storage and military-grade encryption",
+              "image": "https://1ewis.com/images/ledger-wallets.png",
+              "brand": {
+                "@type": "Brand",
+                "name": "Ledger"
+              },
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "4.8",
+                "reviewCount": "1"
+              },
+              "offers": {
+                "@type": "AggregateOffer",
+                "lowPrice": "79",
+                "highPrice": "279",
+                "priceCurrency": "USD",
+                "availability": "https://schema.org/InStock",
+                "url": "https://1ewis.com/wallets/ledger"
+              }
+            }
+          })}
+        </script>
+        
+        {/* FAQ Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is a Ledger hardware wallet?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "A Ledger hardware wallet is a physical device that securely stores the private keys to your cryptocurrency offline, protecting them from online threats like hackers and malware. Ledger devices use certified secure chips to isolate your keys and require physical confirmation for all transactions."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Which Ledger model is best for beginners?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "The Ledger Nano S Plus is ideal for beginners due to its affordable price point and user-friendly design. It supports 5,500+ cryptocurrencies, has a large screen for transaction verification, and can store up to 100+ apps simultaneously, making it perfect for those new to hardware wallets."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Are Ledger hardware wallets secure?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes, Ledger hardware wallets are extremely secure. They use certified secure chips (CC EAL5+) that have never been remotely hacked, run on Ledger's proprietary BOLOS operating system, and keep your private keys completely offline. Every transaction must be physically verified on the device, protecting against remote attacks even if your computer is compromised."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What happens if I lose my Ledger device?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "If you lose your Ledger device, your crypto assets remain safe as long as you have your 24-word recovery phrase. This backup phrase allows you to restore all your accounts on a new Ledger device or compatible wallet. This is why it's crucial to write down your recovery phrase and store it in a secure location when setting up your device."
+                }
+              }
+            ]
+          })}
+        </script>
+        
+        {/* Breadcrumb Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://1ewis.com/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Portfolio",
+                "item": "https://1ewis.com/portfolio"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Wallets",
+                "item": "https://1ewis.com/wallets"
+              },
+              {
+                "@type": "ListItem",
+                "position": 4,
+                "name": "Ledger Review",
+                "item": "https://1ewis.com/wallets/ledger"
+              }
+            ]
+          })}
+        </script>
       </Head>
       
+      <main className="container mx-auto px-4 pt-32 pb-4">
+        {/* Breadcrumb Navigation */}
+        <nav className="flex mb-4 text-sm text-gray-400">
+          <Link href="/" className="hover:text-blue-400 transition-colors">
+            Home
+          </Link>
+          <span className="mx-2">/</span>
+          <Link href="/portfolio" className="hover:text-blue-400 transition-colors">
+            Portfolio
+          </Link>
+          <span className="mx-2">/</span>
+          <Link href="/wallets" className="hover:text-blue-400 transition-colors">
+            Wallets
+          </Link>
+          <span className="mx-2">/</span>
+          <span className="text-blue-400">Ledger Review</span>
+        </nav>
+        
+        {/* Last Updated Information */}
+        <div className="flex items-center text-xs text-gray-400 mb-4">
+          <span>Last updated: June 21, 2025</span>
+          <span className="mx-2">•</span>
+          <span>7 min read</span>
+        </div>
       
-      {/* Hero Section */}
-      <section className="relative overflow-hidden">
+        {/* Hero Section */}
+      <section className="relative overflow-hidden mt-4">
         {/* Background elements */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
           <div className="absolute top-1/4 left-1/4 w-1/2 h-1/2 bg-blue-500/5 rounded-full blur-[100px]"></div>
@@ -133,7 +311,7 @@ export default function LedgerPage() {
           <div className="absolute top-1/3 right-1/3 w-1/4 h-1/4 bg-green-500/5 rounded-full blur-[100px]"></div>
         </div>
         
-        <div className="px-6 py-24 md:py-32 md:px-16 relative z-10">
+        <div className="px-6 py-8 md:py-16 md:px-16 relative z-10">
           <motion.div 
             className="text-center mb-16"
             initial={{ opacity: 0, y: -20 }}
@@ -153,7 +331,7 @@ export default function LedgerPage() {
             </p>
             
             <motion.div
-              className="flex flex-wrap justify-center gap-4"
+              className="flex flex-wrap justify-center gap-4 mb-8"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3, duration: 0.6 }}
@@ -181,6 +359,26 @@ export default function LedgerPage() {
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </span>
               </ButtonLink>
+            </motion.div>
+            
+            <motion.div
+              className="max-w-3xl mx-auto"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.4, duration: 0.6 }}
+            >
+              <div className="relative rounded-xl overflow-hidden shadow-2xl border border-blue-500/30 bg-gradient-to-br from-gray-900/80 to-gray-800/80">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 z-0"></div>
+                <iframe
+                  width="100%"
+                  height="400"
+                  src="https://www.youtube.com/embed/pcPA400hEiU"
+                  title="Ledger Hardware Wallet Tutorial"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="relative z-10"
+                ></iframe>
+              </div>
             </motion.div>
           </motion.div>
 
@@ -476,36 +674,7 @@ export default function LedgerPage() {
       </div>
     </section>
 
-    {/* Footer */}
-    <footer className="px-6 md:px-16 py-8 text-center text-sm text-gray-500 bg-black border-t border-gray-800">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div>
-              © 2025 1ewis.com — All Rights Reserved
-            </div>
-            <div className="flex items-center space-x-4 mt-4 md:mt-0">
-              <a 
-                href="https://github.com/1ewis96/1ewis" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center hover:text-gray-300 transition-colors duration-200"
-              >
-                <Github className="w-5 h-5 mr-2" />
-                GitHub
-              </a>
-              <a 
-                href="https://x.com/1ewis_" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center hover:text-gray-300 transition-colors duration-200"
-              >
-                <Twitter className="w-5 h-5 mr-2" />
-                Twitter
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
+    <Footer />
       
       {/* Floating Call-to-Action Button */}
       <motion.div 
@@ -541,6 +710,7 @@ export default function LedgerPage() {
           </div>
         </a>
       </motion.div>
+      </main>
     </div>
   );
 }

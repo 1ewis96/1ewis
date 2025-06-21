@@ -1,8 +1,9 @@
 import { Button, ButtonLink } from "../../components/ui/button";
-import { ArrowRight, ChevronDown, Shield, Zap, BarChart, LineChart, Github, Twitter, Check, DollarSign, FileText, Server, Database, Users, Clock, Award } from "lucide-react";
+import { ArrowRight, ChevronDown, Shield, Zap, BarChart, LineChart, Check, DollarSign, FileText, Server, Database, Users, Clock, Award } from "lucide-react";
 import Link from 'next/link';
 import Head from 'next/head';
 import { motion } from 'framer-motion';
+import Footer from '../../components/Footer';
 import AnimatedFeatures from '../../components/AnimatedFeatures';
 import { useState } from 'react';
 import { getToolReferral } from '../../utils/referralLinks';
@@ -57,12 +58,172 @@ export default function CoinTrackingPage() {
     <div className="min-h-screen bg-black text-white">
       <Head>
         <title>CoinTracking | Crypto Portfolio Tracking & Tax Reporting</title>
-        <meta name="description" content="CoinTracking offers a comprehensive crypto portfolio management and tax reporting solution. Track your assets, generate tax reports, and analyze your performance." />
+        <meta name="description" content="CoinTracking offers a comprehensive crypto portfolio management and tax reporting solution. Track your assets, generate tax reports, and analyze your performance across 110+ exchanges and 15+ blockchains." />
+        <meta name="keywords" content="CoinTracking, crypto portfolio tracker, cryptocurrency tax software, crypto tax reporting, portfolio management, crypto accounting, blockchain analytics" />
+        <link rel="canonical" href="https://1ewis.com/tools/cointracking" />
+        
+        {/* Open Graph Meta Tags */}
+        <meta property="og:title" content="CoinTracking | Crypto Portfolio Tracking & Tax Reporting" />
+        <meta property="og:description" content="CoinTracking offers a comprehensive crypto portfolio management and tax reporting solution. Track your assets, generate tax reports, and analyze your performance across 110+ exchanges." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://1ewis.com/tools/cointracking" />
+        <meta property="og:image" content="https://1ewis.com/images/tools/cointracking-preview.jpg" />
+        <meta property="og:site_name" content="1ewis.com" />
+        
+        {/* Twitter Card Meta Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@1ewis_" />
+        <meta name="twitter:title" content="CoinTracking | Crypto Portfolio Tracking & Tax Reporting" />
+        <meta name="twitter:description" content="CoinTracking offers a comprehensive crypto portfolio management and tax reporting solution. Track your assets, generate tax reports, and analyze your performance." />
+        <meta name="twitter:image" content="https://1ewis.com/images/tools/cointracking-preview.jpg" />
+        
+        {/* Schema.org structured data for Review */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Review",
+            "name": "CoinTracking Review",
+            "reviewBody": "CoinTracking is a powerful crypto portfolio management and tax reporting solution that supports over 110 exchanges and 15 blockchains. It offers comprehensive tax reports for 25+ countries, real-time portfolio tracking, and advanced analytics for crypto investors of all levels.",
+            "reviewRating": {
+              "@type": "Rating",
+              "ratingValue": "4.7",
+              "bestRating": "5"
+            },
+            "author": {
+              "@type": "Person",
+              "name": "Lewis"
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "1ewis.com",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://1ewis.com/logo.png"
+              }
+            },
+            "datePublished": "2025-06-21",
+            "itemReviewed": {
+              "@type": "SoftwareApplication",
+              "name": "CoinTracking",
+              "applicationCategory": "FinanceApplication",
+              "operatingSystem": "Web, iOS, Android",
+              "offers": {
+                "@type": "AggregateOffer",
+                "lowPrice": "0",
+                "highPrice": "599.99",
+                "priceCurrency": "EUR",
+                "offerCount": "4"
+              }
+            }
+          })}
+        </script>
+        
+        {/* Schema.org structured data for FAQ */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is CoinTracking?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "CoinTracking is a comprehensive cryptocurrency portfolio management and tax reporting platform that allows users to track their holdings across 110+ exchanges and 15+ blockchains. It provides real-time portfolio valuation, profit/loss calculations, and generates tax reports for over 25 countries."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How does CoinTracking help with crypto taxes?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "CoinTracking automatically calculates your taxable gains and losses using various accounting methods (FIFO, LIFO, HIFO, etc.) and generates tax reports compliant with regulations in over 25 countries. It tracks all your transactions including trades, mining, staking, airdrops, and DeFi activities to ensure accurate tax reporting."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can CoinTracking connect to my exchanges and wallets?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes, CoinTracking offers automatic data import from over 110 cryptocurrency exchanges via API connections and CSV file imports. It also supports blockchain analysis for 15+ blockchains to track wallet transactions. This allows for seamless tracking of your entire crypto portfolio in one place."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Is there a free version of CoinTracking?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes, CoinTracking offers a free plan that allows you to track up to 200 transactions. For more active traders, they offer Pro, Expert, and Unlimited plans with additional features such as unlimited transactions, advanced tax reports, and priority support."
+                }
+              }
+            ]
+          })}
+        </script>
+        
+        {/* Schema.org structured data for BreadcrumbList */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://1ewis.com"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Portfolio",
+                "item": "https://1ewis.com/portfolio"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Tools",
+                "item": "https://1ewis.com/tools"
+              },
+              {
+                "@type": "ListItem",
+                "position": 4,
+                "name": "CoinTracking Review",
+                "item": "https://1ewis.com/tools/cointracking"
+              }
+            ]
+          })}
+        </script>
       </Head>
       
+      {/* Breadcrumb Navigation Container */}
+      <main className="container mx-auto px-4 pt-32 pb-4">
+        {/* Breadcrumb Navigation */}
+        <nav className="flex mb-4 text-sm text-gray-400">
+          <Link href="/" className="hover:text-violet-400 transition-colors">
+            Home
+          </Link>
+          <span className="mx-2">/</span>
+          <Link href="/portfolio" className="hover:text-violet-400 transition-colors">
+            Portfolio
+          </Link>
+          <span className="mx-2">/</span>
+          <Link href="/tools" className="hover:text-violet-400 transition-colors">
+            Tools
+          </Link>
+          <span className="mx-2">/</span>
+          <span className="text-violet-400">CoinTracking Review</span>
+        </nav>
+        
+        {/* Last Updated Information */}
+        <div className="flex items-center text-xs text-gray-400 mb-4">
+          <span>Last updated: June 21, 2025</span>
+          <span className="mx-2">•</span>
+          <span>8 min read</span>
+        </div>
+      </main>
+
       {/* Hero Section */}
-      <main className="container mx-auto px-4 pt-32 pb-16">
-        <section className="mb-16">
+      <section className="container mx-auto px-4 mt-4 mb-16">
           <div className="flex flex-col md:flex-row items-center justify-between mb-12">
             <div className="md:w-1/2 mb-8 md:mb-0">
               <motion.h1 
@@ -103,9 +264,23 @@ export default function CoinTrackingPage() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6 }}
-                className="relative w-full max-w-md"
+                className="relative w-full max-w-xl"
               >
                 <div className="bg-gradient-to-r from-violet-500 to-violet-300 rounded-full w-64 h-64 absolute -top-10 -right-10 blur-3xl opacity-20 z-0"></div>
+                
+                <div className="relative z-10 rounded-xl overflow-hidden shadow-2xl border border-violet-500/30">
+                  <div className="absolute inset-0 bg-gradient-to-r from-violet-600/10 to-purple-400/10 z-0"></div>
+                  <div className="absolute -inset-1 bg-gradient-to-r from-violet-500/30 to-purple-300/30 rounded-xl blur-sm z-0"></div>
+                  <iframe
+                    width="100%"
+                    height="300"
+                    src="https://www.youtube.com/embed/pcPA400hEiU"
+                    title="CoinTracking Tutorial"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="relative z-10"
+                  ></iframe>
+                </div>
               </motion.div>
             </div>
           </div>
@@ -163,7 +338,7 @@ export default function CoinTrackingPage() {
         </section>
 
         {/* Features Section */}
-        <section className="mb-16">
+        <section className="container mx-auto px-4 mb-16">
           <div className="text-center mb-10">
             <h2 className="text-3xl font-bold mb-4 text-violet-400">Why Choose CoinTracking?</h2>
             <p className="text-gray-400 max-w-2xl mx-auto">
@@ -174,7 +349,7 @@ export default function CoinTrackingPage() {
         </section>
 
         {/* Stats Section */}
-        <section className="mb-16">
+        <section className="container mx-auto px-4 mb-16">
           <motion.div 
             className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16"
             variants={containerVariants}
@@ -202,7 +377,7 @@ export default function CoinTrackingPage() {
         </section>
 
         {/* Plans Section */}
-        <section className="mb-16">
+        <section className="container mx-auto px-4 mb-16">
           <motion.div
             className="mb-16"
             initial={{ opacity: 0, y: 20 }}
@@ -433,7 +608,7 @@ export default function CoinTrackingPage() {
         </section>
 
         {/* Why Choose Section */}
-        <section className="mb-16">
+        <section className="container mx-auto px-4 mb-16">
           <motion.div
             className="mb-16"
             initial={{ opacity: 0, y: 20 }}
@@ -473,7 +648,7 @@ export default function CoinTrackingPage() {
         </section>
 
         {/* Use Cases Section */}
-        <section className="mb-16">
+        <section className="container mx-auto px-4 mb-16">
           <motion.div
             className="mb-16"
             initial={{ opacity: 0, y: 20 }}
@@ -512,7 +687,7 @@ export default function CoinTrackingPage() {
         </section>
 
         {/* CTA Section */}
-        <section className="mb-16">
+        <section className="container mx-auto px-4 mb-16">
           <motion.div 
             className="text-center"
             initial={{ opacity: 0, y: 20 }}
@@ -535,38 +710,8 @@ export default function CoinTrackingPage() {
             </ButtonLink>
           </motion.div>
         </section>
-      </main>
 
-      {/* Footer */}
-      <footer className="px-6 md:px-16 py-8 text-center text-sm text-gray-500 bg-black border-t border-gray-800">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div>
-              © 2025 1ewis.com — All Rights Reserved
-            </div>
-            <div className="flex items-center space-x-4 mt-4 md:mt-0">
-              <a 
-                href="https://github.com/1ewis96/1ewis" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center hover:text-gray-300 transition-colors duration-200"
-              >
-                <Github className="w-5 h-5 mr-2" />
-                GitHub
-              </a>
-              <a 
-                href="https://x.com/1ewis_" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center hover:text-gray-300 transition-colors duration-200"
-              >
-                <Twitter className="w-5 h-5 mr-2" />
-                Twitter
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
       
       {/* Floating CTA Button */}
       <div className="fixed bottom-6 right-6 z-50">

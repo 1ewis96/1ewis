@@ -1,9 +1,11 @@
 import { Button, ButtonLink } from "../components/ui/button";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import Link from 'next/link';
+import Head from 'next/head';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import referralData from '../data/referralLinks.json';
+import Footer from '../components/Footer';
 
 export default function PortfolioPage() {
   // Prepare data from referralLinks.json
@@ -188,8 +190,64 @@ export default function PortfolioPage() {
     return null;
   };
   
+  // Structured data for rich results
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "itemListElement": [
+      ...exchanges.map((exchange, index) => ({
+        "@type": "ListItem",
+        "position": index + 1,
+        "item": {
+          "@type": "Product",
+          "name": exchange.name,
+          "description": exchange.description,
+          "url": `https://1ewis.com${exchange.link}`
+        }
+      })),
+      ...wallets.map((wallet, index) => ({
+        "@type": "ListItem",
+        "position": exchanges.length + index + 1,
+        "item": {
+          "@type": "Product",
+          "name": wallet.name,
+          "description": wallet.description,
+          "url": `https://1ewis.com${wallet.link}`
+        }
+      })),
+      ...tools.map((tool, index) => ({
+        "@type": "ListItem",
+        "position": exchanges.length + wallets.length + index + 1,
+        "item": {
+          "@type": "Product",
+          "name": tool.name,
+          "description": tool.description,
+          "url": `https://1ewis.com${tool.link}`
+        }
+      }))
+    ]
+  };
+
   return (
     <div className="min-h-screen bg-gray-900 text-white relative">
+      <Head>
+        <title>Best Crypto Exchanges, Wallets & Tools | 1ewis Affiliate Portfolio</title>
+        <meta name="description" content="Discover our curated selection of top crypto exchanges, secure wallets, and essential trading tools with exclusive bonuses through our affiliate links." />
+        <meta name="keywords" content="crypto exchanges, cryptocurrency wallets, crypto trading tools, crypto affiliate, best crypto platforms" />
+        <meta property="og:title" content="Best Crypto Exchanges, Wallets & Tools | 1ewis Affiliate Portfolio" />
+        <meta property="og:description" content="Discover our curated selection of top crypto exchanges, secure wallets, and essential trading tools with exclusive bonuses through our affiliate links." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://1ewis.com/portfolio" />
+        <meta property="og:image" content="https://1ewis.com/images/portfolio-og.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Best Crypto Exchanges, Wallets & Tools | 1ewis Affiliate Portfolio" />
+        <meta name="twitter:description" content="Discover our curated selection of top crypto exchanges, secure wallets, and essential trading tools with exclusive bonuses through our affiliate links." />
+        <meta name="twitter:image" content="https://1ewis.com/images/portfolio-og.jpg" />
+        <link rel="canonical" href="https://1ewis.com/portfolio" />
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
+      </Head>
       {/* Hero Section with Particle Background */}
       <div id="particle-container" className="relative px-6 pt-32 pb-20 md:px-16 bg-gradient-to-b from-gray-900 to-black overflow-hidden">
         <ParticleBackground />
@@ -201,10 +259,10 @@ export default function PortfolioPage() {
           transition={{ duration: 0.6 }}
         >
           <h1 className="text-4xl md:text-6xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-blue-400 to-teal-400">
-            Crypto Affiliate Portfolio
+            Best Crypto Exchanges, Wallets & Tools
           </h1>
           <p className="text-lg md:text-xl max-w-2xl mx-auto text-gray-300">
-            Discover our carefully selected exchanges, wallets, and tools that offer the best features and affiliate programs.
+            Discover our carefully selected exchanges, wallets, and tools with exclusive bonuses through our affiliate links. Updated June 2025.
           </p>
         </motion.div>
 
@@ -608,16 +666,28 @@ export default function PortfolioPage() {
           </div>
         </motion.div>
 
-        {/* Footer */}
-        <footer className="mt-20 text-center text-sm text-gray-500">
-          <div className="mb-4">
-            <Link href="/" className="text-gray-400 hover:text-blue-400">
-              ← Back to Home
-            </Link>
-          </div>
-          © 2025 1ewis.com — All affiliate links on this site help support the content at no extra cost to you.
-        </footer>
+        {/* CTA Section */}
+        <motion.div 
+          className="my-16 text-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+        >
+          <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to Start Your Crypto Journey?</h2>
+          <p className="text-lg text-gray-300 max-w-2xl mx-auto mb-6">Choose from our recommended platforms and get exclusive bonuses when you sign up.</p>
+          <ButtonLink 
+            href="#" 
+            className="bg-gradient-to-r from-yellow-500 to-yellow-400 hover:from-yellow-400 hover:to-yellow-300 text-black font-medium px-8 py-3 rounded-lg"
+          >
+            Explore Top Exchanges <ArrowRight className="ml-2 h-5 w-5" />
+          </ButtonLink>
+        </motion.div>
+
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

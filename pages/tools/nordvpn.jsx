@@ -6,8 +6,6 @@ import {
   Zap, 
   Globe, 
   Lock, 
-  Github, 
-  Twitter, 
   Check, 
   Key, 
   Fingerprint, 
@@ -16,12 +14,15 @@ import {
   Wifi, 
   ExternalLink,
   CreditCard,
-  RefreshCw
+  RefreshCw,
+  Github,
+  Twitter
 } from "lucide-react";
 import Link from 'next/link';
 import Image from 'next/image';
 import Head from 'next/head';
 import { motion, AnimatePresence } from 'framer-motion';
+import Footer from '../../components/Footer';
 import PriceTicker from '../../components/PriceTicker';
 import AnimatedFeatures from '../../components/AnimatedFeatures';
 import { useState } from 'react';
@@ -153,6 +154,140 @@ export default function NordVPNPage() {
       <Head>
         <title>Nord Security | Protect Your Crypto Activities with NordVPN & NordPass</title>
         <meta name="description" content="Secure your crypto activities with NordVPN and NordPass. Get 72% off NordVPN and 50% savings on NordPass Premium with our exclusive referral links." />
+        <meta name="keywords" content="NordVPN, NordPass, VPN for crypto, password manager, online privacy, secure browsing, data protection, cybersecurity" />
+        <link rel="canonical" href="https://1ewis.com/tools/nordvpn" />
+        
+        {/* Open Graph Meta Tags */}
+        <meta property="og:title" content="Nord Security | Protect Your Crypto Activities with NordVPN & NordPass" />
+        <meta property="og:description" content="Secure your crypto activities with NordVPN and NordPass. Get 72% off NordVPN and 50% savings on NordPass Premium with our exclusive referral links." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://1ewis.com/tools/nordvpn" />
+        <meta property="og:image" content="https://1ewis.com/images/tools/nordvpn-preview.jpg" />
+        <meta property="og:site_name" content="1ewis.com" />
+        
+        {/* Twitter Card Meta Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@1ewis_" />
+        <meta name="twitter:title" content="Nord Security | Protect Your Crypto Activities with NordVPN & NordPass" />
+        <meta name="twitter:description" content="Secure your crypto activities with NordVPN and NordPass. Get 72% off NordVPN and 50% savings on NordPass Premium with our exclusive referral links." />
+        <meta name="twitter:image" content="https://1ewis.com/images/tools/nordvpn-preview.jpg" />
+        
+        {/* Schema.org structured data for Review */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Review",
+            "name": "NordVPN & NordPass Review",
+            "reviewBody": "Nord Security offers an impressive suite of privacy tools. NordVPN provides excellent encryption, fast speeds, and a strict no-logs policy, while NordPass offers secure password management with data breach scanning and cross-platform synchronization.",
+            "reviewRating": {
+              "@type": "Rating",
+              "ratingValue": "4.8",
+              "bestRating": "5"
+            },
+            "author": {
+              "@type": "Person",
+              "name": "Lewis"
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "1ewis.com",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://1ewis.com/logo.png"
+              }
+            },
+            "datePublished": "2025-06-21",
+            "itemReviewed": {
+              "@type": "SoftwareApplication",
+              "name": "Nord Security",
+              "applicationCategory": "SecurityApplication",
+              "operatingSystem": "Windows, macOS, iOS, Android, Linux",
+              "offers": {
+                "@type": "AggregateOffer",
+                "lowPrice": "3.19",
+                "highPrice": "11.99",
+                "priceCurrency": "USD",
+                "offerCount": "4"
+              }
+            }
+          })}
+        </script>
+        
+        {/* Schema.org structured data for FAQ */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Why do I need a VPN for cryptocurrency activities?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "A VPN like NordVPN encrypts your internet connection, protecting your crypto transactions from hackers and preventing your IP address from being linked to your wallet addresses. This adds an essential layer of privacy and security for traders, investors, and anyone using cryptocurrency."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Is NordVPN good for crypto traders and investors?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes, NordVPN is excellent for crypto traders and investors because it offers military-grade encryption, a strict no-logs policy, protection against DDoS attacks, and the ability to bypass geo-restrictions on certain exchanges. Its NordLynx protocol also ensures fast speeds for real-time trading."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How does NordPass help protect my crypto investments?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "NordPass helps protect your crypto investments by securely storing your exchange passwords, wallet recovery phrases, and private keys in encrypted notes. It also offers data breach scanning to alert you if your credentials are compromised, and uses zero-knowledge architecture so even Nord can't access your sensitive information."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can I use NordVPN and NordPass on multiple devices?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes, NordVPN allows you to protect up to 6 devices simultaneously with a single subscription. NordPass Premium also offers unlimited device synchronization, allowing you to access your passwords and secure notes across all your devices."
+                }
+              }
+            ]
+          })}
+        </script>
+        
+        {/* Schema.org structured data for BreadcrumbList */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://1ewis.com"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Portfolio",
+                "item": "https://1ewis.com/portfolio"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Tools",
+                "item": "https://1ewis.com/tools"
+              },
+              {
+                "@type": "ListItem",
+                "position": 4,
+                "name": "Nord Security Review",
+                "item": "https://1ewis.com/tools/nordvpn"
+              }
+            ]
+          })}
+        </script>
       </Head>
       
       {/* Background elements */}
@@ -161,9 +296,35 @@ export default function NordVPNPage() {
         <div className="absolute bottom-1/4 left-1/4 w-1/3 h-1/3 bg-blue-900/5 rounded-full blur-[100px]"></div>
       </div>
       
+      {/* Breadcrumb Navigation Container */}
+      <main className="container mx-auto px-4 pt-32 pb-4">
+        {/* Breadcrumb Navigation */}
+        <nav className="flex mb-4 text-sm text-gray-400">
+          <Link href="/" className="hover:text-blue-400 transition-colors">
+            Home
+          </Link>
+          <span className="mx-2">/</span>
+          <Link href="/portfolio" className="hover:text-blue-400 transition-colors">
+            Portfolio
+          </Link>
+          <span className="mx-2">/</span>
+          <Link href="/tools" className="hover:text-blue-400 transition-colors">
+            Tools
+          </Link>
+          <span className="mx-2">/</span>
+          <span className="text-blue-400">Nord Security Review</span>
+        </nav>
+        
+        {/* Last Updated Information */}
+        <div className="flex items-center text-xs text-gray-400 mb-4">
+          <span>Last updated: June 21, 2025</span>
+          <span className="mx-2">•</span>
+          <span>10 min read</span>
+        </div>
+      </main>
+
       {/* Hero Section */}
-      <main className="container mx-auto px-4 pt-32 pb-16">
-        <section className="mb-16">
+      <section className="container mx-auto px-4 mt-4 mb-16">
           <div className="flex flex-col md:flex-row items-center justify-between mb-12">
             <div className="md:w-1/2 mb-8 md:mb-0">
               <motion.h1 
@@ -204,9 +365,23 @@ export default function NordVPNPage() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6 }}
-                className="relative w-full max-w-md"
+                className="relative w-full max-w-xl"
               >
                 <div className="bg-gradient-to-r from-blue-500 to-blue-300 rounded-full w-64 h-64 absolute -top-10 -right-10 blur-3xl opacity-20 z-0"></div>
+                
+                <div className="relative z-10 rounded-xl overflow-hidden shadow-2xl border border-blue-500/30">
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-blue-400/10 z-0"></div>
+                  <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/30 to-blue-300/30 rounded-xl blur-sm z-0"></div>
+                  <iframe
+                    width="100%"
+                    height="300"
+                    src="https://www.youtube.com/embed/pcPA400hEiU"
+                    title="NordVPN Tutorial"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="relative z-10"
+                  ></iframe>
+                </div>
               </motion.div>
             </div>
           </div>
@@ -978,36 +1153,7 @@ export default function NordVPNPage() {
         </motion.div>
       </section>
 
-      {/* Footer */}
-      <footer className="px-6 md:px-16 py-8 text-center text-sm text-gray-500 bg-black border-t border-gray-800">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div>
-              © 2025 1ewis.com — All Rights Reserved
-            </div>
-            <div className="flex items-center space-x-4 mt-4 md:mt-0">
-              <a 
-                href="https://github.com/1ewis96/1ewis" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center hover:text-gray-300 transition-colors duration-200"
-              >
-                <Github className="w-5 h-5 mr-2" />
-                GitHub
-              </a>
-              <a 
-                href="https://x.com/1ewis_" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center hover:text-gray-300 transition-colors duration-200"
-              >
-                <Twitter className="w-5 h-5 mr-2" />
-                Twitter
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
       
       {/* Floating Call-to-Action Buttons */}
       <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
@@ -1072,7 +1218,8 @@ export default function NordVPNPage() {
         </motion.a>
         </motion.div>
       </div>
-      </main>
+      
+      {/* Footer component is already included above */}
     </div>
   );
 }

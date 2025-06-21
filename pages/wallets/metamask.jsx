@@ -1,5 +1,6 @@
 import { Button, ButtonLink } from "../../components/ui/button";
-import { ArrowRight, ChevronDown, Shield, Zap, BarChart, Wallet, Github, Twitter, CheckCircle, ExternalLink } from "lucide-react";
+import { ArrowRight, ChevronDown, Shield, Zap, BarChart, Wallet, CheckCircle, ExternalLink } from "lucide-react";
+import Footer from '../../components/Footer';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import AnimatedFeatures from '../../components/AnimatedFeatures';
@@ -54,12 +55,188 @@ export default function MetaMaskPage() {
   return (
     <div className="min-h-screen bg-black text-white">
       <Head>
-        <title>MetaMask Wallet | Self-Custody Crypto Wallet | 1ewis.com</title>
-        <meta name="description" content="Learn about MetaMask, the leading self-custody wallet and gateway to blockchain applications and Web3." />
+        <title>MetaMask Wallet Review 2025 | Best Self-Custody Web3 Gateway</title>
+        <meta name="description" content="MetaMask review (2025): The leading self-custody crypto wallet with 30M+ users. Access 10,000+ DApps across 15+ networks including Ethereum, BSC, and Polygon." />
+        <meta name="keywords" content="metamask wallet review, metamask extension, web3 wallet, self custody crypto wallet, ethereum wallet, dapp browser, multi chain wallet" />
+        <link rel="canonical" href="https://1ewis.com/wallets/metamask" />
+        
+        {/* Open Graph Tags */}
+        <meta property="og:title" content="MetaMask Wallet Review 2025 | Best Self-Custody Web3 Gateway" />
+        <meta property="og:description" content="MetaMask is the leading self-custody wallet with 30M+ users worldwide. Access 10,000+ DApps across 15+ networks including Ethereum, BSC, and Polygon." />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="https://1ewis.com/wallets/metamask" />
+        <meta property="og:image" content="https://1ewis.com/images/metamask-review.jpg" />
+        <meta property="og:site_name" content="1ewis Crypto Reviews" />
+        <meta property="article:published_time" content="2025-01-15T10:00:00+01:00" />
+        <meta property="article:modified_time" content="2025-06-21T09:00:00+01:00" />
+        <meta property="article:author" content="https://1ewis.com/about" />
+        <meta property="article:section" content="Cryptocurrency Wallets" />
+        <meta property="article:tag" content="MetaMask" />
+        <meta property="article:tag" content="Web3" />
+        <meta property="article:tag" content="Self-Custody Wallet" />
+        
+        {/* Twitter Card Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@1ewiscom" />
+        <meta name="twitter:title" content="MetaMask Wallet Review 2025" />
+        <meta name="twitter:description" content="The leading self-custody wallet with 30M+ users. Access 10,000+ DApps across 15+ networks including Ethereum, BSC, and Polygon." />
+        <meta name="twitter:image" content="https://1ewis.com/images/metamask-review.jpg" />
+        
+        {/* Schema.org structured data for review */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Review",
+            "name": "MetaMask Wallet Review",
+            "reviewRating": {
+              "@type": "Rating",
+              "ratingValue": "4.7",
+              "bestRating": "5"
+            },
+            "reviewBody": "MetaMask is the industry standard for Web3 access, offering a seamless self-custody wallet experience across multiple blockchain networks. With over 30 million active users worldwide, it provides access to 10,000+ decentralized applications while giving users complete control over their private keys and digital assets. The wallet supports 15+ networks including Ethereum, Binance Smart Chain, Polygon, and Avalanche, making it the perfect gateway to the decentralized web.",
+            "datePublished": "2025-01-15",
+            "dateModified": "2025-06-21",
+            "author": {
+              "@type": "Organization",
+              "name": "1ewis.com",
+              "url": "https://1ewis.com/about"
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "1ewis Crypto Reviews",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://1ewis.com/images/logo.png"
+              }
+            },
+            "itemReviewed": {
+              "@type": "SoftwareApplication",
+              "name": "MetaMask",
+              "description": "Self-custody cryptocurrency wallet and gateway to blockchain applications",
+              "image": "https://1ewis.com/images/metamask-logo.png",
+              "applicationCategory": "FinanceApplication",
+              "operatingSystem": "Android, iOS, Windows, macOS, Linux",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "USD"
+              },
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "4.7",
+                "reviewCount": "1"
+              }
+            }
+          })}
+        </script>
+        
+        {/* FAQ Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is MetaMask?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "MetaMask is a self-custody cryptocurrency wallet that serves as a gateway to blockchain applications and Web3. Available as a browser extension and mobile app, it allows users to store and manage digital assets, connect to decentralized applications (DApps), and interact with multiple blockchain networks while maintaining full control of their private keys."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Is MetaMask safe to use?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes, MetaMask is generally considered safe as it's a self-custody wallet where only you control your private keys. It uses industry-standard encryption to protect your wallet and never stores your seed phrase on their servers. However, users must securely store their recovery phrase and be vigilant about phishing attempts, as MetaMask is a common target due to its popularity."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Which blockchain networks does MetaMask support?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "MetaMask supports over 15 blockchain networks. While it was originally built for Ethereum, it now supports many EVM-compatible networks including Binance Smart Chain, Polygon, Avalanche, Arbitrum, Optimism, Fantom, and many others. Users can easily switch between networks or add custom networks through the interface."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How do I get started with MetaMask?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "To get started with MetaMask: 1) Download the browser extension from your browser's web store or the mobile app from the App Store or Google Play. 2) Create a new wallet by setting up a password and securely storing your 12-word recovery phrase, or import an existing wallet. 3) Add your preferred blockchain networks and start exploring decentralized applications."
+                }
+              }
+            ]
+          })}
+        </script>
+        
+        {/* Breadcrumb Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://1ewis.com/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Portfolio",
+                "item": "https://1ewis.com/portfolio"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Wallets",
+                "item": "https://1ewis.com/wallets"
+              },
+              {
+                "@type": "ListItem",
+                "position": 4,
+                "name": "MetaMask Review",
+                "item": "https://1ewis.com/wallets/metamask"
+              }
+            ]
+          })}
+        </script>
       </Head>
       
-      {/* Hero Section */}
-      <div className="relative pt-28 pb-20 px-6 md:px-16 overflow-hidden">
+      <main>
+        {/* Breadcrumb and Last Updated Container */}
+        <div className="container mx-auto px-4 pt-32">
+          {/* Breadcrumb Navigation */}
+          <nav className="flex mb-6 text-sm text-gray-400">
+            <Link href="/" className="hover:text-orange-400 transition-colors">
+              Home
+            </Link>
+            <span className="mx-2">/</span>
+            <Link href="/portfolio" className="hover:text-orange-400 transition-colors">
+              Portfolio
+            </Link>
+            <span className="mx-2">/</span>
+            <Link href="/wallets" className="hover:text-orange-400 transition-colors">
+              Wallets
+            </Link>
+            <span className="mx-2">/</span>
+            <span className="text-orange-400">MetaMask Review</span>
+          </nav>
+          
+          {/* Last Updated Information */}
+          <div className="flex items-center text-xs text-gray-400 mb-8">
+            <span>Last updated: June 21, 2025</span>
+            <span className="mx-2">•</span>
+            <span>6 min read</span>
+          </div>
+        </div>
+        
+        {/* Hero Section - Full Width */}
+        <div className="relative pt-8 pb-20 overflow-hidden w-full">
         {/* Background Elements */}
         <div className="absolute inset-0 bg-gradient-to-b from-orange-900/20 via-black to-black z-0"></div>
         <div className="absolute top-0 left-0 right-0 h-[500px] overflow-hidden">
@@ -68,12 +245,12 @@ export default function MetaMaskPage() {
         </div>
         
         <div className="relative z-10 max-w-7xl mx-auto">
-        <motion.div 
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
+          <motion.div 
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
           <div className="inline-flex items-center mb-6 bg-gradient-to-r from-orange-900/40 to-yellow-900/40 px-5 py-2.5 rounded-full shadow-lg shadow-orange-900/20">
             <Wallet className="text-orange-400 w-5 h-5 mr-2" />
             <span className="text-orange-300 font-medium">Self-Custody Wallet</span>
@@ -82,9 +259,30 @@ export default function MetaMaskPage() {
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-orange-400 via-yellow-400 to-orange-500 drop-shadow-lg">
             MetaMask
           </h1>
-          <p className="text-xl md:text-2xl max-w-3xl mx-auto text-gray-300 leading-relaxed">
+          <p className="text-xl md:text-2xl max-w-3xl mx-auto text-gray-300 leading-relaxed mb-10">
             The leading self-custody wallet and gateway to blockchain applications and Web3.
           </p>
+          
+          <motion.div
+            className="max-w-4xl mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.7 }}
+          >
+            <div className="relative rounded-xl overflow-hidden shadow-2xl">
+              <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-yellow-500/20 z-0"></div>
+              <div className="absolute -inset-1 bg-gradient-to-r from-orange-500/30 to-yellow-500/30 rounded-xl blur-sm z-0"></div>
+              <iframe
+                width="100%"
+                height="400"
+                src="https://www.youtube.com/embed/pcPA400hEiU"
+                title="MetaMask Wallet Tutorial"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="relative z-10"
+              ></iframe>
+            </div>
+          </motion.div>
         </motion.div>
 
         {/* Features Section */}
@@ -253,40 +451,12 @@ export default function MetaMaskPage() {
               </span>
             </ButtonLink>
           </div>
-        </motion.div>
+          </motion.div>
         </div>
-      </div>
+        </div>
+      </main>
 
-      {/* Footer */}
-      <footer className="px-6 md:px-16 py-12 text-center text-sm text-gray-500 bg-black border-t border-gray-800/50">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div>
-              © 2025 1ewis.com — All Rights Reserved
-            </div>
-            <div className="flex items-center space-x-4 mt-4 md:mt-0">
-              <a 
-                href="https://github.com/1ewis96/1ewis" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center hover:text-gray-300 transition-colors duration-200"
-              >
-                <Github className="w-5 h-5 mr-2" />
-                GitHub
-              </a>
-              <a 
-                href="https://x.com/1ewis_" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center hover:text-gray-300 transition-colors duration-200"
-              >
-                <Twitter className="w-5 h-5 mr-2" />
-                Twitter
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

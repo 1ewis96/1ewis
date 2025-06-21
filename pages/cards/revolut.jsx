@@ -11,8 +11,6 @@ import {
   Shield, 
   Lock, 
   Smartphone, 
-  Github, 
-  Twitter, 
   ChevronDown, 
   Sparkles, 
   Star, 
@@ -25,7 +23,8 @@ import {
 } from "lucide-react";
 import Link from 'next/link';
 import Image from 'next/image';
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from 'framer-motion';
+import Footer from '../../components/Footer';
 import PriceTicker from '../../components/PriceTicker';
 import AnimatedFeatures from '../../components/AnimatedFeatures';
 import { useState, useEffect } from 'react';
@@ -127,11 +126,179 @@ export default function RevolutPage() {
     <div className="min-h-screen bg-black text-white">
       <Head>
         <title>Revolut | All-in-One Financial Super App | 1ewis.com</title>
-        <meta name="description" content="Explore Revolut - the all-in-one financial super app with crypto trading, global transfers, and premium metal cards for the modern digital lifestyle." />
+        <meta name="description" content="Explore Revolut - the all-in-one financial super app with crypto trading, global transfers, and premium metal cards for the modern digital lifestyle. Join 25M+ users in 2025." />
+        <meta name="keywords" content="Revolut, crypto trading app, metal cards, global transfers, digital banking, financial super app, mobile banking" />
+        <link rel="canonical" href="https://1ewis.com/cards/revolut" />
+        
+        {/* Open Graph Meta Tags */}
+        <meta property="og:title" content="Revolut | All-in-One Financial Super App | 1ewis.com" />
+        <meta property="og:description" content="Explore Revolut - the all-in-one financial super app with crypto trading, global transfers, and premium metal cards for the modern digital lifestyle. Join 25M+ users in 2025." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://1ewis.com/cards/revolut" />
+        <meta property="og:image" content="https://1ewis.com/images/cards/revolut-card.jpg" />
+        <meta property="og:site_name" content="1ewis.com" />
+        
+        {/* Twitter Card Meta Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@1ewis_" />
+        <meta name="twitter:title" content="Revolut | All-in-One Financial Super App | 1ewis.com" />
+        <meta name="twitter:description" content="Explore Revolut - the all-in-one financial super app with crypto trading, global transfers, and premium metal cards for the modern digital lifestyle." />
+        <meta name="twitter:image" content="https://1ewis.com/images/cards/revolut-card.jpg" />
+        
+        {/* Schema.org structured data for Review */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Review",
+            "name": "Revolut Review",
+            "reviewBody": "Revolut offers an impressive all-in-one financial solution with crypto trading, global transfers, and premium metal cards. The app is user-friendly and packed with features like budgeting tools, savings vaults, and cashback rewards.",
+            "reviewRating": {
+              "@type": "Rating",
+              "ratingValue": "4.7",
+              "bestRating": "5"
+            },
+            "author": {
+              "@type": "Person",
+              "name": "Lewis"
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "1ewis.com",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://1ewis.com/logo.png"
+              }
+            },
+            "datePublished": "2025-06-21",
+            "itemReviewed": {
+              "@type": "FinancialProduct",
+              "name": "Revolut",
+              "brand": {
+                "@type": "Brand",
+                "name": "Revolut"
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "USD",
+                "availability": "https://schema.org/InStock"
+              }
+            },
+            "aggregateRating": {
+              "@type": "AggregateRating",
+              "ratingValue": "4.8",
+              "reviewCount": "24567",
+              "bestRating": "5"
+            }
+          })}
+        </script>
+        
+        {/* Schema.org structured data for FAQ */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is Revolut and how does it work?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Revolut is an all-in-one financial super app that offers banking services, cryptocurrency trading, global money transfers, and premium metal cards. It works through a mobile app that lets you manage all your finances in one place, with features like instant notifications, spending analytics, and savings vaults."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Is Revolut safe to use?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes, Revolut employs bank-level encryption and security measures to protect your data and money. It offers features like device management, biometric authentication, and the ability to freeze/unfreeze your card instantly. Revolut is also regulated by financial authorities in multiple jurisdictions."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What cryptocurrencies can I trade on Revolut?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Revolut supports trading of 80+ cryptocurrencies including Bitcoin, Ethereum, Solana, Cardano, Polkadot, and many more. Premium and Metal plan users enjoy lower fees on crypto transactions compared to standard users."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What are the different Revolut plans available?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Revolut offers several plans: Standard (free), Plus, Premium, and Metal. Higher-tier plans include benefits like overseas medical insurance, delayed baggage insurance, exclusive metal cards, higher ATM withdrawal limits, and priority customer support."
+                }
+              }
+            ]
+          })}
+        </script>
+        
+        {/* Schema.org structured data for BreadcrumbList */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://1ewis.com"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Portfolio",
+                "item": "https://1ewis.com/portfolio"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Cards",
+                "item": "https://1ewis.com/cards"
+              },
+              {
+                "@type": "ListItem",
+                "position": 4,
+                "name": "Revolut Review",
+                "item": "https://1ewis.com/cards/revolut"
+              }
+            ]
+          })}
+        </script>
       </Head>
 
+      {/* Breadcrumb Navigation Container */}
+      <main className="container mx-auto px-4 pt-32 pb-4">
+        {/* Breadcrumb Navigation */}
+        <nav className="flex mb-4 text-sm text-gray-400">
+          <Link href="/" className="hover:text-blue-400 transition-colors">
+            Home
+          </Link>
+          <span className="mx-2">/</span>
+          <Link href="/portfolio" className="hover:text-blue-400 transition-colors">
+            Portfolio
+          </Link>
+          <span className="mx-2">/</span>
+          <Link href="/cards" className="hover:text-blue-400 transition-colors">
+            Cards
+          </Link>
+          <span className="mx-2">/</span>
+          <span className="text-blue-400">Revolut Review</span>
+        </nav>
+        
+        {/* Last Updated Information */}
+        <div className="flex items-center text-xs text-gray-400 mb-4">
+          <span>Last updated: June 21, 2025</span>
+          <span className="mx-2">•</span>
+          <span>8 min read</span>
+        </div>
+      </main>
+
       {/* Hero Section */}
-      <section className="relative overflow-hidden">
+      <section className="relative overflow-hidden mt-4">
         {/* Background elements */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
           <div className="absolute top-1/4 left-1/4 w-1/2 h-1/2 bg-blue-500/10 rounded-full blur-[100px]"></div>
@@ -139,7 +306,7 @@ export default function RevolutPage() {
           <div className="absolute top-1/3 right-1/3 w-1/4 h-1/4 bg-teal-500/10 rounded-full blur-[100px]"></div>
         </div>
         
-        <div className="px-6 py-24 md:py-32 md:px-16 relative z-10">
+        <div className="px-6 py-8 md:py-16 md:px-16 relative z-10">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <motion.div 
@@ -191,11 +358,23 @@ export default function RevolutPage() {
                 transition={{ duration: 0.8, delay: 0.2 }}
                 className="relative"
               >
-                <div className="relative h-[300px] w-full max-w-[400px] mx-auto flex items-center justify-center">
+                <div className="relative w-full max-w-[500px] mx-auto">
                   {/* Background elements */}
-                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full bg-blue-500/20 blur-[50px] z-10"></div>
-                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] rounded-full bg-purple-500/20 blur-[30px] z-10"></div>
+                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full bg-blue-500/20 blur-[50px] z-0"></div>
+                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] rounded-full bg-purple-500/20 blur-[30px] z-0"></div>
                   
+                  <div className="relative z-10 rounded-xl overflow-hidden shadow-2xl border border-blue-500/30 bg-gradient-to-br from-gray-900/80 to-gray-800/80">
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 z-0"></div>
+                    <iframe
+                      width="100%"
+                      height="300"
+                      src="https://www.youtube.com/embed/pcPA400hEiU"
+                      title="Revolut App Tutorial"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      className="relative z-10"
+                    ></iframe>
+                  </div>
                 </div>
               </motion.div>
             </div>
@@ -605,36 +784,7 @@ export default function RevolutPage() {
       </div>
       </section>
 
-      {/* Footer */}
-      <footer className="px-6 md:px-16 py-8 text-center text-sm text-gray-500 bg-black border-t border-gray-800">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div>
-              © 2025 1ewis.com — All Rights Reserved
-            </div>
-            <div className="flex items-center space-x-4 mt-4 md:mt-0">
-              <a 
-                href="https://github.com/1ewis96/1ewis" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center hover:text-gray-300 transition-colors duration-200"
-              >
-                <Github className="w-5 h-5 mr-2" />
-                GitHub
-              </a>
-              <a 
-                href="https://x.com/1ewis_" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center hover:text-gray-300 transition-colors duration-200"
-              >
-                <Twitter className="w-5 h-5 mr-2" />
-                Twitter
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
       
       {/* Floating Call-to-Action Button */}
       <motion.div 

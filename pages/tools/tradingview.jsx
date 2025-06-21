@@ -1,9 +1,11 @@
 import { Button, ButtonLink } from "../../components/ui/button";
-import { ArrowRight, ChevronDown, Shield, Zap, BarChart, LineChart, Github, Twitter, ExternalLink, DollarSign, Check } from "lucide-react";
+import { ArrowRight, ChevronDown, Shield, Zap, BarChart, LineChart, ExternalLink, DollarSign, Check } from "lucide-react";
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import Footer from '../../components/Footer';
 import AnimatedFeatures from '../../components/AnimatedFeatures';
 import { useState } from 'react';
+import Head from 'next/head';
 
 export default function TradingViewPage() {
   const [showMore, setShowMore] = useState(false);
@@ -61,9 +63,173 @@ export default function TradingViewPage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
+      <Head>
+        <title>TradingView | Professional Charting Platform | 1ewis.com</title>
+        <meta name="description" content="Explore TradingView - the ultimate platform for market analysis with powerful charting tools, real-time data, and a global trading community. Save 16% on your first paid plan." />
+        <meta name="keywords" content="TradingView, trading platform, stock charts, forex charts, crypto charts, technical analysis, market analysis, trading tools" />
+        <link rel="canonical" href="https://1ewis.com/tools/tradingview" />
+        
+        {/* Open Graph Meta Tags */}
+        <meta property="og:title" content="TradingView | Professional Charting Platform | 1ewis.com" />
+        <meta property="og:description" content="Explore TradingView - the ultimate platform for market analysis with powerful charting tools, real-time data, and a global trading community." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://1ewis.com/tools/tradingview" />
+        <meta property="og:image" content="https://1ewis.com/images/tools/tradingview-preview.jpg" />
+        <meta property="og:site_name" content="1ewis.com" />
+        
+        {/* Twitter Card Meta Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@1ewis_" />
+        <meta name="twitter:title" content="TradingView | Professional Charting Platform | 1ewis.com" />
+        <meta name="twitter:description" content="Explore TradingView - the ultimate platform for market analysis with powerful charting tools, real-time data, and a global trading community." />
+        <meta name="twitter:image" content="https://1ewis.com/images/tools/tradingview-preview.jpg" />
+        
+        {/* Schema.org structured data for Review */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Review",
+            "name": "TradingView Review",
+            "reviewBody": "TradingView offers an impressive suite of charting tools and technical analysis features for traders of all levels. With real-time data across global markets and a vibrant community of millions of traders, it's the go-to platform for market analysis.",
+            "reviewRating": {
+              "@type": "Rating",
+              "ratingValue": "4.8",
+              "bestRating": "5"
+            },
+            "author": {
+              "@type": "Person",
+              "name": "Lewis"
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "1ewis.com",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://1ewis.com/logo.png"
+              }
+            },
+            "datePublished": "2025-06-21",
+            "itemReviewed": {
+              "@type": "SoftwareApplication",
+              "name": "TradingView",
+              "applicationCategory": "FinanceApplication",
+              "operatingSystem": "Windows, macOS, iOS, Android, Web",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "USD",
+                "availability": "https://schema.org/InStock"
+              }
+            }
+          })}
+        </script>
+        
+        {/* Schema.org structured data for FAQ */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is TradingView?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "TradingView is a comprehensive charting platform and social network for traders and investors. It provides professional-grade charting tools, real-time data across global markets, and access to a community of millions of traders sharing ideas and strategies."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Is TradingView free to use?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "TradingView offers a free basic plan with limited features, as well as three paid subscription tiers: Pro, Pro+ and Premium. Each tier unlocks additional features such as more indicators, multiple charts, server-side alerts, and extended data access."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What markets can I analyze on TradingView?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "TradingView provides access to a wide range of markets including stocks, forex, cryptocurrencies, indices, futures, bonds, and CFDs from exchanges worldwide. The exact data availability depends on your subscription level."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can I use TradingView on mobile devices?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes, TradingView is available as a web application and has native mobile apps for iOS and Android devices. Your charts, watchlists, and settings sync across all platforms, allowing you to analyze markets on the go."
+                }
+              }
+            ]
+          })}
+        </script>
+        
+        {/* Schema.org structured data for BreadcrumbList */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://1ewis.com"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Portfolio",
+                "item": "https://1ewis.com/portfolio"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Tools",
+                "item": "https://1ewis.com/tools"
+              },
+              {
+                "@type": "ListItem",
+                "position": 4,
+                "name": "TradingView Review",
+                "item": "https://1ewis.com/tools/tradingview"
+              }
+            ]
+          })}
+        </script>
+      </Head>
       
+      {/* Breadcrumb Navigation Container */}
+      <main className="container mx-auto px-4 pt-32 pb-4">
+        {/* Breadcrumb Navigation */}
+        <nav className="flex mb-4 text-sm text-gray-400">
+          <Link href="/" className="hover:text-indigo-400 transition-colors">
+            Home
+          </Link>
+          <span className="mx-2">/</span>
+          <Link href="/portfolio" className="hover:text-indigo-400 transition-colors">
+            Portfolio
+          </Link>
+          <span className="mx-2">/</span>
+          <Link href="/tools" className="hover:text-indigo-400 transition-colors">
+            Tools
+          </Link>
+          <span className="mx-2">/</span>
+          <span className="text-indigo-400">TradingView Review</span>
+        </nav>
+        
+        {/* Last Updated Information */}
+        <div className="flex items-center text-xs text-gray-400 mb-4">
+          <span>Last updated: June 21, 2025</span>
+          <span className="mx-2">•</span>
+          <span>9 min read</span>
+        </div>
+      </main>
+
       {/* Hero Section */}
-      <div className="px-6 pt-36 pb-20 md:px-16 bg-gradient-to-b from-indigo-900/30 to-black">
+      <div className="px-6 pt-8 pb-20 md:px-16 bg-gradient-to-b from-indigo-900/30 to-black mt-4">
         <div className="flex flex-col md:flex-row items-center justify-between mb-12">
           <div className="md:w-1/2 mb-8 md:mb-0">
             <motion.h1 
@@ -104,9 +270,23 @@ export default function TradingViewPage() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6 }}
-              className="relative w-full max-w-md"
+              className="relative w-full max-w-xl"
             >
               <div className="bg-gradient-to-r from-indigo-500 to-indigo-300 rounded-full w-64 h-64 absolute -top-10 -right-10 blur-3xl opacity-20 z-0"></div>
+              
+              <div className="relative z-10 rounded-xl overflow-hidden shadow-2xl border border-indigo-500/30">
+                <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 z-0"></div>
+                <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500/30 to-purple-500/30 rounded-xl blur-sm z-0"></div>
+                <iframe
+                  width="100%"
+                  height="300"
+                  src="https://www.youtube.com/embed/pcPA400hEiU"
+                  title="TradingView Tutorial"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="relative z-10"
+                ></iframe>
+              </div>
             </motion.div>
           </div>
         </div>
@@ -369,36 +549,7 @@ export default function TradingViewPage() {
         </motion.div>
       </div>
 
-      {/* Footer */}
-      <footer className="px-6 md:px-16 py-8 text-center text-sm text-gray-500 bg-black border-t border-gray-800">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div>
-              © 2025 1ewis.com — All Rights Reserved
-            </div>
-            <div className="flex items-center space-x-4 mt-4 md:mt-0">
-              <a 
-                href="https://github.com/1ewis96/1ewis" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center hover:text-gray-300 transition-colors duration-200"
-              >
-                <Github className="w-5 h-5 mr-2" />
-                GitHub
-              </a>
-              <a 
-                href="https://x.com/1ewis_" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center hover:text-gray-300 transition-colors duration-200"
-              >
-                <Twitter className="w-5 h-5 mr-2" />
-                Twitter
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
       
       {/* Fixed Referral Button */}
       <div className="fixed bottom-6 right-6 z-50">

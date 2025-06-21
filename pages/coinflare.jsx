@@ -73,20 +73,176 @@ export default function Coinflare() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-black to-gray-900 text-white">
       <Head>
-        <title>Coinflare Exchange | Trade Crypto with Low Fees & Advanced Security</title>
-        <meta name="description" content="Coinflare crypto exchange offers low trading fees, advanced security features, and a powerful trading platform for both beginners and experienced traders." />
-        <meta name="keywords" content="coinflare exchange, crypto trading platform, low fee crypto exchange, secure cryptocurrency exchange, coinflare review" />
+        <title>Coinflare Exchange Review 2025 | Low Fees & Advanced Security Features</title>
+        <meta name="description" content="Coinflare crypto exchange review (2025): Discover low trading fees starting at 0.1%, advanced security features with cold storage, and powerful trading tools for both beginners and experienced traders." />
+        <meta name="keywords" content="coinflare exchange review 2025, crypto trading platform, low fee crypto exchange, secure cryptocurrency exchange, coinflare referral bonus, advanced crypto trading tools, multi-factor authentication crypto" />
         <link rel="canonical" href="https://1ewis.com/coinflare" />
-        <meta property="og:title" content="Coinflare Exchange | Trade Crypto with Low Fees" />
-        <meta property="og:description" content="Coinflare offers competitive trading fees, advanced security features, and a powerful trading platform for all types of crypto traders." />
+        <meta property="og:title" content="Coinflare Exchange Review 2025 | Low Fees & Advanced Security" />
+        <meta property="og:description" content="Coinflare offers competitive trading fees starting at 0.1%, advanced security features with cold storage, and a powerful trading platform for all types of crypto traders." />
         <meta property="og:type" content="article" />
         <meta property="og:url" content="https://1ewis.com/coinflare" />
+        <meta property="og:image" content="https://1ewis.com/images/coinflare-review.jpg" />
+        <meta property="og:site_name" content="1ewis Crypto Reviews" />
+        <meta property="article:published_time" content="2025-01-20T09:00:00+01:00" />
+        <meta property="article:modified_time" content="2025-06-21T09:00:00+01:00" />
+        <meta property="article:author" content="https://1ewis.com/about" />
+        <meta property="article:section" content="Cryptocurrency Exchanges" />
+        <meta property="article:tag" content="Coinflare" />
+        <meta property="article:tag" content="Crypto Exchange" />
+        <meta property="article:tag" content="Trading Platform" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Coinflare Exchange | Advanced Crypto Trading" />
-        <meta name="twitter:description" content="Coinflare offers competitive trading fees, advanced security features, and a powerful trading platform." />
+        <meta name="twitter:site" content="@1ewiscom" />
+        <meta name="twitter:title" content="Coinflare Exchange Review 2025 | Advanced Crypto Trading" />
+        <meta name="twitter:description" content="Coinflare offers competitive trading fees starting at 0.1%, advanced security features, and a powerful trading platform for all types of crypto traders." />
+        <meta name="twitter:image" content="https://1ewis.com/images/coinflare-review.jpg" />
+        
+        {/* Schema.org structured data for review */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Review",
+            "name": "Coinflare Exchange Review",
+            "reviewRating": {
+              "@type": "Rating",
+              "ratingValue": "4.4",
+              "bestRating": "5"
+            },
+            "reviewBody": "Coinflare is a reliable cryptocurrency exchange with competitive trading fees and excellent security features. The platform offers advanced trading tools, multi-factor authentication, and cold storage for asset protection. Their mobile app provides a seamless trading experience for users on the go.",
+            "datePublished": "2025-01-20",
+            "dateModified": "2025-06-21",
+            "author": {
+              "@type": "Organization",
+              "name": "1ewis.com",
+              "url": "https://1ewis.com/about"
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "1ewis Crypto Reviews",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://1ewis.com/images/logo.png"
+              }
+            },
+            "itemReviewed": {
+              "@type": "Product",
+              "name": "Coinflare Exchange",
+              "description": "Advanced cryptocurrency trading platform with competitive fees and robust security features",
+              "image": "https://1ewis.com/images/coinflare-logo.png",
+              "brand": {
+                "@type": "Brand",
+                "name": "Coinflare"
+              },
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "4.4",
+                "reviewCount": "1"
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "USD",
+                "availability": "https://schema.org/InStock",
+                "url": "https://1ewis.com/coinflare"
+              }
+            }
+          })}
+        </script>
+        
+        {/* FAQ Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is Coinflare Exchange?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Coinflare is a cryptocurrency exchange that offers advanced trading tools, competitive fees, and robust security features. It provides a platform for both beginners and experienced traders to buy, sell, and trade various cryptocurrencies."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What are Coinflare's security features?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Coinflare implements multiple security measures including multi-factor authentication, cold storage for the majority of user funds, and comprehensive insurance protection against potential security incidents."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What trading fees does Coinflare charge?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Coinflare offers competitive trading fees starting at 0.1% with volume-based discounts available for high-volume traders. Users can also receive exclusive fee discounts through referral programs."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Does Coinflare have a mobile app?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes, Coinflare provides a powerful mobile application that allows users to trade anytime and anywhere. The app includes all the essential features of the desktop platform with an intuitive interface optimized for mobile devices."
+                }
+              }
+            ]
+          })}
+        </script>
+        
+        {/* Breadcrumb Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://1ewis.com/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Portfolio",
+                "item": "https://1ewis.com/portfolio"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Exchanges",
+                "item": "https://1ewis.com/exchanges"
+              },
+              {
+                "@type": "ListItem",
+                "position": 4,
+                "name": "Coinflare Review",
+                "item": "https://1ewis.com/coinflare"
+              }
+            ]
+          })}
+        </script>
       </Head>
 
       <main className="container mx-auto px-4 pt-32 pb-16">
+        {/* Breadcrumb Navigation */}
+        <nav className="text-sm mb-8" aria-label="Breadcrumb">
+          <div className="flex flex-wrap items-center">
+            <a href="/" className="text-gray-400 hover:text-orange-400 transition-colors">Home</a>
+            <span className="mx-2 text-gray-600">/</span>
+            <a href="/portfolio" className="text-gray-400 hover:text-orange-400 transition-colors">Portfolio</a>
+            <span className="mx-2 text-gray-600">/</span>
+            <a href="/exchanges" className="text-gray-400 hover:text-orange-400 transition-colors">Exchanges</a>
+            <span className="mx-2 text-gray-600">/</span>
+            <span className="text-orange-400" aria-current="page">Coinflare Review</span>
+          </div>
+        </nav>
+        
+        {/* Last Updated Info */}
+        <div className="mb-8 text-sm text-gray-400">
+          <span>Last updated: June 21, 2025</span> • <span>Reading time: 6 min</span>
+        </div>
         <section className="mb-16">
           <div className="flex flex-col md:flex-row items-center justify-between mb-12">
             <div className="md:w-1/2 mb-8 md:mb-0">
@@ -128,9 +284,21 @@ export default function Coinflare() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6 }}
-                className="relative w-full max-w-md"
+                className="relative w-full max-w-xl"
               >
                 <div className="bg-gradient-to-r from-orange-500 to-orange-300 rounded-full w-64 h-64 absolute -top-10 -right-10 blur-3xl opacity-30 z-0"></div>
+                
+                <div className="relative z-10 rounded-xl overflow-hidden shadow-2xl border border-orange-500/30">
+                  <iframe
+                    width="100%"
+                    height="350"
+                    src="https://www.youtube.com/embed/pcPA400hEiU"
+                    title="Coinflare Exchange Tutorial"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="z-10"
+                  ></iframe>
+                </div>
               </motion.div>
             </div>
           </div>
