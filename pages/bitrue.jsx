@@ -300,7 +300,7 @@ export default function Bitrue() {
                   <iframe
                     width="100%"
                     height="350"
-                    src="https://www.youtube.com/embed/pcPA400hEiU"
+                    src="https://www.youtube.com/embed/VakE5FEPV-4"
                     title="Bitrue Exchange Tutorial"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
