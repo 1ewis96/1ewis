@@ -8,6 +8,7 @@ import GuideSidebar from '../../../components/guides/GuideSidebar';
 import { ArrowLeft, Calendar, Tag, Clock, Share2, ArrowRight, ExternalLink } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import SectionInteractiveElements from '../../../components/guides/SectionInteractiveElements';
+import StarRating from '../../../components/guides/StarRating';
 
 
 // Dynamically import components with SSR disabled to prevent hydration issues

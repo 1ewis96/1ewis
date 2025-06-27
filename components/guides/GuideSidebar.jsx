@@ -6,10 +6,22 @@ import SidebarAd from './SidebarAd';
 import SponsoredPanel from './SponsoredPanel';
 import RelatedQuestions from './RelatedQuestions';
 import SocialShareButtons from './SocialShareButtons';
+import StarRating from './StarRating';
 
 const GuideSidebar = ({ guide }) => {
   return (
     <div className="w-full lg:w-80 space-y-8">
+      {/* Star Rating Component */}
+      <motion.div 
+        className="bg-gradient-to-br from-gray-900/80 to-gray-800/50 backdrop-blur-sm rounded-xl p-4 border border-gray-800/80 shadow-lg"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+      >
+        <div className="flex justify-center">
+          <StarRating defaultRating={4.5} />
+        </div>
+      </motion.div>
       {/* Quick Navigation */}
       {guide.sections && guide.sections.length > 0 && (
         <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/50 backdrop-blur-sm rounded-xl p-4 border border-gray-800/80 shadow-lg sticky top-4">
