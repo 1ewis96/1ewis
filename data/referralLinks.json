@@ -1,5 +1,13 @@
 {
   "exchanges": {
+    "coinjar": {
+      "name": "CoinJar",
+      "description": "Australian-based cryptocurrency exchange with user-friendly interface",
+      "referralLink": "https://cjr.io/xRu5",
+      "referralCode": "xRu5",
+      "bonusDetails": "Special bonuses for referred users",
+      "color": "green"
+    },
     "bittrue": {
       "name": "Bitrue",
       "description": "Exchange focused on XRP and crypto yield products",
@@ -21,7 +29,7 @@
     "youhodler": {
       "name": "YouHodler",
       "description": "Crypto lending platform with high-yield savings accounts",
-      "referralLink": "https://www.youhodler.com",
+      "referralLink": "https://track.youhodler.com/click?offer_id=12&pid=5124&sub2={traffic_source_id}",
       "referralCode": "",
       "bonusDetails": "Earn up to 13% APY on your crypto assets",
       "color": "teal"

@@ -112,6 +112,16 @@ export default function ExchangesPage() {
       bonusDetails: referralData.exchanges.bittrue.bonusDetails
     },
     {
+      name: referralData.exchanges.coinjar.name,
+      color: "green-400", // Match CoinJar's branding
+      description: "Australian-based cryptocurrency exchange with a user-friendly interface and excellent mobile app.",
+      pros: ["User-friendly platform", "Fast verification process", "Excellent mobile app", "Competitive fees", "Strong security measures"],
+      bestFor: "Beginners and intermediate traders looking for a simple, reliable exchange",
+      link: "/coinjar",
+      refLink: referralData.exchanges.coinjar.referralLink,
+      bonusDetails: referralData.exchanges.coinjar.bonusDetails
+    },
+    {
       name: "Coinflare",
       color: "orange-400",
       description: "Advanced trading platform with competitive fees and robust security features for all types of traders.",
@@ -326,6 +336,13 @@ export default function ExchangesPage() {
                   <td className="py-3 px-4">400+</td>
                   <td className="py-3 px-4">XRP ecosystem, Power Piggy staking</td>
                   <td className="py-3 px-4">XRP traders, yield seekers</td>
+                </tr>
+                <tr className="border-b border-gray-700">
+                  <td className="py-3 px-4 font-medium text-green-400">CoinJar</td>
+                  <td className="py-3 px-4">0.1% - 0.2%</td>
+                  <td className="py-3 px-4">300+</td>
+                  <td className="py-3 px-4">User-friendly interface, excellent mobile app</td>
+                  <td className="py-3 px-4">Beginners and intermediate traders</td>
                 </tr>
                 <tr className="border-b border-gray-700">
                   <td className="py-3 px-4 font-medium text-orange-400">Coinflare</td>

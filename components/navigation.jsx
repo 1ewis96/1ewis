@@ -79,8 +79,11 @@ export default function Navigation() {
   ];
   
   const exchangeItems = [
+    // These appear under "Main Exchanges"
     { name: 'Bitrue', path: '/bitrue', color: 'blue' },
     { name: 'Coinflare', path: '/coinflare', color: 'orange' },
+    // Items after this appear under "More Exchanges"
+    { name: 'CoinJar', path: '/coinjar', color: 'green' },
   ];
   
   const walletItems = [
@@ -238,7 +241,7 @@ export default function Navigation() {
                   transition={{ duration: 0.2 }}
                 >
                   <div className="px-4 py-2 text-xs text-gray-500 uppercase">Main Exchanges</div>
-                  {exchangeItems.slice(0, 4).map((item) => (
+                  {exchangeItems.slice(0, 2).map((item) => (
                     <Link 
                       key={item.path} 
                       href={item.path}
@@ -249,7 +252,7 @@ export default function Navigation() {
                     </Link>
                   ))}
                   <div className="px-4 py-2 text-xs text-gray-500 uppercase">More Exchanges</div>
-                  {exchangeItems.slice(4).map((item) => (
+                  {exchangeItems.slice(2).map((item) => (
                     <Link 
                       key={item.path} 
                       href={item.path}
