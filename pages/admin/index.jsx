@@ -19,7 +19,8 @@ function AdminHome() {
     answers: 0,
     unapprovedQuestions: 0,
     unapprovedAnswers: 0,
-    questionViews: 0
+    questionViews: 0,
+    guideViews: 0
   });
   const [statsLoading, setStatsLoading] = useState(true);
   const [statsError, setStatsError] = useState(null);
@@ -370,6 +371,48 @@ function AdminHome() {
                 </div>
                 <div className="p-3 rounded-lg bg-amber-500/10 text-amber-400 group-hover:bg-amber-500/20 transition-all duration-300">
                   <CheckCircle className="w-6 h-6" />
+                </div>
+              </div>
+            </div>
+          </motion.div>
+          
+          {/* Guide Statistics Section */}
+          <motion.h2 
+            className="text-2xl font-bold text-white mt-12 mb-6"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+          >
+            Guide Statistics
+          </motion.h2>
+          
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.7 }}
+          >
+            {/* Guide Views Card */}
+            <div className="bg-black/60 backdrop-blur-xl rounded-xl border border-white/10 p-6 hover:border-purple-500/50 transition-all duration-300 group">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h3 className="text-xl font-semibold text-white">Guide Views</h3>
+                  {statsLoading ? (
+                    <div className="h-9 mt-2 w-24 bg-gray-800/50 animate-pulse rounded"></div>
+                  ) : statsError ? (
+                    <p className="text-3xl font-bold mt-2 text-red-400">Error</p>
+                  ) : (
+                    <p className="text-3xl font-bold mt-2 bg-clip-text text-transparent bg-gradient-to-r from-teal-400 to-cyan-500">
+                      {stats.guideViews?.toLocaleString() || '0'}
+                    </p>
+                  )}
+                  <p className="text-green-500 text-sm mt-1 flex items-center">
+                    <TrendingUp className="w-4 h-4 mr-1" />
+                    Updated in real-time
+                  </p>
+                </div>
+                <div className="p-3 rounded-lg bg-teal-500/10 text-teal-400 group-hover:bg-teal-500/20 transition-all duration-300">
+                  <BrainCircuit className="w-6 h-6" />
                 </div>
               </div>
             </div>

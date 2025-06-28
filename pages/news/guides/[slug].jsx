@@ -52,6 +52,9 @@ export default function GuidePage() {
   const [contentProcessed, setContentProcessed] = useState(false);
   const mainContentRef = useRef(null);
   
+  // Track if the analytics call has been made for this page view
+  const [analyticsLogged, setAnalyticsLogged] = useState(false);
+  
   // Simple text rendering function that preserves newlines
   const renderText = (text) => {
     if (!text) return null;
@@ -314,6 +317,13 @@ export default function GuidePage() {
   const processTextContent = renderText;
   const parseMarkdownLinks = renderText;
   
+  // Reset autoplay state and analytics logged state when slug changes
+  useEffect(() => {
+    hasSetupAutoplay.current = false;
+    setShowAutoplayVideo(false);
+    setAnalyticsLogged(false);
+  }, [slug]);
+
   // Detect client-side rendering
   useEffect(() => {
     setIsBrowser(true);
@@ -339,6 +349,45 @@ export default function GuidePage() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isBrowser]);
   
+  // Function to log guide view to analytics
+  async function logGuideView(guideId) {
+    // Check if this view has already been logged in this session or component state
+    const viewLogKey = `guide_view_logged_${guideId}`;
+    
+    // Use both component state and session storage to prevent duplicate calls
+    if (typeof window !== 'undefined' && !sessionStorage.getItem(viewLogKey) && !analyticsLogged) {
+      try {
+        // Set both flags immediately to prevent any possibility of duplicate calls
+        sessionStorage.setItem(viewLogKey, 'true');
+        setAnalyticsLogged(true);
+        
+        // Add a small delay to ensure React has time to update state
+        // This helps prevent race conditions in development mode
+        await new Promise(resolve => setTimeout(resolve, 10));
+        
+        const response = await fetch('https://api.1ewis.com/analytics/guides/views', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            PK: guideId
+          })
+        });
+        
+        if (response.ok) {
+          console.log('Guide view logged successfully');
+        } else {
+          console.error('Failed to log guide view: API returned error status');
+        }
+      } catch (analyticsErr) {
+        console.error('Failed to log guide view:', analyticsErr);
+      }
+    } else {
+      console.log('Guide view already logged, skipping analytics call');
+    }
+  }
+
   // Fetch guide data from API
   useEffect(() => {
     if (slug) {
@@ -397,6 +446,14 @@ export default function GuidePage() {
           
           setGuideData(data); // The API returns the guide directly, not nested
           setLoading(false);
+          
+          // Log the view after we've successfully fetched the guide data
+          if (data && data.PK) {
+            logGuideView(data.PK);
+          } else if (data && data.id) {
+            // Fallback to id if PK is not available
+            logGuideView(data.id);
+          }
         })
         .catch(err => {
           console.error('Error fetching guide:', err);
