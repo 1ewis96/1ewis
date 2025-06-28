@@ -31,6 +31,18 @@ const ComparisonTable = () => {
       bonus: 'Exclusive trading fee discounts',
       link: '/coinflare',
       color: 'orange'
+    },
+    {
+      name: 'Coinjar',
+      logo: '/images/coinjar-logo.png', // You'll need to add this logo image
+      spotFees: '0.10%',
+      futuresFees: '0.04%',
+      cryptoCount: '300+',
+      countries: '100+',
+      features: ['Australian regulated', 'Simple interface', 'Digital payment solutions'],
+      bonus: 'Fast verification process',
+      link: '/coinjar',
+      color: 'green'
     }
   ];
 

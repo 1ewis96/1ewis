@@ -30,6 +30,16 @@ export default function PortfolioPage() {
       link: "/coinflare",
       refLink: referralData.exchanges.coinflare?.referralLink || "#",
       bonusDetails: referralData.exchanges.coinflare?.bonusDetails || "Exclusive trading fee discounts"
+    },
+    {
+      name: referralData.exchanges.coinjar?.name || "Coinjar",
+      color: "green-400",
+      description: "Australian-based cryptocurrency exchange offering a simple trading interface and digital payment solutions.",
+      pros: ["User-friendly platform", "Mobile app available", "Australian regulated", "Integrated payment solutions", "Fast verification process"],
+      bestFor: "Beginners and Australian users looking for a simple, regulated exchange",
+      link: "/coinjar",
+      refLink: referralData.exchanges.coinjar?.referralLink || "#",
+      bonusDetails: referralData.exchanges.coinjar?.bonusDetails || "Easy sign-up process with quick verification"
     }
   ];
 

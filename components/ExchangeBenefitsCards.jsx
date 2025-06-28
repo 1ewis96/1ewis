@@ -34,6 +34,21 @@ const ExchangeBenefitsCards = () => {
         'Regular promotions and events',
         'Comprehensive staking program'
       ]
+    },
+    {
+      name: 'Coinjar',
+      link: '/coinjar',
+      color: 'green',
+      benefits: [
+        'Australian regulated exchange',
+        'Simple and intuitive interface',
+        'Digital payment solutions',
+        'Fast verification process',
+        'Mobile app available',
+        'Competitive fees for Australian users',
+        'Local AUD deposits and withdrawals',
+        'Responsive customer support'
+      ]
     }
   ];
 

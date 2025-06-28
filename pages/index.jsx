@@ -32,6 +32,12 @@ export default function HomePage() {
       link: "/coinflare",
       color: "orange"
     },
+    {
+      name: "Coinjar",
+      tagline: "Australian crypto exchange with simple trading interface",
+      link: "/coinjar",
+      color: "green"
+    },
   ];
   
   const tools = [
