@@ -60,10 +60,10 @@ export default function HomePage() {
       color: "violet"
     },
     {
-      name: "NordVPN",
-      tagline: "Secure your crypto activities with the world's leading VPN",
-      link: "/tools/nordvpn",
-      color: "blue"
+      name: "Ledger",
+      tagline: "Industry-leading hardware wallet for secure crypto storage",
+      link: "/wallets/ledger",
+      color: "green"
     },
   ];
 

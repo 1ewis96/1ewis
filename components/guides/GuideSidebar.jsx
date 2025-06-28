@@ -19,7 +19,12 @@ const GuideSidebar = ({ guide }) => {
         transition={{ duration: 0.4 }}
       >
         <div className="flex justify-center">
-          <StarRating defaultRating={4.5} />
+          {/* Calculate average rating from ratingSum and ratingCount */}
+          <StarRating 
+            defaultRating={guide.ratingSum && guide.ratingCount ? (guide.ratingSum / guide.ratingCount) : 4.5} 
+            totalVotes={guide.ratingCount || 0}
+            guidePk={guide.PK} 
+          />
         </div>
       </motion.div>
       {/* Quick Navigation */}

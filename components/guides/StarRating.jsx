@@ -3,15 +3,16 @@ import { motion } from 'framer-motion';
 
 const StarRating = ({ 
   defaultRating = 4.5, 
-  totalVotes = 127, 
-  onRatingChange 
+  totalVotes = 0, 
+  onRatingChange,
+  guidePk
 }) => {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [hasRated, setHasRated] = useState(false);
 
   // Handle star click with half-star precision
-  const handleStarClick = (selectedRating, isHalfStar) => {
+  const handleStarClick = async (selectedRating, isHalfStar) => {
     // If clicking on half star, subtract 0.5
     const finalRating = isHalfStar ? selectedRating - 0.5 : selectedRating;
     setRating(finalRating);
@@ -21,8 +22,33 @@ const StarRating = ({
       onRatingChange(finalRating);
     }
     
-    // Show alert with the selected rating
-    alert(`You rated this guide ${finalRating} stars!`);
+    // Send rating to API endpoint
+    if (guidePk) {
+      try {
+        const response = await fetch('https://api.1ewis.com/analytics/guides/rating', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            PK: guidePk,
+            rating: finalRating
+          })
+        });
+        
+        if (response.ok) {
+          console.log('Rating submitted successfully');
+          // You could optionally update the total votes display here
+          // by setting a state variable if you want to show the updated count immediately
+        } else {
+          console.error('Failed to submit rating:', response.status);
+        }
+      } catch (error) {
+        console.error('Error submitting rating:', error);
+      }
+    } else {
+      console.warn('No guide PK provided, rating not submitted to API');
+    }
   };
 
   // Handle mouse enter on star with half-star precision
