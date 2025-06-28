@@ -25,7 +25,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import Footer from '../../components/Footer';
-import PriceTicker from '../../components/PriceTicker';
+
 import AnimatedFeatures from '../../components/AnimatedFeatures';
 import { useState, useEffect } from 'react';
 import { getReferralLink } from '../../utils/referralLinks';

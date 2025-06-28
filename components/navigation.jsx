@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [pastPriceTicker, setPastPriceTicker] = useState(false);
+  const [portfolioOpen, setPortfolioOpen] = useState(false);
   const [exchangesOpen, setExchangesOpen] = useState(false);
   const [walletsOpen, setWalletsOpen] = useState(false);
   const [cardsOpen, setCardsOpen] = useState(false);
@@ -19,6 +19,7 @@ export default function Navigation() {
   // Function to toggle a dropdown and close others
   const toggleDropdown = (dropdown) => {
     // Close all dropdowns first
+    if (dropdown !== 'portfolio') setPortfolioOpen(false);
     if (dropdown !== 'exchanges') setExchangesOpen(false);
     if (dropdown !== 'wallets') setWalletsOpen(false);
     if (dropdown !== 'cards') setCardsOpen(false);
@@ -28,6 +29,9 @@ export default function Navigation() {
     
     // Toggle the selected dropdown
     switch(dropdown) {
+      case 'portfolio':
+        setPortfolioOpen(prev => !prev);
+        break;
       case 'exchanges':
         setExchangesOpen(prev => !prev);
         break;
@@ -52,12 +56,6 @@ export default function Navigation() {
   useEffect(() => {
     const handleScroll = () => {
       const offset = window.scrollY;
-      // Check if we've scrolled past the price ticker (approximately 36px height)
-      if (offset > 36) {
-        setPastPriceTicker(true);
-      } else {
-        setPastPriceTicker(false);
-      }
       
       // General scrolled state for visual effects
       if (offset > 50) {
@@ -74,8 +72,12 @@ export default function Navigation() {
   }, []);
 
   const mainNavItems = [
-    { name: 'Home', path: '/' },
-    { name: 'Portfolio', path: '/portfolio' }
+    { name: 'Home', path: '/' }
+  ];
+  
+  const portfolioItems = [
+    { name: 'Compare Exchanges', path: '/portfolio', color: 'blue' },
+    { name: 'Tokens', path: '/tokens', color: 'purple' }
   ];
   
   const exchangeItems = [
@@ -118,7 +120,7 @@ export default function Navigation() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
-      style={{ top: pastPriceTicker ? '0' : '36px' }} // Dynamic position based on scroll position
+      style={{ top: '0' }} // Fixed position at top
     >
       <div className="flex justify-between items-center max-w-7xl mx-auto">
         <Link href="/" className="relative group flex items-center">
@@ -182,6 +184,53 @@ export default function Navigation() {
           ))}
          
           {/* Categories Dropdowns */}
+          
+          {/* Portfolio Dropdown */}
+          <div className="relative">
+            <motion.button 
+              onClick={() => toggleDropdown('portfolio')}
+              className="flex items-center px-4 py-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-md transition-all duration-300 relative group"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <motion.span
+                className="absolute inset-0 rounded-md bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100"
+                initial={{ scale: 0.8 }}
+                whileHover={{ scale: 1 }}
+                transition={{ duration: 0.2 }}
+              />
+              <span>Portfolio</span>
+              <motion.div
+                animate={{ rotate: portfolioOpen ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <ChevronDown className="ml-1 w-4 h-4" />
+              </motion.div>
+            </motion.button>
+            
+            <AnimatePresence>
+              {portfolioOpen && (
+                <motion.div 
+                  className="absolute top-full right-0 mt-2 w-48 bg-gray-900/95 backdrop-blur-md rounded-lg overflow-hidden border border-gray-800 shadow-xl"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {portfolioItems.map((item) => (
+                    <Link 
+                      key={item.path} 
+                      href={item.path}
+                      className={`block px-4 py-3 transition-colors border-l-2 ${isActive(item.path) ? `border-${item.color}-500 bg-gray-800/50 text-white` : `border-transparent hover:border-${item.color}-500 text-gray-300 hover:bg-gray-800/30 hover:text-white`}`}
+                      onClick={() => setPortfolioOpen(false)}
+                    >
+                      {item.name}
+                    </Link>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
           
           {/* Guides Link */}
           <Link 
@@ -632,12 +681,40 @@ export default function Navigation() {
                 </Link>
               </motion.div>
               
-              {/* Exchanges Section */}
+              {/* Portfolio Section */}
               <motion.div 
                 className="mt-4 pt-4 border-t border-gray-800"
                 initial={{ x: 50, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ delay: 0.2 }}
+              >
+                <h3 className="px-4 text-sm font-medium text-gray-400 uppercase tracking-wider mb-2">Portfolio</h3>
+                <div className="space-y-1">
+                  {portfolioItems.map((item, index) => (
+                    <motion.div
+                      key={item.path}
+                      initial={{ x: 50, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      transition={{ delay: 0.2 + (index * 0.05) }}
+                    >
+                      <Link 
+                        href={item.path}
+                        className={`block py-2 px-4 text-base transition-colors border-l-2 ${isActive(item.path) ? `border-${item.color}-500 bg-white/5 text-white` : `border-transparent text-gray-300 hover:border-${item.color}-500 hover:bg-white/5 hover:text-white`}`}
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        {item.name}
+                      </Link>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+              
+              {/* Exchanges Section */}
+              <motion.div 
+                className="mt-4 pt-4 border-t border-gray-800"
+                initial={{ x: 50, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.3 }}
               >
                 <h3 className="px-4 text-sm font-medium text-gray-400 uppercase tracking-wider mb-2">Exchanges</h3>
                 <div className="space-y-1">

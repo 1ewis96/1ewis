@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight, ExternalLink, Check, Info, TrendingUp, Shield, Zap } from 'lucide-react';
 import { ButtonLink } from '../../components/ui/button';
-import PriceTicker from '../../components/PriceTicker';
 import TokenPriceChart from '../../components/TokenPriceChart';
 import tokenData from '../../data/tokenData.json';
 import { getExchangeReferral } from '../../utils/referralLinks';
@@ -83,9 +82,6 @@ export default function TokenPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-black text-white">
-      {/* Price Ticker */}
-      <PriceTicker />
-      
       {/* Hero Section */}
       <div className="px-6 py-20 md:px-16">
         <motion.div 

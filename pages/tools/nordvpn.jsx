@@ -23,7 +23,7 @@ import Image from 'next/image';
 import Head from 'next/head';
 import { motion, AnimatePresence } from 'framer-motion';
 import Footer from '../../components/Footer';
-import PriceTicker from '../../components/PriceTicker';
+
 import AnimatedFeatures from '../../components/AnimatedFeatures';
 import { useState } from 'react';
 import { getToolReferral } from '../../utils/referralLinks';
