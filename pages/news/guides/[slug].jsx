@@ -600,7 +600,7 @@ export default function GuidePage() {
         <meta property="og:url" content={`https://1ewis.com/news/guides/${currentGuide.slug}`} />
         <meta property="og:title" content={`${currentGuide.title || 'Guide'} | 1ewis`} />
         <meta property="og:description" content={currentGuide.description || 'A comprehensive guide by 1ewis'} />
-        <meta property="og:image" content={currentGuide.image || 'https://s3.1ewis.com/default-guide-image.webp'} />
+        <meta property="og:image" content={currentGuide.image || currentGuide.fallbackImage || 'https://s3.1ewis.com/default-guide-image.webp'} />
         <meta property="article:published_time" content={currentGuide.publishedDate} />
         <meta property="article:author" content={currentGuide.author?.name || '1ewis'} />
         <meta property="article:section" content={currentGuide.category || 'Cryptocurrency'} />
@@ -613,7 +613,7 @@ export default function GuidePage() {
         <meta name="twitter:site" content="@1ewis" />
         <meta name="twitter:title" content={`${currentGuide.title || 'Guide'} | 1ewis`} />
         <meta name="twitter:description" content={currentGuide.description || 'A comprehensive guide by 1ewis'} />
-        <meta name="twitter:image" content={currentGuide.image || 'https://s3.1ewis.com/default-guide-image.webp'} />
+        <meta name="twitter:image" content={currentGuide.image || currentGuide.fallbackImage || 'https://s3.1ewis.com/default-guide-image.webp'} />
         <meta name="twitter:label1" content="Reading time" />
         <meta name="twitter:data1" content={`${currentGuide.readTime || '5'} min`} />
         
@@ -626,7 +626,7 @@ export default function GuidePage() {
               "@type": "Article",
               "headline": currentGuide.title,
               "description": currentGuide.description,
-              "image": currentGuide.image || 'https://s3.1ewis.com/default-guide-image.webp',
+              "image": currentGuide.image || currentGuide.fallbackImage || 'https://s3.1ewis.com/default-guide-image.webp',
               "author": {
                 "@type": "Person",
                 "name": currentGuide.author?.name || '1ewis'
