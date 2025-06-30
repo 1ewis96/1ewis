@@ -10,42 +10,6 @@ export default function GuidesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [showCategoryFilter, setShowCategoryFilter] = useState(false);
-  const [categories, setCategories] = useState(['all']);
-  const [categoryColors, setCategoryColors] = useState({});
-  
-  // Fetch categories from API
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch('https://api.1ewis.com/news/categories');
-        
-        if (!response.ok) {
-          throw new Error(`Failed to fetch categories: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        
-        if (data && data.categories && Array.isArray(data.categories)) {
-          // Extract category names and add 'all' as the first option
-          const categoryNames = ['all', ...data.categories.map(cat => cat.categoryName.toLowerCase())];
-          setCategories(categoryNames);
-          
-          // Create a mapping of category names to their colors
-          const colorMap = {};
-          data.categories.forEach(cat => {
-            colorMap[cat.categoryName.toLowerCase()] = cat.colorHex;
-          });
-          setCategoryColors(colorMap);
-        }
-      } catch (err) {
-        console.error('Error fetching categories:', err);
-      }
-    };
-    
-    fetchCategories();
-  }, []);
   
   // State for pagination
   const [nextPageToken, setNextPageToken] = useState(null);
@@ -54,20 +18,15 @@ export default function GuidesPage() {
   const [hasMorePages, setHasMorePages] = useState(false);
   const [limit, setLimit] = useState(10);
   
-  // Fetch guides from API with filtering and pagination
+  // Fetch guides from API with pagination
   useEffect(() => {
     const fetchGuides = async () => {
       try {
         setLoading(true);
         
-        // Build the API URL with query parameters
+        // Use the regular listing endpoint
         let apiUrl = 'https://api.1ewis.com/guides/list?';
         const params = new URLSearchParams();
-        
-        // Add category filter if not 'all'
-        if (selectedCategory !== 'all') {
-          params.append('category', selectedCategory);
-        }
         
         // Add pagination token if available
         if (currentPageToken) {
@@ -102,7 +61,7 @@ export default function GuidesPage() {
     };
     
     fetchGuides();
-  }, [selectedCategory, currentPageToken, limit]);
+  }, [currentPageToken, limit]);
   
   // Function to handle next page
   const goToNextPage = () => {
@@ -128,11 +87,7 @@ export default function GuidesPage() {
     }
   };
   
-  // Reset pagination when category changes
-  useEffect(() => {
-    setCurrentPageToken(null);
-    setPageHistory([]);
-  }, [selectedCategory]);
+  // No category filters anymore
 
   return (
     <div className="flex flex-col min-h-screen bg-black text-white">
@@ -199,7 +154,7 @@ export default function GuidesPage() {
           </div>
         </section>
 
-        {/* Search and Filter Section */}
+        {/* Search Section - Non-functional */}
         <section className="bg-gradient-to-r from-gray-900 to-gray-950 border-y border-gray-800/70 shadow-lg">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8" id="guides">
             <motion.div 
@@ -218,7 +173,7 @@ export default function GuidesPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              {/* Search Bar */}
+              {/* Search Bar - Non-functional */}
               <div className="relative flex-grow">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Search className="h-5 w-5 text-cyan-400" />
@@ -231,105 +186,11 @@ export default function GuidesPage() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
-              
-              {/* Category Filter */}
-              <div className="relative">
-                <button 
-                  onClick={() => setShowCategoryFilter(!showCategoryFilter)}
-                  className="flex items-center justify-center px-5 py-3 bg-gray-800 border border-gray-600 rounded-lg text-gray-200 hover:bg-gray-700 transition-all duration-300 shadow-sm w-full md:w-auto"
-                >
-                  <Filter className="h-5 w-5 mr-2 text-cyan-400" />
-                  {selectedCategory === 'all' ? 'All Categories' : selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}
-                </button>
-                
-                <AnimatePresence>
-                  {showCategoryFilter && (
-                    <motion.div 
-                      className="absolute right-0 mt-2 w-64 rounded-lg shadow-xl bg-gray-800 ring-1 ring-black ring-opacity-5 z-50 border border-gray-700"
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <div className="py-2 max-h-60 overflow-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800" role="menu" aria-orientation="vertical">
-                        {categories.map((category) => (
-                          <button
-                            key={category}
-                            className={`block w-full text-left px-4 py-2.5 text-sm ${selectedCategory === category ? 'bg-gray-700 font-medium' : 'text-gray-300 hover:bg-gray-700'} transition-colors duration-200 flex items-center`}
-                            onClick={() => {
-                              setSelectedCategory(category);
-                              setShowCategoryFilter(false);
-                            }}
-                          >
-                            {category !== 'all' && (
-                              <span 
-                                className="w-3 h-3 rounded-full mr-2" 
-                                style={{ backgroundColor: categoryColors[category] || '#3B82F6' }}
-                              />
-                            )}
-                            {category === 'all' ? 'All Categories' : category.charAt(0).toUpperCase() + category.slice(1)}
-                          </button>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-              
-              {/* Clear Filters Button - Only show if filters are applied */}
-              {(searchQuery || selectedCategory !== 'all') && (
-                <motion.button 
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  onClick={() => {
-                    setSearchQuery('');
-                    setSelectedCategory('all');
-                  }}
-                  className="flex items-center justify-center px-5 py-3 bg-gray-800 border border-gray-600 rounded-lg text-gray-200 hover:bg-gray-700 hover:text-white transition-all duration-300 shadow-sm w-full md:w-auto"
-                >
-                  <X className="h-4 w-4 mr-2 text-red-400" />
-                  Clear Filters
-                </motion.button>
-              )}
             </motion.div>
           </div>
         </section>
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          {/* Category Chips */}
-          <div className="mb-8 overflow-x-auto pb-4 hide-scrollbar">
-            <div className="flex space-x-2 min-w-max">
-              <motion.button
-                key="all-category"
-                className={`px-4 py-2 rounded-full border ${selectedCategory === 'all' ? 'bg-gray-800 border-cyan-500 text-white' : 'border-gray-700 text-gray-400 hover:border-gray-500'} transition-all duration-200`}
-                onClick={() => setSelectedCategory('all')}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                All Categories
-              </motion.button>
-              
-              {categories
-                .filter(cat => cat !== 'all')
-                .map(category => (
-                  <motion.button
-                    key={category}
-                    className={`px-4 py-2 rounded-full border flex items-center ${selectedCategory === category ? 'bg-gray-800 border-cyan-500 text-white' : 'border-gray-700 text-gray-400 hover:border-gray-500'} transition-all duration-200`}
-                    onClick={() => setSelectedCategory(category)}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <span 
-                      className="w-2 h-2 rounded-full mr-2" 
-                      style={{ backgroundColor: categoryColors[category] || '#3B82F6' }}
-                    />
-                    {category.charAt(0).toUpperCase() + category.slice(1)}
-                  </motion.button>
-                ))
-              }
-            </div>
-          </div>
           
           {loading ? (
             <div className="flex justify-center items-center py-20">
@@ -347,25 +208,10 @@ export default function GuidesPage() {
             </div>
           ) : guides.length > 0 ? (
             <>
-              {/* Filter information */}
-              {(searchQuery || selectedCategory !== 'all') && (
-                <div className="mb-8 p-4 bg-gray-800/50 border border-gray-700 rounded-lg">
-                  <p className="text-gray-300">
-                    <span className="font-medium">Filters applied:</span> {searchQuery && `"${searchQuery}"`} {selectedCategory !== 'all' && `in ${selectedCategory}`}
-                  </p>
-                </div>
-              )}
               
               {/* Guides grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {guides
-                  // Only filter by search query client-side since category filtering is done by the API
-                  .filter(guide => {
-                    return searchQuery === '' || 
-                      guide.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                      guide.description.toLowerCase().includes(searchQuery.toLowerCase());
-                  })
-                  .map((guide) => (
+                {guides.map((guide) => (
                 <Link href={`/news/guides/${guide.slug}`} key={guide.id}>
                   <motion.div 
                     className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl overflow-hidden border border-gray-700 shadow-lg group hover:shadow-cyan-900/20 hover:border-gray-600 transition-all duration-300 cursor-pointer"
@@ -378,13 +224,9 @@ export default function GuidesPage() {
                       <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent z-10" />
                       <div className="absolute top-4 left-4 z-20">
                         <span 
-                          className={`text-xs font-medium px-3 py-1.5 rounded-full ${!categoryColors[guide.category.toLowerCase()] ? 'bg-black/50 backdrop-blur-sm text-gray-300 border border-gray-700/50' : 'text-white shadow-lg'}`}
-                          style={categoryColors[guide.category.toLowerCase()] ? {
-                            backgroundColor: categoryColors[guide.category.toLowerCase()],
-                            boxShadow: `0 0 10px ${categoryColors[guide.category.toLowerCase()]}40`
-                          } : {}}
+                          className="text-xs font-medium px-3 py-1.5 rounded-full bg-black/50 backdrop-blur-sm text-gray-300 border border-gray-700/50"
                         >
-                          {guide.category.charAt(0).toUpperCase() + guide.category.slice(1)}
+                          {guide.category ? guide.category.charAt(0).toUpperCase() + guide.category.slice(1) : 'Guide'}
                         </span>
                       </div>
                       <div className="absolute top-4 right-4 z-20">

@@ -7,6 +7,7 @@ import SponsoredPanel from './SponsoredPanel';
 import RelatedQuestions from './RelatedQuestions';
 import SocialShareButtons from './SocialShareButtons';
 import StarRating from './StarRating';
+import CoinWidget from './CoinWidget';
 
 const GuideSidebar = ({ guide }) => {
   return (
@@ -67,6 +68,17 @@ const GuideSidebar = ({ guide }) => {
             ))}
           </nav>
         </div>
+      )}
+      
+      {/* Crypto Price Widget - shows only if guide has tags */}
+      {guide.tags && guide.tags.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+        >
+          <CoinWidget coinId={guide.tags[0].toLowerCase()} />
+        </motion.div>
       )}
       
       {/* Popular Tags section removed */}

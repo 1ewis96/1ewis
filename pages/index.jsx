@@ -13,6 +13,7 @@ import BeginnersGuide from '../components/BeginnersGuide';
 import CookieConsent from '../components/CookieConsent';
 import ParticleBackground from '../components/ParticleBackground';
 import PartnerLogoSlider from '../components/PartnerLogoSlider';
+import CryptoShortsSection from '../components/CryptoShortsSection';
 import Footer from '../components/Footer';
 import { useMemo } from 'react';
 import { getWalletReferral } from '../utils/referralLinks';
@@ -433,6 +434,9 @@ export default function HomePage() {
         </section>
 
 
+        
+        {/* Shorts Video Section */}
+        <CryptoShortsSection bgClassName="bg-gradient-to-b from-black to-gray-950" />
         
         {/* FAQ Section */}
         <section id="faq" className="py-16 px-4 bg-gradient-to-b from-gray-950 to-black relative overflow-hidden">

@@ -1,0 +1,32 @@
+{
+  "shorts": [
+    {
+      "id": "VbVoBuptqT0",
+      "title": "Dogecoin: The Meme That Became a Billion-Dollar Coin 🐶🚀",
+      "description": "How a joke cryptocurrency based on a meme became one of the most valuable digital assets in the world.",
+      "url": "https://www.youtube.com/shorts/VbVoBuptqT0",
+      "thumbnail": "https://i.ytimg.com/vi/VbVoBuptqT0/maxresdefault.jpg"
+    },
+    {
+      "id": "placeholder1",
+      "title": "Coming Soon: Bitcoin Explained",
+      "description": "Stay tuned for our upcoming short on Bitcoin basics.",
+      "url": "#",
+      "thumbnail": "/images/placeholder-short-1.jpg"
+    },
+    {
+      "id": "placeholder2",
+      "title": "Coming Soon: Crypto Wallets 101",
+      "description": "Learn about crypto wallets in our upcoming short.",
+      "url": "#",
+      "thumbnail": "/images/placeholder-short-2.jpg"
+    },
+    {
+      "id": "placeholder3",
+      "title": "Coming Soon: NFT Basics",
+      "description": "Everything you need to know about NFTs coming soon.",
+      "url": "#",
+      "thumbnail": "/images/placeholder-short-3.jpg"
+    }
+  ]
+}
