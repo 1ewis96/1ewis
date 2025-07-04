@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Navigation from '../components/navigation';
 import ConsentManager from '../components/ConsentManager';
+import NewsletterPopup from '../components/NewsletterPopup';
 import { initializeGoogleConsentMode, initializeTCF } from '../utils/consentManager';
 import { FloatingVideoProvider } from '../context/FloatingVideoContext';
 import FloatingVideoPlayerWrapper from '../components/videos/FloatingVideoPlayerWrapper';
@@ -109,6 +110,9 @@ function MyApp({ Component, pageProps }) {
       <Component {...pageProps} />
       {/* Only show ConsentManager on non-admin pages */}
       {!router.pathname.startsWith('/admin') && <ConsentManager />}
+      
+      {/* Newsletter Popup - Shows on all pages after inactivity */}
+      {!router.pathname.startsWith('/admin') && <NewsletterPopup />}
       
       {/* Floating Video Player - Shows on all pages once activated */}
       <FloatingVideoPlayerWrapper />

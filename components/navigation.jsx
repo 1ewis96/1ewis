@@ -12,21 +12,35 @@ export default function Navigation() {
   const [walletsOpen, setWalletsOpen] = useState(false);
   const [cardsOpen, setCardsOpen] = useState(false);
   const [toolsOpen, setToolsOpen] = useState(false);
-  // Removed newsOpen state as it's no longer needed
+  const [guidesOpen, setGuidesOpen] = useState(false);
+  const [newsCategories, setNewsCategories] = useState([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(false);
+  const [categoriesError, setCategoriesError] = useState(null);
+  const [categoriesSubmenuOpen, setCategoriesSubmenuOpen] = useState(false);
+  const [tokensSubmenuOpen, setTokensSubmenuOpen] = useState(false);
+  const [topTokens, setTopTokens] = useState([]);
+  const [tokensLoading, setTokensLoading] = useState(false);
+  const [tokensError, setTokensError] = useState(null);
   const [qaOpen, setQaOpen] = useState(false);
   const router = useRouter();
-  
+
   // Function to toggle a dropdown and close others
   const toggleDropdown = (dropdown) => {
     // Close all dropdowns first
-    if (dropdown !== 'portfolio') setPortfolioOpen(false);
+    if (dropdown !== 'portfolio') {
+      setPortfolioOpen(false);
+      setTokensSubmenuOpen(false);
+    }
     if (dropdown !== 'exchanges') setExchangesOpen(false);
     if (dropdown !== 'wallets') setWalletsOpen(false);
     if (dropdown !== 'cards') setCardsOpen(false);
     if (dropdown !== 'tools') setToolsOpen(false);
-    // Removed news dropdown toggle
+    if (dropdown !== 'guides') {
+      setGuidesOpen(false);
+      setCategoriesSubmenuOpen(false);
+    }
     if (dropdown !== 'qa') setQaOpen(false);
-    
+
     // Toggle the selected dropdown
     switch(dropdown) {
       case 'portfolio':
@@ -44,7 +58,10 @@ export default function Navigation() {
       case 'tools':
         setToolsOpen(prev => !prev);
         break;
-      // Removed news case
+      case 'guides':
+        setGuidesOpen(prev => !prev);
+        if (!guidesOpen) setCategoriesSubmenuOpen(false);
+        break;
       case 'qa':
         setQaOpen(prev => !prev);
         break;
@@ -56,7 +73,7 @@ export default function Navigation() {
   useEffect(() => {
     const handleScroll = () => {
       const offset = window.scrollY;
-      
+
       // General scrolled state for visual effects
       if (offset > 50) {
         setScrolled(true);
@@ -71,15 +88,93 @@ export default function Navigation() {
     };
   }, []);
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setCategoriesLoading(true);
+        const response = await fetch('https://api.1ewis.com/news/categories');
+
+        if (!response.ok) {
+          throw new Error(`Error fetching categories: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setNewsCategories(data.categories || []);
+        setCategoriesError(null);
+      } catch (err) {
+        console.error('Error loading categories:', err);
+        setCategoriesError('Failed to load categories');
+      } finally {
+        setCategoriesLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+  
+  useEffect(() => {
+    const fetchTopTokens = async () => {
+      try {
+        setTokensLoading(true);
+        // Fetch the top 4 tokens from the API
+        const response = await fetch('https://api.1ewis.com/tokens/market-cap?limit=4');
+        
+        if (!response.ok) {
+          throw new Error(`API request failed with status ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        // Transform API data to match our component's expected format
+        // Ensure we only take exactly 4 tokens
+        const transformedTokens = data.items.slice(0, 4).map(item => ({
+          symbol: item.coin.toUpperCase(),
+          name: item.coinFullName,
+          price: `$${item.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+          change: `${item.priceChange24h >= 0 ? '+' : ''}${item.priceChange24h.toFixed(2)}%`,
+          color: getTokenColor(item.coin.toLowerCase()),
+          image: item.tokenImage || `https://s3.1ewis.com/tokens/${item.coin.toLowerCase()}.png`
+        }));
+        
+        setTopTokens(transformedTokens);
+        setTokensError(null);
+      } catch (err) {
+        console.error('Error loading top tokens:', err);
+        setTokensError('Failed to load tokens');
+      } finally {
+        setTokensLoading(false);
+      }
+    };
+    
+    // Helper function to assign colors to tokens
+    const getTokenColor = (symbol) => {
+      const colorMap = {
+        btc: 'orange',
+        eth: 'blue',
+        sol: 'purple',
+        bnb: 'yellow',
+        xrp: 'teal',
+        ada: 'blue',
+        doge: 'yellow',
+        dot: 'pink'
+      };
+      
+      return colorMap[symbol] || 'gray';
+    };
+
+    fetchTopTokens();
+  }, []);
+
   const mainNavItems = [
     { name: 'Home', path: '/' }
   ];
-  
+
   const portfolioItems = [
     { name: 'Compare Exchanges', path: '/portfolio', color: 'blue' },
-    { name: 'Tokens', path: '/tokens', color: 'purple' }
+    { name: 'Top Tokens', isSubmenu: true, color: 'purple' },
+    { name: 'All Tokens', path: '/tokens', color: 'indigo' }
   ];
-  
+
   const exchangeItems = [
     // These appear under "Main Exchanges"
     { name: 'Bitrue', path: '/bitrue', color: 'blue' },
@@ -87,25 +182,29 @@ export default function Navigation() {
     // Items after this appear under "More Exchanges"
     { name: 'CoinJar', path: '/coinjar', color: 'green' },
   ];
-  
+
   const walletItems = [
     { name: 'YouHodler', path: '/wallets/youhodler', color: 'teal' },
     { name: 'Ledger', path: '/wallets/ledger', color: 'gray' },
     { name: 'MetaMask', path: '/wallets/metamask', color: 'orange' },
   ];
-  
+
   const cardItems = [
     { name: 'Revolut', path: '/cards/revolut', color: 'blue' },
   ];
-  
+
   const toolItems = [
     { name: 'TradingView', path: '/tools/tradingview', color: 'indigo' },
     { name: 'NordVPN', path: '/tools/nordvpn', color: 'blue' },
     { name: 'CoinTracking', path: '/tools/cointracking', color: 'violet' },
   ];
-  
-  // Removed newsItems array as it's no longer needed
-  
+
+  const guidesItems = [
+    { name: 'All Guides', href: '/news/guides', color: 'green' },
+    { name: 'Crypto News', href: '/news', color: 'blue' },
+    { name: 'News Categories', isSubmenu: true, color: 'teal' }
+  ];
+
   const qaItems = [
     { name: 'Q&A Home', path: '/qa', color: 'blue' },
     { name: 'Most Answered', path: '/questions/most-answered', color: 'indigo' },
@@ -211,51 +310,232 @@ export default function Navigation() {
             <AnimatePresence>
               {portfolioOpen && (
                 <motion.div 
-                  className="absolute top-full right-0 mt-2 w-48 bg-gray-900/95 backdrop-blur-md rounded-lg overflow-hidden border border-gray-800 shadow-xl"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.2 }}
+                  className="absolute left-0 mt-2 w-56 rounded-md shadow-xl bg-gray-900/95 backdrop-blur-sm ring-1 ring-white/10 overflow-hidden z-50 border border-blue-500/20"
+                  initial={{ opacity: 0, y: -10, height: 0 }}
+                  animate={{ opacity: 1, y: 0, height: 'auto' }}
+                  exit={{ opacity: 0, y: -10, height: 0 }}
+                  transition={{ duration: 0.3 }}
                 >
-                  {portfolioItems.map((item) => (
-                    <Link 
-                      key={item.path} 
-                      href={item.path}
-                      className={`block px-4 py-3 transition-colors border-l-2 ${isActive(item.path) ? `border-${item.color}-500 bg-gray-800/50 text-white` : `border-transparent hover:border-${item.color}-500 text-gray-300 hover:bg-gray-800/30 hover:text-white`}`}
-                      onClick={() => setPortfolioOpen(false)}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
+                  <div className="py-1">
+                    {portfolioItems.map((item, index) => 
+                      item.isSubmenu ? (
+                        <div key={index} className="relative">
+                          <button
+                            className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors flex items-center justify-between"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setTokensSubmenuOpen(prev => !prev);
+                            }}
+                          >
+                            <span>{item.name}</span>
+                            <ChevronDown
+                              className={`ml-1 h-4 w-4 transition-transform ${tokensSubmenuOpen ? 'rotate-180' : ''}`}
+                            />
+                          </button>
+                          
+                          <AnimatePresence>
+                            {tokensSubmenuOpen && (
+                              <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.2 }}
+                                className="bg-gray-800/50 border-l-2 border-purple-500/50"
+                              >
+                                {tokensLoading ? (
+                                  <div className="px-4 py-2 text-xs text-gray-400 flex items-center">
+                                    <div className="animate-spin rounded-full h-3 w-3 border-t-2 border-b-2 border-purple-500 mr-2"></div>
+                                    Loading...
+                                  </div>
+                                ) : tokensError ? (
+                                  <div className="px-4 py-2 text-xs text-red-400">
+                                    Failed to load
+                                  </div>
+                                ) : topTokens.length === 0 ? (
+                                  <div className="px-4 py-2 text-xs text-gray-400">
+                                    No tokens
+                                  </div>
+                                ) : (
+                                  <>
+                                    {topTokens.map((token) => (
+                                      <Link
+                                        key={token.symbol}
+                                        href={`/token/${token.symbol.toLowerCase()}`}
+                                        className="block pl-6 pr-4 py-2 text-xs text-gray-300 hover:bg-gray-700 hover:text-white transition-colors flex items-center justify-between"
+                                        onClick={() => {
+                                          setPortfolioOpen(false);
+                                          setTokensSubmenuOpen(false);
+                                        }}
+                                      >
+                                        <div className="flex items-center">
+                                          <img 
+                                            src={token.image} 
+                                            alt={token.symbol} 
+                                            className="w-4 h-4 rounded-full mr-2" 
+                                          />
+                                          <span>{token.symbol}</span>
+                                        </div>
+                                        <div className="text-xs opacity-75">{token.price}</div>
+                                      </Link>
+                                    ))}
+                                    <Link
+                                      href="/tokens"
+                                      className="block pl-6 pr-4 py-2 text-xs text-purple-400 hover:bg-gray-700 hover:text-purple-300 transition-colors border-t border-gray-700/50"
+                                      onClick={() => {
+                                        setPortfolioOpen(false);
+                                        setTokensSubmenuOpen(false);
+                                      }}
+                                    >
+                                      View All
+                                    </Link>
+                                  </>
+                                )}
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                      ) : (
+                        <Link 
+                          key={item.path} 
+                          href={item.path}
+                          className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
+                          onClick={() => setPortfolioOpen(false)}
+                        >
+                          {item.name}
+                        </Link>
+                      )
+                    )}
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
-          
-          {/* Guides Link */}
-          <Link 
-            href="/news/guides"
-            className={`relative px-4 py-2 rounded-md transition-all duration-300 group ${
-              isActive('/news/guides') 
-                ? 'text-white font-medium bg-white/5' 
-                : 'text-gray-300 hover:text-white hover:bg-white/10'
-            }`}
-          >
-            <motion.span
-              className="absolute inset-0 rounded-md bg-gradient-to-r from-green-500/20 to-teal-500/20 opacity-0 group-hover:opacity-100"
-              initial={{ scale: 0.8 }}
-              whileHover={{ scale: 1 }}
-              transition={{ duration: 0.2 }}
-            />
-            {isActive('/news/guides') && (
-              <motion.span 
-                className="absolute inset-0 bg-white/10 rounded-md z-0" 
-                layoutId="navbar-active-item"
-                transition={{ type: 'spring', duration: 0.6 }}
+          {/* Guides Dropdown */}
+          <div className="relative">
+            <motion.button 
+              onClick={() => toggleDropdown('guides')}
+              className="flex items-center px-4 py-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-md transition-all duration-300 relative group"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <motion.span
+                className="absolute inset-0 rounded-md bg-gradient-to-r from-green-500/20 to-teal-500/20 opacity-0 group-hover:opacity-100"
+                initial={{ scale: 0.8 }}
+                whileHover={{ scale: 1 }}
+                transition={{ duration: 0.2 }}
               />
-            )}
-            <span className="relative z-10">Guides</span>
-          </Link>
+              <span>Guides</span>
+              <motion.div
+                animate={{ rotate: guidesOpen ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <ChevronDown className="ml-1 w-4 h-4" />
+              </motion.div>
+            </motion.button>
+            
+            <AnimatePresence>
+              {guidesOpen && (
+                <motion.div 
+                  className="absolute left-0 mt-2 w-56 rounded-md shadow-xl bg-gray-900/95 backdrop-blur-sm ring-1 ring-white/10 overflow-hidden z-50 border border-green-500/20"
+                  initial={{ opacity: 0, y: -10, height: 0 }}
+                  animate={{ opacity: 1, y: 0, height: 'auto' }}
+                  exit={{ opacity: 0, y: -10, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className="py-1">
+                    {guidesItems.map((item, index) => 
+                      item.isSubmenu ? (
+                        <div key={index} className="relative">
+                          <button
+                            className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors flex items-center justify-between"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setCategoriesSubmenuOpen(prev => !prev);
+                            }}
+                          >
+                            <span>{item.name}</span>
+                            <ChevronDown
+                              className={`ml-1 h-4 w-4 transition-transform ${categoriesSubmenuOpen ? 'rotate-180' : ''}`}
+                            />
+                          </button>
+                          
+                          <AnimatePresence>
+                            {categoriesSubmenuOpen && (
+                              <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.2 }}
+                                className="bg-gray-800/50 border-l-2 border-teal-500/50"
+                              >
+                                {categoriesLoading ? (
+                                  <div className="px-4 py-2 text-xs text-gray-400 flex items-center">
+                                    <div className="animate-spin rounded-full h-3 w-3 border-t-2 border-b-2 border-green-500 mr-2"></div>
+                                    Loading...
+                                  </div>
+                                ) : categoriesError ? (
+                                  <div className="px-4 py-2 text-xs text-red-400">
+                                    Failed to load
+                                  </div>
+                                ) : newsCategories.length === 0 ? (
+                                  <div className="px-4 py-2 text-xs text-gray-400">
+                                    No categories
+                                  </div>
+                                ) : (
+                                  <>
+                                    {newsCategories.map((category) => (
+                                      <Link
+                                        key={category.categoryName}
+                                        href={`/news/${encodeURIComponent(category.categoryName.toLowerCase().replace(/\s+/g, '-'))}`}
+                                        className="block pl-6 pr-4 py-2 text-xs text-gray-300 hover:bg-gray-700 hover:text-white transition-colors flex items-center"
+                                        onClick={() => {
+                                          setGuidesOpen(false);
+                                          setCategoriesSubmenuOpen(false);
+                                        }}
+                                      >
+                                        <span 
+                                          className="inline-block w-2 h-2 rounded-full mr-2" 
+                                          style={{ backgroundColor: category.colorHex }}
+                                        ></span>
+                                        {category.categoryName}
+                                      </Link>
+                                    ))}
+                                    <Link
+                                      href="/news"
+                                      className="block pl-6 pr-4 py-2 text-xs text-green-400 hover:bg-gray-700 hover:text-green-300 transition-colors border-t border-gray-700/50"
+                                      onClick={() => {
+                                        setGuidesOpen(false);
+                                        setCategoriesSubmenuOpen(false);
+                                      }}
+                                    >
+                                      View All
+                                    </Link>
+                                  </>
+                                )}
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                      ) : (
+                        <Link
+                          key={index}
+                          href={item.href}
+                          className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
+                          onClick={() => {
+                            setGuidesOpen(false);
+                            setCategoriesSubmenuOpen(false);
+                          }}
+                        >
+                          {item.name}
+                        </Link>
+                      )
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
           
           {/* Exchanges Dropdown */}
           <div className="relative">
@@ -283,34 +563,36 @@ export default function Navigation() {
             <AnimatePresence>
               {exchangesOpen && (
                 <motion.div 
-                  className="absolute top-full right-0 mt-2 w-48 bg-gray-900/95 backdrop-blur-md rounded-lg overflow-hidden border border-gray-800 shadow-xl max-h-96 overflow-y-auto"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.2 }}
+                  className="absolute left-0 mt-2 w-56 rounded-md shadow-xl bg-gray-900/95 backdrop-blur-sm ring-1 ring-white/10 overflow-hidden z-50 border border-yellow-500/20 max-h-96 overflow-y-auto"
+                  initial={{ opacity: 0, y: -10, height: 0 }}
+                  animate={{ opacity: 1, y: 0, height: 'auto' }}
+                  exit={{ opacity: 0, y: -10, height: 0 }}
+                  transition={{ duration: 0.3 }}
                 >
-                  <div className="px-4 py-2 text-xs text-gray-500 uppercase">Main Exchanges</div>
-                  {exchangeItems.slice(0, 2).map((item) => (
-                    <Link 
-                      key={item.path} 
-                      href={item.path}
-                      className={`block px-4 py-3 transition-colors border-l-2 ${isActive(item.path) ? `border-${item.color}-500 bg-gray-800/50 text-white` : `border-transparent hover:border-${item.color}-500 text-gray-300 hover:bg-gray-800/30 hover:text-white`}`}
-                      onClick={() => setExchangesOpen(false)}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
-                  <div className="px-4 py-2 text-xs text-gray-500 uppercase">More Exchanges</div>
-                  {exchangeItems.slice(2).map((item) => (
-                    <Link 
-                      key={item.path} 
-                      href={item.path}
-                      className={`block px-4 py-3 transition-colors border-l-2 ${isActive(item.path) ? `border-${item.color}-500 bg-gray-800/50 text-white` : `border-transparent hover:border-${item.color}-500 text-gray-300 hover:bg-gray-800/30 hover:text-white`}`}
-                      onClick={() => setExchangesOpen(false)}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
+                  <div className="py-1">
+                    <div className="px-4 py-2 text-xs text-gray-500 uppercase">Main Exchanges</div>
+                    {exchangeItems.slice(0, 2).map((item) => (
+                      <Link 
+                        key={item.path} 
+                        href={item.path}
+                        className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
+                        onClick={() => setExchangesOpen(false)}
+                      >
+                        {item.name}
+                      </Link>
+                    ))}
+                    <div className="px-4 py-2 text-xs text-gray-500 uppercase mt-1">More Exchanges</div>
+                    {exchangeItems.slice(2).map((item) => (
+                      <Link 
+                        key={item.path} 
+                        href={item.path}
+                        className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
+                        onClick={() => setExchangesOpen(false)}
+                      >
+                        {item.name}
+                      </Link>
+                    ))}
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -342,22 +624,24 @@ export default function Navigation() {
             <AnimatePresence>
               {walletsOpen && (
                 <motion.div 
-                  className="absolute left-0 mt-2 w-48 rounded-md shadow-xl bg-gray-900/95 backdrop-blur-sm ring-1 ring-white/10 overflow-hidden z-50 border border-blue-500/20"
+                  className="absolute left-0 mt-2 w-56 rounded-md shadow-xl bg-gray-900/95 backdrop-blur-sm ring-1 ring-white/10 overflow-hidden z-50 border border-blue-500/20"
                   initial={{ opacity: 0, y: -10, height: 0 }}
                   animate={{ opacity: 1, y: 0, height: 'auto' }}
                   exit={{ opacity: 0, y: -10, height: 0 }}
                   transition={{ duration: 0.3 }}
                 >
-                  {walletItems.map((item) => (
-                    <Link 
-                      key={item.path} 
-                      href={item.path}
-                      className={`block px-4 py-3 transition-colors border-l-2 ${isActive(item.path) ? `border-${item.color}-500 bg-white/5 text-white font-medium` : `border-transparent text-gray-300 hover:border-${item.color}-500 hover:bg-white/5 hover:text-white`}`}
-                      onClick={() => setWalletsOpen(false)}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
+                  <div className="py-1">
+                    {walletItems.map((item) => (
+                      <Link 
+                        key={item.path} 
+                        href={item.path}
+                        className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
+                        onClick={() => setWalletsOpen(false)}
+                      >
+                        {item.name}
+                      </Link>
+                    ))}
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -389,22 +673,24 @@ export default function Navigation() {
             <AnimatePresence>
               {cardsOpen && (
                 <motion.div 
-                  className="absolute left-0 mt-2 w-48 rounded-md shadow-xl bg-gray-900/95 backdrop-blur-sm ring-1 ring-white/10 overflow-hidden z-50 border border-yellow-500/20"
+                  className="absolute left-0 mt-2 w-56 rounded-md shadow-xl bg-gray-900/95 backdrop-blur-sm ring-1 ring-white/10 overflow-hidden z-50 border border-pink-500/20"
                   initial={{ opacity: 0, y: -10, height: 0 }}
                   animate={{ opacity: 1, y: 0, height: 'auto' }}
                   exit={{ opacity: 0, y: -10, height: 0 }}
                   transition={{ duration: 0.3 }}
                 >
-                  {cardItems.map((item) => (
-                    <Link 
-                      key={item.path} 
-                      href={item.path}
-                      className={`block px-4 py-3 transition-colors border-l-2 ${isActive(item.path) ? `border-${item.color}-500 bg-white/5 text-white font-medium` : `border-transparent text-gray-300 hover:border-${item.color}-500 hover:bg-white/5 hover:text-white`}`}
-                      onClick={() => setCardsOpen(false)}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
+                  <div className="py-1">
+                    {cardItems.map((item) => (
+                      <Link 
+                        key={item.path} 
+                        href={item.path}
+                        className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
+                        onClick={() => setCardsOpen(false)}
+                      >
+                        {item.name}
+                      </Link>
+                    ))}
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -436,22 +722,24 @@ export default function Navigation() {
             <AnimatePresence>
               {toolsOpen && (
                 <motion.div 
-                  className="absolute left-0 mt-2 w-48 rounded-md shadow-xl bg-gray-900/95 backdrop-blur-sm ring-1 ring-white/10 overflow-hidden z-50 border border-purple-500/20"
+                  className="absolute left-0 mt-2 w-56 rounded-md shadow-xl bg-gray-900/95 backdrop-blur-sm ring-1 ring-white/10 overflow-hidden z-50 border border-purple-500/20"
                   initial={{ opacity: 0, y: -10, height: 0 }}
                   animate={{ opacity: 1, y: 0, height: 'auto' }}
                   exit={{ opacity: 0, y: -10, height: 0 }}
                   transition={{ duration: 0.3 }}
                 >
-                  {toolItems.map((item) => (
-                    <Link 
-                      key={item.path} 
-                      href={item.path}
-                      className={`block px-4 py-3 transition-colors border-l-2 ${isActive(item.path) ? `border-${item.color}-500 bg-white/5 text-white font-medium` : `border-transparent text-gray-300 hover:border-${item.color}-500 hover:bg-white/5 hover:text-white`}`}
-                      onClick={() => setToolsOpen(false)}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
+                  <div className="py-1">
+                    {toolItems.map((item) => (
+                      <Link 
+                        key={item.path} 
+                        href={item.path}
+                        className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
+                        onClick={() => setToolsOpen(false)}
+                      >
+                        {item.name}
+                      </Link>
+                    ))}
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -485,22 +773,24 @@ export default function Navigation() {
             <AnimatePresence>
               {qaOpen && (
                 <motion.div 
-                  className="absolute left-0 mt-2 w-48 rounded-md shadow-xl bg-gray-900/95 backdrop-blur-sm ring-1 ring-white/10 overflow-hidden z-50 border border-blue-500/20"
+                  className="absolute left-0 mt-2 w-56 rounded-md shadow-xl bg-gray-900/95 backdrop-blur-sm ring-1 ring-white/10 overflow-hidden z-50 border border-blue-500/20"
                   initial={{ opacity: 0, y: -10, height: 0 }}
                   animate={{ opacity: 1, y: 0, height: 'auto' }}
                   exit={{ opacity: 0, y: -10, height: 0 }}
                   transition={{ duration: 0.3 }}
                 >
-                  {qaItems.map((item) => (
-                    <Link 
-                      key={item.path} 
-                      href={item.path}
-                      className={`block px-4 py-3 transition-colors border-l-2 ${isActive(item.path) ? `border-${item.color}-500 bg-white/5 text-white font-medium` : `border-transparent text-gray-300 hover:border-${item.color}-500 hover:bg-white/5 hover:text-white`}`}
-                      onClick={() => setQaOpen(false)}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
+                  <div className="py-1">
+                    {qaItems.map((item) => (
+                      <Link 
+                        key={item.path} 
+                        href={item.path}
+                        className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
+                        onClick={() => setQaOpen(false)}
+                      >
+                        {item.name}
+                      </Link>
+                    ))}
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>

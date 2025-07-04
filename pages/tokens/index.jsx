@@ -6,7 +6,7 @@ import Footer from '../../components/Footer';
 import ParticleBackground from '../../components/ParticleBackground';
 
 // Market Statistics Component
-const MarketStatistics = ({ stats, lastUpdated }) => {
+const MarketStatistics = ({ stats, lastUpdated, isLoading }) => {
   // Format the last updated time
   const formatLastUpdated = (timestamp) => {
     if (!timestamp) return 'Not available';
@@ -14,6 +14,34 @@ const MarketStatistics = ({ stats, lastUpdated }) => {
     const date = new Date(timestamp);
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
+  
+  if (isLoading) {
+    return (
+      <div className="bg-gray-800/50 rounded-xl p-4 mb-6 border border-gray-700/50">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-semibold text-white">Market Statistics</h2>
+          <div className="text-xs text-gray-400 flex items-center">
+            <RefreshCw className="w-3 h-3 mr-1 animate-spin" />
+            Loading data...
+          </div>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((index) => (
+            <div key={index} className="bg-gray-800/80 p-3 rounded-lg border border-gray-700/50">
+              <div className="flex items-center mb-2">
+                <div className="p-2 rounded-full bg-gray-700/50 mr-2 animate-pulse">
+                  <div className="w-4 h-4"></div>
+                </div>
+                <div className="h-4 bg-gray-700/50 rounded w-20 animate-pulse"></div>
+              </div>
+              <div className="h-6 bg-gray-700/50 rounded w-24 animate-pulse mb-2"></div>
+              <div className="h-4 bg-gray-700/50 rounded w-16 animate-pulse"></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
   
   return (
     <div className="bg-gray-800/50 rounded-xl p-4 mb-6 border border-gray-700/50">
@@ -90,8 +118,9 @@ export default function TokensPage() {
     ethGas: '0 Gwei',
     lastUpdatedAt: null
   });
+  const [marketStatsLoading, setMarketStatsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const tokensPerPage = 10;
+  const tokensPerPage = 50;
   
   // Market statistics data
   const marketStatsList = [
@@ -133,6 +162,7 @@ export default function TokensPage() {
   // Fetch market overview data
   const fetchMarketOverview = async () => {
     try {
+      setMarketStatsLoading(true);
       const response = await fetch('https://api.1ewis.com/tokens/overview');
       
       if (!response.ok) {
@@ -151,6 +181,8 @@ export default function TokensPage() {
       });
     } catch (err) {
       console.error('Error fetching market overview:', err);
+    } finally {
+      setMarketStatsLoading(false);
     }
   };
 
@@ -385,7 +417,7 @@ export default function TokensPage() {
         </div>
 
         {/* Market Statistics */}
-        <MarketStatistics stats={marketStatsList} lastUpdated={marketStats.lastUpdatedAt} />
+        <MarketStatistics stats={marketStatsList} lastUpdated={marketStats.lastUpdatedAt} isLoading={marketStatsLoading} />
 
         {/* Filters and Search */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
@@ -407,9 +439,100 @@ export default function TokensPage() {
 
         {/* Tokens table */}
         {loading && tokens.length === 0 ? (
-          <div className="bg-gray-800/30 backdrop-blur-sm rounded-xl border border-gray-700 overflow-hidden p-8">
-            <div className="flex flex-col items-center justify-center">
-              <p className="text-gray-400">Loading tokens...</p>
+          <div className="bg-gray-800/30 backdrop-blur-sm rounded-xl border border-gray-700 overflow-hidden">
+            {/* Desktop view - skeleton loading */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-700">
+                <thead>
+                  <tr className="bg-gray-800/50">
+                    <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">#</th>
+                    <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Name</th>
+                    <th scope="col" className="px-4 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">Price</th>
+                    <th scope="col" className="px-4 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">24h %</th>
+                    <th scope="col" className="px-4 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">Market Cap</th>
+                    <th scope="col" className="px-4 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">Volume (24h)</th>
+                    <th scope="col" className="px-4 py-3 text-center text-xs font-medium text-gray-400 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-gray-800/20 divide-y divide-gray-700">
+                  {/* Skeleton rows */}
+                  {[...Array(10)].map((_, index) => (
+                    <tr key={index} className="animate-pulse">
+                      <td className="px-4 py-4 whitespace-nowrap">
+                        <div className="h-4 w-6 bg-gray-700/50 rounded"></div>
+                      </td>
+                      <td className="px-4 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <div className="h-6 w-6 bg-gray-700/50 rounded-full mr-2"></div>
+                          <div>
+                            <div className="h-4 w-24 bg-gray-700/50 rounded mb-1"></div>
+                            <div className="h-3 w-12 bg-gray-700/50 rounded"></div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-4 py-4 whitespace-nowrap text-right">
+                        <div className="h-4 w-16 bg-gray-700/50 rounded ml-auto"></div>
+                      </td>
+                      <td className="px-4 py-4 whitespace-nowrap text-right">
+                        <div className="h-4 w-14 bg-gray-700/50 rounded ml-auto"></div>
+                      </td>
+                      <td className="px-4 py-4 whitespace-nowrap text-right">
+                        <div className="h-4 w-20 bg-gray-700/50 rounded ml-auto"></div>
+                      </td>
+                      <td className="px-4 py-4 whitespace-nowrap text-right">
+                        <div className="h-4 w-20 bg-gray-700/50 rounded ml-auto"></div>
+                      </td>
+                      <td className="px-4 py-4 whitespace-nowrap text-center">
+                        <div className="flex justify-center space-x-2">
+                          <div className="h-6 w-14 bg-gray-700/50 rounded"></div>
+                          <div className="h-6 w-14 bg-gray-700/50 rounded"></div>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            
+            {/* Mobile view - skeleton loading */}
+            <div className="md:hidden">
+              {/* Skeleton cards */}
+              {[...Array(5)].map((_, index) => (
+                <div key={index} className="border-b border-gray-700 p-4 animate-pulse">
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="flex items-center">
+                      <div className="h-8 w-8 bg-gray-700/50 rounded-full mr-2"></div>
+                      <div>
+                        <div className="h-4 w-24 bg-gray-700/50 rounded mb-1"></div>
+                        <div className="h-3 w-12 bg-gray-700/50 rounded"></div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="h-4 w-16 bg-gray-700/50 rounded mb-1 ml-auto"></div>
+                      <div className="h-3 w-14 bg-gray-700/50 rounded ml-auto"></div>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-2 text-sm">
+                    <div>
+                      <div className="h-3 w-16 bg-gray-700/50 rounded mb-1"></div>
+                      <div className="h-4 w-20 bg-gray-700/50 rounded"></div>
+                    </div>
+                    <div>
+                      <div className="h-3 w-16 bg-gray-700/50 rounded mb-1"></div>
+                      <div className="h-4 w-20 bg-gray-700/50 rounded"></div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-between mt-3">
+                    <div className="h-3 w-6 bg-gray-700/50 rounded"></div>
+                    <div className="flex space-x-2">
+                      <div className="h-6 w-16 bg-gray-700/50 rounded"></div>
+                      <div className="h-6 w-16 bg-gray-700/50 rounded"></div>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         ) : error && tokens.length === 0 ? (
@@ -726,8 +849,90 @@ export default function TokensPage() {
           
           {/* Loading indicator for automatic pagination */}
           {loading && tokens.length > 0 && nextToken && (
-            <div className="flex justify-center items-center py-4 bg-gray-800/30 border-t border-gray-700">
-              <p className="text-sm text-gray-400">Loading more tokens...</p>
+            <div className="bg-gray-800/30 border-t border-gray-700">
+              {/* Desktop view - skeleton loading for pagination */}
+              <div className="hidden md:block overflow-x-auto">
+                <table className="min-w-full">
+                  <tbody className="bg-gray-800/20">
+                    {/* Skeleton rows */}
+                    {[...Array(3)].map((_, index) => (
+                      <tr key={index} className="animate-pulse border-b border-gray-700/50">
+                        <td className="px-4 py-4 whitespace-nowrap">
+                          <div className="h-4 w-6 bg-gray-700/50 rounded"></div>
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <div className="h-6 w-6 bg-gray-700/50 rounded-full mr-2"></div>
+                            <div>
+                              <div className="h-4 w-24 bg-gray-700/50 rounded mb-1"></div>
+                              <div className="h-3 w-12 bg-gray-700/50 rounded"></div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap text-right">
+                          <div className="h-4 w-16 bg-gray-700/50 rounded ml-auto"></div>
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap text-right">
+                          <div className="h-4 w-14 bg-gray-700/50 rounded ml-auto"></div>
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap text-right">
+                          <div className="h-4 w-20 bg-gray-700/50 rounded ml-auto"></div>
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap text-right">
+                          <div className="h-4 w-20 bg-gray-700/50 rounded ml-auto"></div>
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap text-center">
+                          <div className="flex justify-center space-x-2">
+                            <div className="h-6 w-14 bg-gray-700/50 rounded"></div>
+                            <div className="h-6 w-14 bg-gray-700/50 rounded"></div>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              
+              {/* Mobile view - skeleton loading for pagination */}
+              <div className="md:hidden">
+                {/* Skeleton cards */}
+                {[...Array(2)].map((_, index) => (
+                  <div key={index} className="border-b border-gray-700 p-4 animate-pulse">
+                    <div className="flex justify-between items-start mb-2">
+                      <div className="flex items-center">
+                        <div className="h-8 w-8 bg-gray-700/50 rounded-full mr-2"></div>
+                        <div>
+                          <div className="h-4 w-24 bg-gray-700/50 rounded mb-1"></div>
+                          <div className="h-3 w-12 bg-gray-700/50 rounded"></div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="h-4 w-16 bg-gray-700/50 rounded mb-1 ml-auto"></div>
+                        <div className="h-3 w-14 bg-gray-700/50 rounded ml-auto"></div>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-2 text-sm">
+                      <div>
+                        <div className="h-3 w-16 bg-gray-700/50 rounded mb-1"></div>
+                        <div className="h-4 w-20 bg-gray-700/50 rounded"></div>
+                      </div>
+                      <div>
+                        <div className="h-3 w-16 bg-gray-700/50 rounded mb-1"></div>
+                        <div className="h-4 w-20 bg-gray-700/50 rounded"></div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex justify-between mt-3">
+                      <div className="h-3 w-6 bg-gray-700/50 rounded"></div>
+                      <div className="flex space-x-2">
+                        <div className="h-6 w-16 bg-gray-700/50 rounded"></div>
+                        <div className="h-6 w-16 bg-gray-700/50 rounded"></div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>

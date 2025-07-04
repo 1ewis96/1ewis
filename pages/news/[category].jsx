@@ -6,9 +6,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { fetchArticles, formatPublishedDate, extractArticleId } from '../../utils/newsApi';
 
-export default function NewsPage() {
+export default function CategoryNewsPage() {
   const router = useRouter();
-  const { tag } = router.query;
+  const { category } = router.query;
   
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,27 +19,24 @@ export default function NewsPage() {
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [categoriesError, setCategoriesError] = useState(null);
 
-  // Fetch articles on component mount or when tag changes
-  useEffect(() => {
-    async function loadInitialArticles() {
-      try {
-        setLoading(true);
-        const data = await fetchArticles({ tag, limit: 6 });
-        setArticles(data.articles || []);
-        setNextToken(data.nextToken);
-      } catch (err) {
-        console.error('Error loading articles:', err);
-        setError('Failed to load articles. Please try again later.');
-      } finally {
-        setLoading(false);
-      }
-    }
+  // Format category for display (capitalize first letter, replace hyphens with spaces)
+  const formatCategoryName = (categorySlug) => {
+    if (!categorySlug) return '';
+    return categorySlug
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
+  
+  // Format category for API calls (convert back to original format if needed)
+  const getApiCategory = (categorySlug) => {
+    if (!categorySlug) return '';
+    // For API calls, we might need the original format without hyphens
+    // This depends on how your API expects category names
+    return formatCategoryName(categorySlug);
+  };
 
-    // Only load articles after router is ready
-    if (router.isReady) {
-      loadInitialArticles();
-    }
-  }, [router.isReady, tag]);
+  const displayCategory = formatCategoryName(category);
 
   // Fetch categories from API
   useEffect(() => {
@@ -66,13 +63,38 @@ export default function NewsPage() {
     fetchCategories();
   }, []);
 
+  // Fetch articles on component mount or when category changes
+  useEffect(() => {
+    async function loadInitialArticles() {
+      try {
+        setLoading(true);
+        // Use the formatted category as a tag filter
+        const apiCategory = getApiCategory(category);
+        const data = await fetchArticles({ tag: apiCategory, limit: 12 });
+        setArticles(data.articles || []);
+        setNextToken(data.nextToken);
+      } catch (err) {
+        console.error('Error loading articles:', err);
+        setError('Failed to load articles. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    // Only load articles after router is ready and category is available
+    if (router.isReady && category) {
+      loadInitialArticles();
+    }
+  }, [router.isReady, category]);
+
   // Load more articles when requested
   const loadMoreArticles = async () => {
     if (!nextToken || loadingMore) return;
     
     try {
       setLoadingMore(true);
-      const data = await fetchArticles({ limit: 6, nextToken });
+      const apiCategory = getApiCategory(category);
+      const data = await fetchArticles({ tag: apiCategory, limit: 12, nextToken });
       setArticles(prev => [...prev, ...(data.articles || [])]);
       setNextToken(data.nextToken);
     } catch (err) {
@@ -86,25 +108,17 @@ export default function NewsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-black text-white">
       <Head>
-        <title>{tag ? `${tag} News & Updates | 1ewis.com` : `Crypto News & Market Updates | 1ewis.com`}</title>
+        <title>{displayCategory} News & Updates | 1ewis.com</title>
         <meta 
           name="description" 
-          content={tag 
-            ? `Latest ${tag} cryptocurrency news, updates, and market insights. Stay informed with 1ewis.com's coverage of ${tag} developments.`
-            : "Stay updated with the latest cryptocurrency news, market trends, and industry developments. Get timely insights on Bitcoin, Ethereum, and the broader crypto ecosystem."} 
+          content={`Latest ${displayCategory} cryptocurrency news, updates, and market insights. Stay informed with 1ewis.com's coverage of ${displayCategory} developments.`} 
         />
-        <meta name="keywords" content={tag ? `${tag} news, ${tag} crypto, ${tag} cryptocurrency, ${tag.toLowerCase()} updates` : "crypto news, bitcoin news, ethereum news, cryptocurrency market updates, blockchain news"} />
+        <meta name="keywords" content={`${displayCategory} news, ${displayCategory} crypto, ${displayCategory} cryptocurrency, ${category?.toLowerCase()} updates`} />
         
-        {/* Always use the base URL as canonical for tag pages to avoid duplicate content */}
-        <link rel="canonical" href="https://1ewis.com/news" />
+        <link rel="canonical" href={`https://1ewis.com/news/${category}`} />
         
-        {/* Add tag-specific meta tags */}
-        {tag && (
-          <>
-            <meta property="og:title" content={`${tag} News & Updates | 1ewis.com`} />
-            <meta property="og:description" content={`Latest ${tag} cryptocurrency news, updates, and market insights. Stay informed with 1ewis.com's coverage of ${tag} developments.`} />
-          </>
-        )}
+        <meta property="og:title" content={`${displayCategory} News & Updates | 1ewis.com`} />
+        <meta property="og:description" content={`Latest ${displayCategory} cryptocurrency news, updates, and market insights. Stay informed with 1ewis.com's coverage of ${displayCategory} developments.`} />
       </Head>
       
       <main className="pt-28 pb-20 px-4 md:px-8 max-w-7xl mx-auto">
@@ -117,18 +131,22 @@ export default function NewsPage() {
             className="text-center"
           >
             <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-green-400 via-teal-400 to-emerald-400">
-              Crypto News & Updates
+              {displayCategory} News
             </h1>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Stay informed with the latest developments in the cryptocurrency world. 
-              From market trends to regulatory updates, we've got you covered.
+              Stay informed with the latest {displayCategory} developments in the cryptocurrency world.
             </p>
+            <div className="mt-6">
+              <Link href="/news" className="text-green-400 hover:text-green-300 transition-colors">
+                ← Back to all news
+              </Link>
+            </div>
           </motion.div>
         </section>
         
         {/* News Articles Section */}
         <section className="mb-16">
-          <h2 className="text-2xl font-bold mb-8 border-b border-gray-800 pb-4">Latest News</h2>
+          <h2 className="text-2xl font-bold mb-8 border-b border-gray-800 pb-4">Latest {displayCategory} Articles</h2>
           
           {loading ? (
             <div className="flex justify-center items-center py-20">
@@ -144,12 +162,21 @@ export default function NewsPage() {
                 Try Again
               </button>
             </div>
+          ) : articles.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-gray-400 mb-4">No articles found for {displayCategory}.</p>
+              <Link href="/news">
+                <span className="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-md transition-colors inline-block">
+                  View All News
+                </span>
+              </Link>
+            </div>
           ) : (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {articles.map((article, index) => {
                   const articleId = extractArticleId(article.id);
-                  const primaryTag = article.tags && article.tags.length > 0 ? article.tags[0] : 'News';
+                  const primaryTag = article.tags && article.tags.length > 0 ? article.tags[0] : displayCategory;
                   const formattedDate = formatPublishedDate(article.publishedAt);
                   
                   return (
@@ -223,11 +250,9 @@ export default function NewsPage() {
           )}
         </section>
         
-
-        
-        {/* Categories Section */}
+        {/* Related Categories Section */}
         <section>
-          <h2 className="text-2xl font-bold mb-8 border-b border-gray-800 pb-4">News Categories</h2>
+          <h2 className="text-2xl font-bold mb-8 border-b border-gray-800 pb-4">Explore Other Categories</h2>
           
           {categoriesLoading ? (
             <div className="flex justify-center items-center py-10">
@@ -239,29 +264,46 @@ export default function NewsPage() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {categories.map((category, index) => (
+              {categories
+                .filter(cat => cat.categoryName.toLowerCase() !== category?.toLowerCase().replace(/-/g, ' '))
+                .map((cat, index) => (
                 <motion.div
-                  key={category.categoryName}
+                  key={cat.categoryName}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   className="bg-gray-900/50 border border-gray-800 rounded-lg p-6 hover:border-opacity-70 hover:bg-gray-800/30 transition-all duration-300 cursor-pointer"
                   style={{
-                    borderColor: category.colorHex,
+                    borderColor: cat.colorHex,
                     borderLeftWidth: '4px'
                   }}
                 >
-                  <Link href={`/news/${encodeURIComponent(category.categoryName.toLowerCase().replace(/\s+/g, '-'))}`}>
+                  <Link href={`/news/${encodeURIComponent(cat.categoryName.toLowerCase().replace(/\s+/g, '-'))}`}>
                     <h3 className="text-lg font-medium flex items-center">
                       <span 
                         className="inline-block w-3 h-3 rounded-full mr-2" 
-                        style={{ backgroundColor: category.colorHex }}
+                        style={{ backgroundColor: cat.colorHex }}
                       ></span>
-                      {category.categoryName}
+                      {cat.categoryName}
                     </h3>
                   </Link>
                 </motion.div>
               ))}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: categories.length * 0.1 }}
+                className="bg-gray-900/50 border border-green-500/30 rounded-lg p-6 hover:border-opacity-70 hover:bg-gray-800/30 transition-all duration-300 cursor-pointer"
+              >
+                <Link href="/news">
+                  <h3 className="text-lg font-medium flex items-center">
+                    <span 
+                      className="inline-block w-3 h-3 rounded-full mr-2 bg-green-500" 
+                    ></span>
+                    View All News
+                  </h3>
+                </Link>
+              </motion.div>
             </div>
           )}
         </section>

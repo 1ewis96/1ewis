@@ -478,8 +478,114 @@ export default function TokenPage() {
           maxOpacity={0.3} 
           blur={2}
         />
-        <div className="flex items-center justify-center h-[calc(100vh-80px)]">
-          <div className="animate-pulse text-xl">Loading token information...</div>
+        <div className="container mx-auto px-4 pt-24 pb-4">
+          {/* Back Button */}
+          <div className="flex items-center mb-8">
+            <div className="flex items-center text-gray-400">
+              <ArrowLeft className="mr-2 w-4 h-4" /> 
+              <div className="h-4 w-24 bg-gray-700/50 rounded animate-pulse"></div>
+            </div>
+          </div>
+          
+          {/* Hero Section - Skeleton */}
+          <div className="mb-8">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+              {/* Left Column - Token Info */}
+              <div className="flex items-center mb-6 md:mb-0">
+                <div className="mr-4">
+                  <div className="w-16 h-16 rounded-full bg-gray-700/50 animate-pulse"></div>
+                </div>
+                <div>
+                  <div className="h-8 w-48 bg-gray-700/50 rounded mb-2 animate-pulse"></div>
+                  <div className="h-4 w-24 bg-gray-700/50 rounded animate-pulse"></div>
+                </div>
+              </div>
+              
+              {/* Right Column - Price Info */}
+              <div className="flex flex-col items-end">
+                <div className="h-8 w-32 bg-gray-700/50 rounded mb-2 animate-pulse"></div>
+                <div className="h-6 w-24 bg-gray-700/50 rounded animate-pulse"></div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Action Buttons - Skeleton */}
+          <div className="flex flex-wrap gap-3 mb-8">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-10 w-28 bg-gray-700/50 rounded-lg animate-pulse"></div>
+            ))}
+          </div>
+          
+          {/* Chart Section - Skeleton */}
+          <div className="bg-gray-800/30 backdrop-blur-sm rounded-xl border border-gray-700 p-4 mb-8">
+            <div className="flex justify-between items-center mb-4">
+              <div className="h-6 w-32 bg-gray-700/50 rounded animate-pulse"></div>
+              <div className="flex space-x-2">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="h-8 w-16 bg-gray-700/50 rounded animate-pulse"></div>
+                ))}
+              </div>
+            </div>
+            <div className="h-64 w-full bg-gray-700/30 rounded-lg animate-pulse flex items-center justify-center">
+              <div className="text-gray-500">Chart Loading...</div>
+            </div>
+          </div>
+          
+          {/* Token Stats - Skeleton */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+              <div key={i} className="bg-gray-800/30 backdrop-blur-sm rounded-xl border border-gray-700 p-4 animate-pulse">
+                <div className="h-4 w-24 bg-gray-700/50 rounded mb-2"></div>
+                <div className="h-6 w-32 bg-gray-700/50 rounded"></div>
+              </div>
+            ))}
+          </div>
+          
+          {/* About Section - Skeleton */}
+          <div className="bg-gray-800/30 backdrop-blur-sm rounded-xl border border-gray-700 p-6 mb-8">
+            <div className="h-6 w-32 bg-gray-700/50 rounded mb-4"></div>
+            <div className="space-y-2">
+              <div className="h-4 w-full bg-gray-700/50 rounded"></div>
+              <div className="h-4 w-full bg-gray-700/50 rounded"></div>
+              <div className="h-4 w-3/4 bg-gray-700/50 rounded"></div>
+              <div className="h-4 w-5/6 bg-gray-700/50 rounded"></div>
+              <div className="h-4 w-full bg-gray-700/50 rounded"></div>
+            </div>
+          </div>
+          
+          {/* Related Tokens - Skeleton */}
+          <div className="mb-8">
+            <div className="h-6 w-48 bg-gray-700/50 rounded mb-4"></div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="bg-gray-800/30 backdrop-blur-sm rounded-xl border border-gray-700 p-4 animate-pulse">
+                  <div className="flex items-center mb-3">
+                    <div className="h-10 w-10 bg-gray-700/50 rounded-full mr-3"></div>
+                    <div>
+                      <div className="h-5 w-20 bg-gray-700/50 rounded mb-1"></div>
+                      <div className="h-4 w-12 bg-gray-700/50 rounded"></div>
+                    </div>
+                  </div>
+                  <div className="h-6 w-24 bg-gray-700/50 rounded mb-3"></div>
+                  <div className="h-8 w-full bg-gray-700/50 rounded"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          {/* Related Guides - Skeleton */}
+          <div className="mb-8">
+            <div className="h-6 w-48 bg-gray-700/50 rounded mb-4"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {[1, 2].map((i) => (
+                <div key={i} className="bg-gray-800/30 backdrop-blur-sm rounded-xl border border-gray-700 p-4 animate-pulse">
+                  <div className="h-6 w-3/4 bg-gray-700/50 rounded mb-2"></div>
+                  <div className="h-4 w-1/2 bg-gray-700/50 rounded mb-3"></div>
+                  <div className="h-4 w-24 bg-gray-700/50 rounded"></div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     );
