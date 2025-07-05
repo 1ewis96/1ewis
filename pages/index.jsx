@@ -435,9 +435,7 @@ export default function HomePage() {
 
 
         
-        {/* Shorts Video Section */}
-        <CryptoShortsSection bgClassName="bg-gradient-to-b from-black to-gray-950" />
-        
+
         {/* FAQ Section */}
         <section id="faq" className="py-16 px-4 bg-gradient-to-b from-gray-950 to-black relative overflow-hidden">
           {/* Background glow effects */}

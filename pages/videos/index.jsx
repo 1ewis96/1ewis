@@ -6,6 +6,7 @@ import VideoCard from '../../components/videos/VideoCard';
 import PlaylistCard from '../../components/videos/PlaylistCard';
 import CategorySelector from '../../components/videos/CategorySelector';
 import FeaturedVideo from '../../components/videos/FeaturedVideo';
+import CryptoShortsSection from '../../components/CryptoShortsSection';
 // FloatingCTA removed as requested
 import { videoCategories } from '../../data/videoCategories';
 import { Youtube, PlaySquare, ListVideo, Loader2 } from 'lucide-react';
@@ -237,12 +238,11 @@ export default function VideosPage() {
 
         {/* Content Section */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          {/* Featured Video - Only show when not loading */}
-          {!loading && !error && videos.length > 0 && (
-            <section className="mb-16">
-              <FeaturedVideo video={videos[0]} />
-            </section>
-          )}
+
+          {/* Crypto Shorts Section */}
+          <section className="mb-16">
+            <CryptoShortsSection bgClassName="" showBackground={false} />
+          </section>
           
           {/* Category Filter - Always show this */}
           <motion.div

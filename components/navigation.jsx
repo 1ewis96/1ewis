@@ -171,8 +171,7 @@ export default function Navigation() {
 
   const portfolioItems = [
     { name: 'Compare Exchanges', path: '/portfolio', color: 'blue' },
-    { name: 'Top Tokens', isSubmenu: true, color: 'purple' },
-    { name: 'All Tokens', path: '/tokens', color: 'indigo' }
+    { name: 'Tokens', isSubmenu: true, color: 'purple' }
   ];
 
   const exchangeItems = [
@@ -202,7 +201,8 @@ export default function Navigation() {
   const guidesItems = [
     { name: 'All Guides', href: '/news/guides', color: 'green' },
     { name: 'Crypto News', href: '/news', color: 'blue' },
-    { name: 'News Categories', isSubmenu: true, color: 'teal' }
+    { name: 'News Categories', isSubmenu: true, color: 'teal' },
+    { name: 'Schedule', href: '/news/schedule', color: 'purple' }
   ];
 
   const qaItems = [
