@@ -46,190 +46,21 @@ export default function NewsSchedulePage() {
     setCurrentDate(newDate);
   };
   
-  // Calendar event data structure
-  const calendarEvents = [
-    // Monday, June 30, 2025
-    {
-      id: 1,
-      title: 'Fed Interest Rate Decision',
-      date: '2025-06-30',
-      time: '14:00',
-      category: 'Macro',
-      importance: 'high',
-      description: 'Federal Reserve announces interest rate decision with significant impact on crypto markets.'
-    },
-    {
-      id: 2,
-      title: 'BTC Options Expiry',
-      date: '2025-06-30',
-      time: '08:00',
-      category: 'Bitcoin',
-      importance: 'medium',
-      description: 'Monthly Bitcoin options contracts expire, potentially causing market volatility.'
-    },
-    
-    // Tuesday, July 1, 2025
-    {
-      id: 3,
-      title: 'Ethereum Protocol Upgrade',
-      date: '2025-07-01',
-      time: '10:30',
-      category: 'Ethereum',
-      importance: 'high',
-      description: 'Major Ethereum network upgrade implementing new EIPs and protocol improvements.'
-    },
-    {
-      id: 4,
-      title: 'Crypto Regulation Hearing',
-      date: '2025-07-01',
-      time: '16:00',
-      category: 'Regulation',
-      importance: 'high',
-      description: 'Senate Banking Committee hearing on proposed cryptocurrency regulations.'
-    },
-    
-    // Wednesday, July 2, 2025
-    {
-      id: 5,
-      title: 'Solana Ecosystem Conference',
-      date: '2025-07-02',
-      time: '09:00',
-      category: 'Conference',
-      importance: 'medium',
-      description: 'Annual Solana ecosystem conference with project announcements and developer workshops.'
-    },
-    {
-      id: 6,
-      title: 'DeFi Protocol Token Launch',
-      date: '2025-07-02',
-      time: '13:00',
-      category: 'DeFi',
-      importance: 'medium',
-      description: 'Launch of a new decentralized finance protocol token with initial liquidity pools.'
-    },
-    
-    // Thursday, July 3, 2025
-    {
-      id: 7,
-      title: 'US Employment Report',
-      date: '2025-07-03',
-      time: '08:30',
-      category: 'Macro',
-      importance: 'medium',
-      description: 'Monthly US employment report release with potential market impact.'
-    },
-    {
-      id: 8,
-      title: 'Binance Quarterly Token Burn',
-      date: '2025-07-03',
-      time: '11:00',
-      category: 'Exchange',
-      importance: 'medium',
-      description: 'Binance quarterly BNB token burn event affecting token supply.'
-    },
-    
-    // Friday, July 4, 2025
-    {
-      id: 9,
-      title: 'US Markets Closed - Independence Day',
-      date: '2025-07-04',
-      time: '00:00',
-      category: 'Market',
-      importance: 'low',
-      description: 'US financial markets closed for Independence Day holiday.'
-    },
-    
-    // Saturday, July 5, 2025
-    {
-      id: 10,
-      title: 'Bitcoin Miami Hackathon',
-      date: '2025-07-05',
-      time: '10:00',
-      category: 'Bitcoin',
-      importance: 'low',
-      description: '48-hour Bitcoin development hackathon with prizes for innovative projects.'
-    },
-    {
-      id: 11,
-      title: 'NFT Art Exhibition Launch',
-      date: '2025-07-05',
-      time: '18:00',
-      category: 'NFT',
-      importance: 'low',
-      description: 'Virtual NFT art exhibition featuring prominent crypto artists.'
-    },
-    
-    // Sunday, July 6, 2025
-    {
-      id: 12,
-      title: 'Crypto Market Weekly Open',
-      date: '2025-07-06',
-      time: '23:00',
-      category: 'Market',
-      importance: 'medium',
-      description: 'Weekly crypto market open, often with increased volatility.'
-    },
-    {
-      id: 13,
-      title: 'Layer 2 Protocol Launch',
-      date: '2025-07-06',
-      time: '15:00',
-      category: 'Scaling',
-      importance: 'high',
-      description: 'Major Ethereum Layer 2 scaling solution mainnet launch.'
-    }
-  ];
+  // Calendar event data structure - empty array as all events have been removed
+  const calendarEvents = [];
   
   // Use the calendar events as the upcoming events
   const [upcomingEvents, setUpcomingEvents] = useState(calendarEvents);
   
-  // Function to handle adding new events
-  const handleAddEvent = (e) => {
-    e.preventDefault();
-    
-    // Format the time to ensure it's in the correct format (HH:MM)
-    const formattedTime = newEvent.time;
-    
-    // Create a new event object
-    const event = {
-      id: upcomingEvents.length + 1,
-      title: newEvent.title,
-      date: newEvent.date,
-      time: formattedTime,
-      category: newEvent.category,
-      importance: newEvent.importance,
-      description: newEvent.description
-    };
-    
-    // Add the new event to the events array
-    setUpcomingEvents([...upcomingEvents, event]);
-    
-    // Reset the form
-    setNewEvent({
-      title: '',
-      date: '',
-      time: '',
-      category: '',
-      importance: 'medium',
-      description: ''
-    });
-    
-    // Close the form
-    setShowEventForm(false);
-  };
+  // Function to handle adding new events - removed as per request
 
   const [filter, setFilter] = useState('all');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [showEventForm, setShowEventForm] = useState(false);
-  const [newEvent, setNewEvent] = useState({
-    title: '',
-    date: '',
-    time: '',
-    category: '',
-    importance: 'medium',
-    description: ''
-  });
+  // Event form state variables removed
+  const [showEventForm, setShowEventForm] = useState(false); // Keeping this but not using it
+  
+  // All events have been removed
 
   // Initialize calendar and update current time indicator
   useEffect(() => {
@@ -257,58 +88,57 @@ export default function NewsSchedulePage() {
     return () => clearInterval(timeIndicatorInterval);
   }, []);
 
-  const filteredEvents = filter === 'all' 
-    ? upcomingEvents 
-    : upcomingEvents.filter(event => event.importance === filter);
+  // Define filteredEvents as an empty array since we've removed all events
+  const filteredEvents = [];
 
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
   
-  // Calendar event helpers
+  // Calendar event helpers - simplified since we've removed all events
   const getEventsForDay = (date) => {
-    // Format date to YYYY-MM-DD for comparison
-    const dateString = date.toISOString().split('T')[0];
-    return upcomingEvents.filter(event => event.date === dateString);
+    return []; // Return empty array as all events have been removed
   };
   
   const getEventPosition = (event) => {
-    // Parse the time (e.g., "14:00 UTC") to get hours and minutes
-    const timeMatch = event.time.match(/(\d+):(\d+)/);
-    if (!timeMatch) return 0;
-    
-    const hours = parseInt(timeMatch[1], 10);
-    const minutes = parseInt(timeMatch[2], 10);
-    
-    // Calculate position as percentage of the day (24 hours)
-    return ((hours + minutes / 60) / 24) * 100;
+    // This function is kept for compatibility but won't be used
+    const [hours, minutes] = event?.time?.split(':').map(Number) || [0, 0];
+    return getHourPositionPercentage(hours, minutes);
   };
   
   const getCurrentTimePosition = () => {
-    // Get current UTC time from the state
-    const utcHours = currentTime.getUTCHours();
-    const utcMinutes = currentTime.getUTCMinutes();
-    
-    // Calculate position as percentage of the day (24 hours)
-    return ((utcHours + utcMinutes / 60) / 24) * 100;
+    return getHourPositionPercentage(
+      currentTime.getUTCHours(),
+      currentTime.getUTCMinutes()
+    );
   };
 
+  // These functions are kept for compatibility but won't be used since all events are removed
   const getImportanceColor = (importance) => {
     switch(importance) {
-      case 'high': return 'bg-red-500/20 text-red-400';
-      case 'medium': return 'bg-yellow-500/20 text-yellow-400';
-      case 'low': return 'bg-green-500/20 text-green-400';
-      default: return 'bg-blue-500/20 text-blue-400';
+      case 'high': return 'bg-red-600 text-white';
+      case 'medium': return 'bg-yellow-600 text-white';
+      case 'low': return 'bg-green-600 text-white';
+      default: return 'bg-gray-600 text-white';
     }
   };
-
+  
   const getImportanceLabel = (importance) => {
     switch(importance) {
       case 'high': return 'High Impact';
       case 'medium': return 'Medium Impact';
       case 'low': return 'Low Impact';
       default: return 'Unknown';
+    }
+  };
+  
+  const getEventBackground = (importance) => {
+    switch(importance) {
+      case 'high': return 'border-red-500 bg-red-900/70 text-white';
+      case 'medium': return 'border-yellow-500 bg-yellow-900/70 text-white';
+      case 'low': return 'border-green-500 bg-green-900/70 text-white';
+      default: return 'border-gray-500 bg-gray-900/70 text-white';
     }
   };
 
@@ -464,9 +294,8 @@ export default function NewsSchedulePage() {
                   </div>
                 </div>
                 
-                {/* Days columns with events */}
+                {/* Days columns - no events displayed */}
                 {currentWeek.map((day, dayIndex) => {
-                  const dayEvents = getEventsForDay(day);
                   const isToday = new Date().toDateString() === day.toDateString();
                   
                   return (
@@ -474,24 +303,7 @@ export default function NewsSchedulePage() {
                       key={dayIndex} 
                       className={`relative h-full border-r border-gray-800 ${isToday ? 'bg-purple-900/10' : ''}`}
                     >
-                      {dayEvents.map((event) => {
-                        const topPosition = getEventPosition(event);
-                        
-                        return (
-                          <div 
-                            key={event.id}
-                            className={`absolute left-1 right-1 p-2 rounded-md text-xs ${getImportanceColor(event.importance)} border border-current z-10`}
-                            style={{ 
-                              top: `${topPosition}%`,
-                              minHeight: '40px'
-                            }}
-                          >
-                            <div className="font-medium">{event.time}</div>
-                            <div className="font-bold truncate">{event.title}</div>
-                            <div className="truncate">{event.category}</div>
-                          </div>
-                        );
-                      })}
+                      {/* No events to display */}
                     </div>
                   );
                 })}
@@ -519,171 +331,13 @@ export default function NewsSchedulePage() {
             </div>
           </div>
           
-          {/* Add Event Button */}
-          <div className="mt-8 flex justify-end">
-            <button
-              onClick={() => setShowEventForm(true)}
-              className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-all duration-300"
-            >
-              <Plus size={18} />
-              Add Event
-            </button>
-          </div>
-          
-          {/* Event Form Modal */}
-          {showEventForm && (
-            <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="bg-gray-900 border border-gray-800 rounded-lg p-6 w-full max-w-lg"
-              >
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-xl font-bold">Add New Event</h3>
-                  <button 
-                    onClick={() => setShowEventForm(false)}
-                    className="text-gray-400 hover:text-white"
-                  >
-                    <X size={20} />
-                  </button>
-                </div>
-                
-                <form onSubmit={handleAddEvent} className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-1">Event Title</label>
-                    <input
-                      type="text"
-                      value={newEvent.title}
-                      onChange={(e) => setNewEvent({...newEvent, title: e.target.value})}
-                      className="w-full bg-gray-800 border border-gray-700 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                      required
-                    />
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-1">Date</label>
-                      <input
-                        type="date"
-                        value={newEvent.date}
-                        onChange={(e) => setNewEvent({...newEvent, date: e.target.value})}
-                        className="w-full bg-gray-800 border border-gray-700 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-1">Time (24h)</label>
-                      <input
-                        type="time"
-                        value={newEvent.time}
-                        onChange={(e) => setNewEvent({...newEvent, time: e.target.value})}
-                        className="w-full bg-gray-800 border border-gray-700 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                        required
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-1">Category</label>
-                      <input
-                        type="text"
-                        value={newEvent.category}
-                        onChange={(e) => setNewEvent({...newEvent, category: e.target.value})}
-                        className="w-full bg-gray-800 border border-gray-700 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-1">Importance</label>
-                      <select
-                        value={newEvent.importance}
-                        onChange={(e) => setNewEvent({...newEvent, importance: e.target.value})}
-                        className="w-full bg-gray-800 border border-gray-700 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                      >
-                        <option value="high">High</option>
-                        <option value="medium">Medium</option>
-                        <option value="low">Low</option>
-                      </select>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-1">Description</label>
-                    <textarea
-                      value={newEvent.description}
-                      onChange={(e) => setNewEvent({...newEvent, description: e.target.value})}
-                      rows="3"
-                      className="w-full bg-gray-800 border border-gray-700 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                      required
-                    ></textarea>
-                  </div>
-                  
-                  <div className="flex justify-end gap-3 pt-2">
-                    <button
-                      type="button"
-                      onClick={() => setShowEventForm(false)}
-                      className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-md transition-colors"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      className="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-md transition-colors"
-                    >
-                      Add Event
-                    </button>
-                  </div>
-                </form>
-              </motion.div>
-            </div>
-          )}
-          
           {/* Event Details */}
           <div className="mt-8">
             <h3 className="text-xl font-bold mb-4 border-b border-gray-800 pb-2">Event Details</h3>
             <div className="space-y-4">
-              {filteredEvents.length === 0 ? (
-                <div className="text-center py-8 bg-gray-900/50 rounded-lg border border-gray-800">
-                  <p className="text-gray-400">No events found matching your filter.</p>
-                </div>
-              ) : (
-                filteredEvents.map((event) => (
-                  <motion.div
-                    key={event.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="bg-gray-900/50 border border-gray-800 rounded-lg p-4 hover:border-purple-500/30 transition-all duration-300"
-                  >
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-                      <div>
-                        <h4 className="text-lg font-bold">{event.title}</h4>
-                        <div className="flex flex-wrap gap-3 text-sm text-gray-400 mt-1">
-                          <div className="flex items-center">
-                            <CalendarIcon className="w-4 h-4 mr-1" />
-                            {formatDate(event.date)}
-                          </div>
-                          <div className="flex items-center">
-                            <Clock className="w-4 h-4 mr-1" />
-                            {event.time}
-                          </div>
-                          <div className="flex items-center">
-                            <Tag className="w-4 h-4 mr-1" />
-                            {event.category}
-                          </div>
-                        </div>
-                      </div>
-                      <div className={`px-3 py-1 rounded-full text-xs font-medium ${getImportanceColor(event.importance)}`}>
-                        {getImportanceLabel(event.importance)}
-                      </div>
-                    </div>
-                    <div className="mt-3 text-gray-300">
-                      <p>{event.description}</p>
-                    </div>
-                  </motion.div>
-                ))
-              )}
+              <div className="text-center py-8 bg-gray-900/50 rounded-lg border border-gray-800">
+                <p className="text-gray-400">No events currently scheduled. Check back later.</p>
+              </div>
             </div>
           </div>
         </section>
