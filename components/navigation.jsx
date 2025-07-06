@@ -982,18 +982,24 @@ export default function Navigation() {
                 <div className="space-y-1">
                   {portfolioItems.map((item, index) => (
                     <motion.div
-                      key={item.path}
+                      key={index}
                       initial={{ x: 50, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
                       transition={{ delay: 0.2 + (index * 0.05) }}
                     >
-                      <Link 
-                        href={item.path}
-                        className={`block py-2 px-4 text-base transition-colors border-l-2 ${isActive(item.path) ? `border-${item.color}-500 bg-white/5 text-white` : `border-transparent text-gray-300 hover:border-${item.color}-500 hover:bg-white/5 hover:text-white`}`}
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        {item.name}
-                      </Link>
+                      {item.isSubmenu ? (
+                        <div className={`block py-2 px-4 text-base transition-colors border-l-2 border-${item.color}-500 text-gray-300`}>
+                          {item.name}
+                        </div>
+                      ) : (
+                        <Link 
+                          href={item.path}
+                          className={`block py-2 px-4 text-base transition-colors border-l-2 ${isActive(item.path) ? `border-${item.color}-500 bg-white/5 text-white` : `border-transparent text-gray-300 hover:border-${item.color}-500 hover:bg-white/5 hover:text-white`}`}
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          {item.name}
+                        </Link>
+                      )}
                     </motion.div>
                   ))}
                 </div>
